@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dropflow Executive Gold 4K</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-core:#02060c;--bg-card:linear-gradient(145deg, #060d1a, #02060c);
+  --gold:#e2b042;--gold-glow:rgba(226, 176, 66, 0.4);
+  --premium-cyan:#00f2ff;--premium-green:#00ff9d;
+  --text-main:#f0f5ff;--text-dim:#7aa8cc;
+  --border-gold:rgba(226, 176, 66, 0.15);
+  --font-executive:'Outfit', sans-serif;--font-data:'JetBrains Mono', monospace;
+  --shadow-4k:0 20px 50px rgba(0,0,0,0.8);
+}
+
+body {
+  background: var(--bg-core);color: var(--text-main);
+  font-family: var(--font-executive);margin: 0;overflow: hidden;
+}
+
+/* Background Matrix 4K */
+body::before {
+  content: '';position: fixed;inset: 0;
+  background-image: radial-gradient(circle at 50% 0%, rgba(226, 176, 66, 0.05), transparent 70%),
+                    linear-gradient(rgba(0,242,255,0.01) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0,242,255,0.01) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;z-index: -1;
+}
+
+.executive-container { display: flex; height: 100vh; }
+
+/* Ultra Premium Sidebar */
+.sidebar-gold {
+  width: 260px;background: #010409;border-right: 1px solid var(--border-gold);
+  display: flex;flex-direction: column;box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+}
+
+.brand-4k {
+  padding: 30px 20px;text-align: center;
+  border-bottom: 1px solid var(--border-gold);
+}
+
+.logo-gold {
+  font-size: 28px;font-weight: 900;letter-spacing: -1px;
+  background: linear-gradient(135deg, #fff 30%, var(--gold) 100%);
+  -webkit-background-clip: text;-webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px var(--gold-glow));
+}
+
+.nav-executive { flex: 1; padding: 20px 10px; }
+.nav-item-4k {
+  display: flex;align-items:center;padding: 14px 18px;margin-bottom: 8px;
+  border-radius: 12px;font-size: 13px;font-weight: 600;color: var(--text-dim);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid transparent;cursor: pointer;
+}
+
+.nav-item-4k:hover, .nav-item-4k.active {
+  background: rgba(226, 176, 66, 0.08);color: var(--gold);
+  border-color: var(--border-gold);transform: translateX(5px);
+  box-shadow: inset 0 0 15px rgba(226, 176, 66, 0.05);
+}
+
+/* KPI HUD STYLE */
+.kpi-master-grid {
+  display: grid;grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;padding: 25px;
+}
+
+.kpi-card-4k {
+  background: var(--bg-card);border: 1px solid var(--border-gold);
+  padding: 24px;border-radius: 20px;position: relative;overflow: hidden;
+  box-shadow: var(--shadow-4k);transition: transform 0.3s;
+}
+
+.kpi-card-4k:hover { transform: translateY(-5px); border-color: var(--gold); }
+
+.kpi-label-gold {
+  font-family: var(--font-data);font-size: 10px;color: var(--gold);
+  text-transform: uppercase;letter-spacing: 2px;margin-bottom: 10px;
+}
+
+.kpi-value-4k {
+  font-size: 32px;font-weight: 900;color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.main-viewport { flex: 1; overflow-y: auto; background: rgba(0,0,0,0.2); }
+
+/* Elias Rocha Premium Header */
+.topbar-executive {
+  height: 70px;display: flex;align-items: center;justify-content: space-between;
+  padding: 0 30px;background: rgba(1, 4, 9, 0.8);backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-gold);position: sticky;top: 0;z-index: 10;
+}
+
+.btn-premium {
+  background: linear-gradient(135deg, var(--gold), #b3862b);
+  border: none;color: #000;padding: 10px 22px;border-radius: 8px;
+  font-weight: 800;font-size: 12px;cursor: pointer;text-transform: uppercase;
+  box-shadow: 0 4px 15px var(--gold-glow);
+}
+</style>
+</head>
+<body>
+
+<div class="executive-container">
+  <aside class="sidebar-gold">
+    <div class="brand-4k">
+      <div class="logo-gold">DROPFLOW</div>
+      <div style="font-size: 8px; color: var(--gold); letter-spacing: 3px; margin-top: 5px;">EXECUTIVE GOLD 4K</div>
+    </div>
+    <nav class="nav-executive">
+      <div class="nav-item-4k active">Dashboard Real-Time</div>
+      <div class="nav-item-4k">Analytics Avanzado</div>
+      <div class="nav-item-4k">Meta Ads Elite</div>
+      <div class="nav-item-4k">Logística Pro</div>
+      <div class="nav-item-4k">Configuración</div>
+    </nav>
+  </aside>
+
+  <main class="main-viewport">
+    <header class="topbar-executive">
+      <div style="font-weight: 600;">Control Center <span style="color: var(--gold);">/ Resumen Global</span></div>
+      <button class="btn-premium">Sincronizar Datos</button>
+    </header>
+
+    <div class="kpi-master-grid">
+      <div class="kpi-card-4k">
+        <div class="kpi-label-gold">Ventas Netas</div>
+        <div class="kpi-value-4k">$4.250.000</div>
+        <div style="color: var(--premium-green); font-size: 11px; margin-top: 5px;">↑ 12% vs ayer</div>
+      </div>
+      <div class="kpi-card-4k">
+        <div class="kpi-label-gold">ROAS Promedio</div>
+        <div class="kpi-value-4k" style="color: var(--gold);">5.2x</div>
+        <div style="color: var(--text-dim); font-size: 11px; margin-top: 5px;">Escalado Optimizando</div>
+      </div>
+      <div class="kpi-card-4k">
+        <div class="kpi-label-gold">CPA Actual</div>
+        <div class="kpi-value-4k">$2.150</div>
+        <div style="color: var(--premium-cyan); font-size: 11px; margin-top: 5px;">Target: $2.500</div>
+      </div>
+    </div>
+
+    <!-- Area de Gráficos e IA Jarvis -->
+    <div style="padding: 0 25px;">
+       <div style="background: var(--bg-card); border: 1px solid var(--border-gold); height: 400px; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--text-dim);">
+          [ Monitor de Flujo de Caja Elias Rocha System Ready ]
+       </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
