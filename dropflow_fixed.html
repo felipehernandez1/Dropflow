@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dropflow Executive v3.0</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Birthstone&family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;600;700;800;900&display=swap');
+:root {
+  --bg:#02050a;--bg1:#050c14;--bg2:#080f1c;--bg3:#0c1525;
+  --panel:rgba(8,14,26,0.9);--gold:#ff9d00;--gold2:#ffbe50;
+  --gold-dim:rgba(255,157,0,0.15);--gold-glow:rgba(255,157,0,0.5);
+  --cyan:#00f2ff;--cyan-dim:rgba(0,242,255,0.12);--cyan-glow:rgba(0,242,255,0.4);
+  --green:#00ffb3;--red:#ff3355;--purple:#b060ff;
+  --text:#e0f0ff;--text2:#7090b0;--text3:#9a6030;
+  --border:rgba(255,157,0,0.12);--border2:rgba(255,157,0,0.25);
+  --radius:12px;--radius2:8px;
+  --font-display:'Outfit',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --bg0:var(--bg);--bg4:var(--bg3);
+  --border-cyan:rgba(0,242,255,0.15);
+  --amber:var(--gold);--amber-bg:var(--gold-dim);
+  --blue2:var(--cyan);--blue-bg:var(--cyan-dim);
+  --green-bg:rgba(0,255,179,0.08);--red-bg:rgba(255,51,85,0.08);
+  --purple-bg:rgba(176,96,255,0.08);--cyan-bg:var(--cyan-dim);
+  --orange:#ff6a00;--orange-bg:rgba(255,106,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-display);font-size:15px;background:var(--bg);
+  background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(255,120,0,0.06) 0%,transparent 60%),
+  radial-gradient(ellipse 40% 30% at 80% 80%,rgba(0,200,255,0.03) 0%,transparent 50%);
+  color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(255,157,0,0.015) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,157,0,0.015) 1px,transparent 1px);
+  background-size:80px 80px;}
+.app-layout{display:flex;height:100vh;overflow:hidden;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.content{overflow-y:auto!important;height:calc(100vh - 52px)!important;flex:none!important;}
+.sidebar{width:72px;min-width:72px;background:rgba(3,7,14,0.97);
+  border-right:1px solid rgba(255,157,0,0.1);display:flex;flex-direction:column;
+  height:100vh;position:sticky;top:0;overflow:hidden;z-index:100;
+  box-shadow:4px 0 30px rgba(0,0,0,0.8);transition:width 0.3s cubic-bezier(0.4,0,0.2,1);}
+.sidebar:hover{width:200px;}
+.sidebar:hover .nav-label{opacity:1;width:auto;}
+.sidebar:hover .logo-area{padding:20px 16px;}
+.sidebar:hover .logo-text{opacity:1;}
+.logo-area{padding:20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;overflow:hidden;}
+.logo-icon-box{width:36px;height:36px;flex-shrink:0;border:2px solid var(--gold);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;color:var(--gold);font-weight:900;font-size:16px;
+  box-shadow:0 0 16px var(--gold-glow),inset 0 0 10px rgba(255,157,0,0.1);}
+.logo-text{font-size:14px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;opacity:0;transition:opacity 0.2s;letter-spacing:-0.5px;}
+.sidebar-nav{padding:8px;flex:1;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius2);
+  font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;transition:all 0.2s;
+  border:1px solid transparent;background:none;width:100%;text-align:left;position:relative;
+  margin-bottom:2px;overflow:hidden;white-space:nowrap;}
+.nav-item:hover{background:rgba(255,157,0,0.06);color:var(--gold2);border-color:rgba(255,157,0,0.15);}
+.nav-item.active{background:linear-gradient(135deg,rgba(255,157,0,0.12),rgba(255,157,0,0.04));
+  color:var(--gold);font-weight:700;border-color:rgba(255,157,0,0.3);
+  box-shadow:0 0 16px rgba(255,157,0,0.08) inset;text-shadow:0 0 8px rgba(255,157,0,0.6);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:2px;border-radius:2px;
+  background:linear-gradient(180deg,var(--gold),var(--gold2));box-shadow:0 0 8px var(--gold),0 0 16px var(--gold-glow);}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:0.6;}
+.nav-item.active .nav-icon,.nav-item:hover .nav-icon{opacity:1;}
+.nav-label{opacity:0;transition:opacity 0.2s;white-space:nowrap;}
+.sidebar-bottom{padding:12px 8px;border-top:1px solid var(--border);}
+.sync-indicator{display:flex;align-items:center;gap:8px;padding:6px 8px;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0;}
+.sync-dot.live{background:var(--gold);box-shadow:0 0 6px var(--gold-glow),0 0 12px var(--gold-glow);}
+.sync-text{font-family:var(--font-mono);font-size:9px;color:var(--text3);}
+.topbar{display:flex;align-items:center;gap:10px;height:50px;flex-shrink:0;
+  border-bottom:1px solid rgba(255,157,0,0.12);
+  background:linear-gradient(90deg,rgba(2,4,10,0.98),rgba(4,8,18,0.98));
+  position:sticky;top:0;z-index:90;box-shadow:0 2px 20px rgba(0,0,0,0.8);backdrop-filter:blur(20px);}
+.topbar-left{display:flex;flex-direction:column;justify-content:center;gap:1px;padding:0 0 0 14px;}
+.page-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:1px;font-family:var(--font-mono);text-transform:uppercase;}
+.topbar-spacer{flex:1;}
+.section{display:none;padding:16px 20px;flex-direction:column;gap:0;animation:fadeIn 0.25s ease;position:relative;z-index:1;}
+.section.active{display:flex;}
+
+/* CONFIG */
+.config-section{border-radius:var(--radius);margin-bottom:14px;}
+.config-section-title{font-size:12px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.config-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.config-field{display:flex;flex-direction:column;gap:5px;}
+.config-label{font-family:var(--font-mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.config-input{background:rgba(0,0,0,0.4);border:1px solid rgba(255,157,0,0.12);color:var(--text);
+  font-family:var(--font-mono);font-size:14px;padding:8px 12px;border-radius:var(--radius2);
+  outline:none;transition:all 0.2s;width:100%;}
+.config-input:focus{border-color:rgba(255,157,0,0.35);box-shadow:0 0 12px var(--gold-dim);}
+.config-btn{display:flex;align-items:center;gap:6px;padding:9px 18px;
+  background:rgba(255,157,0,0.08);border:1px solid rgba(255,157,0,0.25);color:var(--gold);
+  font-family:var(--font-mono);font-size:13px;font-weight:700;border-radius:var(--radius2);
+  cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;white-space:nowrap;}
+.config-btn:hover{background:rgba(255,157,0,0.15);box-shadow:0 0 20px var(--gold-dim);}
+.config-status{margin-top:8px;font-family:var(--font-mono);font-size:11px;padding:8px 12px;border-radius:var(--radius2);display:none;}
+.drop-zone{border:2px dashed rgba(255,157,0,0.2);border-radius:var(--radius);padding:24px;
+  text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(255,157,0,0.02);}
+.drop-zone:hover,.drop-zone.drag-over{border-color:rgba(255,157,0,0.45);background:rgba(255,157,0,0.05);}
+.drop-zone-icon{font-size:24px;margin-bottom:6px;}
+.drop-zone-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px;}
+.drop-zone-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+thead th{padding:10px 12px;font-family:var(--font-mono);font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);
+  border-bottom:1px solid rgba(255,157,0,0.15);text-align:left;white-space:nowrap;background:rgba(255,157,0,0.04);}
+tbody tr{border-bottom:1px solid rgba(255,157,0,0.04);transition:all 0.15s;}
+tbody tr:hover{background:rgba(255,157,0,0.04);}
+tbody td{padding:9px 12px;color:var(--text2);white-space:nowrap;}
+
+/* BADGES */
+.badge{font-family:var(--font-mono);font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;}
+.badge.entregado{background:rgba(0,255,179,0.08);color:var(--green);border:1px solid rgba(0,255,179,0.2);}
+.badge.transito{background:rgba(0,242,255,0.08);color:var(--cyan);border:1px solid rgba(0,242,255,0.2);}
+.badge.pendiente{background:rgba(255,157,0,0.08);color:var(--gold);border:1px solid rgba(255,157,0,0.2);}
+.badge.devuelto{background:rgba(255,51,85,0.08);color:var(--red);border:1px solid rgba(255,51,85,0.2);}
+.badge.cancelado{background:rgba(58,85,112,0.15);color:var(--text3);border:1px solid rgba(58,85,112,0.3);}
+
+/* KPI CARDS */
+.kpi-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 18px;position:relative;overflow:hidden;transition:all 0.3s;backdrop-filter:blur(10px);}
+.kpi-card::after{content:'';position:absolute;left:0;top:10%;height:80%;width:3px;
+  background:var(--gold);box-shadow:0 0 12px var(--gold-glow);}
+.kpi-card.green::after{background:var(--green);}
+.kpi-card.red::after{background:var(--red);}
+.kpi-card.amber::after{background:var(--gold);}
+.kpi-card.purple::after{background:var(--purple);}
+.kpi-label{font-family:var(--font-mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
+.kpi-value{font-size:28px;font-weight:900;color:var(--text);letter-spacing:-0.5px;line-height:1.1;}
+.kpi-sub{font-family:var(--font-mono);font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* DB CARDS */
+.db-card{background:rgba(6,10,20,0.92);border:1px solid rgba(255,157,0,0.18);border-radius:var(--radius);
+  padding:14px;position:relative;backdrop-filter:blur(12px);}
+.db-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,157,0,0.6),transparent);}
+.db-card-title{font-family:var(--font-mono);font-size:8px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;}
+.db-kpi-card{background:rgba(6,10,20,0.92);border:1px solid rgba(255,157,0,0.18);
+  border-radius:var(--radius);padding:14px 16px;position:relative;backdrop-filter:blur(12px);
+  text-align:center;transition:all 0.2s;overflow:hidden;}
+.db-kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent,#ff9d00),transparent);}
+.db-kpi-card::after{content:'';position:absolute;left:0;top:10%;height:80%;width:3px;
+  background:var(--accent,var(--gold));box-shadow:0 0 12px var(--accent,var(--gold-glow));}
+.db-kpi-label{font-family:var(--font-mono);font-size:11px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.db-kpi-val{font-size:28px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.5px;}
+.db-kpi-val.cyan{color:var(--cyan);}
+.db-kpi-val.gold{color:var(--gold);}
+.db-kpi-val.red{color:var(--red);}
+.db-kpi-val.green{color:var(--green);}
+.db-kpi-delta{font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-top:4px;}
+
+/* FILTER BTNS */
+.filter-btn{padding:6px 14px;font-family:var(--font-mono);font-size:11px;font-weight:600;
+  background:rgba(255,157,0,0.04);border:1px solid rgba(255,157,0,0.12);color:var(--text3);
+  border-radius:20px;cursor:pointer;transition:all 0.15s;}
+.filter-btn:hover,.filter-btn.active{background:rgba(255,157,0,0.1);color:var(--gold);border-color:rgba(255,157,0,0.35);}
+.filter-search{flex:1;max-width:220px;padding:5px 12px;background:rgba(0,0,0,0.4);
+  border:1px solid rgba(255,157,0,0.12);color:var(--text);font-family:var(--font-mono);
+  font-size:10px;border-radius:20px;outline:none;}
+.table-filters{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+.table-footer{padding:10px 16px;font-family:var(--font-mono);font-size:10px;color:var(--text3);
+  border-top:1px solid var(--border);background:rgba(0,0,0,0.3);}
+.semaforo{font-family:var(--font-mono);font-size:12px;font-weight:700;padding:2px 6px;border-radius:4px;}
+.semaforo.verde{color:var(--green);}
+.semaforo.amarillo{color:var(--gold);}
+.semaforo.rojo{color:var(--red);}
+.empty-state{text-align:center;padding:40px;color:var(--text3);font-family:var(--font-mono);font-size:11px;line-height:2;}
+
+/* IA CHAT */
+.ia-msg{display:flex;gap:10px;align-items:flex-start;}
+.ia-msg-user{flex-direction:row-reverse;}
+.ia-avatar{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#ff6a00);
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.ia-msg-user .ia-avatar{background:linear-gradient(135deg,var(--bg3),var(--bg2));border:1px solid var(--border2);}
+.ia-burbuja{background:var(--panel);border:1px solid var(--border2);border-radius:10px;
+  padding:12px 14px;font-size:15px;line-height:1.7;color:var(--text2);max-width:80%;}
+.ia-msg-user .ia-burbuja{background:rgba(255,157,0,0.06);border-color:rgba(255,157,0,0.2);color:var(--text);}
+.ia-typing{display:flex;gap:5px;align-items:center;padding:4px 0;}
+.ia-typing span{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:typing 1.2s infinite;opacity:0.4;}
+.ia-typing span:nth-child(2){animation-delay:0.2s;}
+.ia-typing span:nth-child(3){animation-delay:0.4s;}
+.ia-chip{padding:6px 14px;background:rgba(255,157,0,0.06);border:1px solid rgba(255,157,0,0.18);
+  color:var(--text2);font-size:12px;border-radius:20px;cursor:pointer;transition:all 0.15s;}
+.ia-chip:hover{background:rgba(255,157,0,0.12);color:var(--gold);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:rgba(255,157,0,0.2);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,157,0,0.4);}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;z-index:9000;background:var(--bg);display:flex;align-items:center;justify-content:center;}
+
+/* TOAST */
+.df-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10000;
+  padding:12px 24px;border-radius:var(--radius);font-family:var(--font-mono);font-size:14px;
+  font-weight:600;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;backdrop-filter:blur(12px);}
+.df-toast.show{opacity:1;}
+.df-toast.ok{background:rgba(255,157,0,0.12);color:var(--gold);border:1px solid rgba(255,157,0,0.3);}
+.df-toast.err{background:rgba(255,51,85,0.12);color:var(--red);border:1px solid rgba(255,51,85,0.3);}
+
+/* BTN REFRESH */
+.btn-refresh{display:flex;align-items:center;gap:5px;padding:6px 12px;
+  background:rgba(255,157,0,0.06);border:1px solid rgba(255,157,0,0.2);color:var(--gold);
+  font-family:var(--font-mono);font-size:10px;border-radius:var(--radius2);cursor:pointer;transition:all 0.2s;}
+.btn-refresh:hover{background:rgba(255,157,0,0.12);}
+
+/* MODO DÍA */
+body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ece5;
+  --panel:rgba(255,255,255,0.9);--border:rgba(200,150,0,0.15);--text:#1a1000;--text2:#5a4500;--text3:#9a8060;}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
+
+/* DROP OVERLAY */
+.drop-overlay{position:fixed;inset:0;background:rgba(255,157,0,0.04);backdrop-filter:blur(4px);
+  z-index:9999;display:none;align-items:center;justify-content:center;}
+.drop-overlay.visible{display:flex;}
+.drop-box{background:var(--bg2);border:2px solid rgba(255,157,0,0.4);border-radius:var(--radius);padding:40px;text-align:center;}
+
+/* FLOAT BTN */
+.btn-ia-flotante{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#ff6a00);border:none;cursor:pointer;font-size:22px;
+  z-index:8000;box-shadow:0 0 24px var(--gold-glow);transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.btn-ia-flotante:hover{transform:scale(1.1);}
+
+/* META KPI */
+.meta-kpi{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 16px;position:relative;overflow:hidden;transition:all 0.2s;backdrop-filter:blur(8px);text-align:center;}
+.meta-kpi-label{font-family:var(--font-mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;}
+.meta-kpi-val{font-size:24px;font-weight:800;color:var(--text);}
+
+/* SUGERENCIAS */
+.sugg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sugg-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.sugg-card h3{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:8px;color:var(--text);}
+.sugg-card p{font-family:var(--font-mono);font-size:12px;color:var(--text3);line-height:1.7;}
+.sugg-prio{font-family:var(--font-mono);font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:auto;letter-spacing:1px;}
+.sugg-prio.high{background:rgba(255,51,85,0.1);color:var(--red);border:1px solid rgba(255,51,85,0.2);}
+.sugg-prio.med{background:rgba(255,157,0,0.1);color:var(--gold);border:1px solid rgba(255,157,0,0.2);}
+.sugg-prio.low{background:rgba(0,242,255,0.08);color:var(--cyan);border:1px solid rgba(0,242,255,0.15);}
+
+/* CHART CARD */
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;backdrop-filter:blur(8px);}
+.chart-card.full{grid-column:1/-1;}
+.chart-card-title{font-family:var(--font-mono);font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+.charts-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* DASH CARD */
+.dash-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;backdrop-filter:blur(10px);}
+.dash-card.full{grid-column:1/-1;}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-title{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1px;font-family:var(--font-mono);text-transform:uppercase;}
+.card-badge{font-family:var(--font-mono);font-size:9px;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(255,157,0,0.2);padding:2px 8px;border-radius:20px;}
+
+/* TOTAL NETO */
+.total-neto-grid{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px;
+  padding:14px;background:rgba(0,0,0,0.3);border-radius:var(--radius2);border:1px solid var(--border);}
+.total-neto-card{text-align:center;}
+.total-neto-label{font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
+.total-neto-val{font-size:20px;font-weight:800;}
+.total-neto-sub{font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-top:3px;}
+.total-neto-op{font-size:18px;color:var(--gold);font-weight:300;text-align:center;}
+
+/* INSIGHTS PANEL */
+#insights-panel{box-shadow:-8px 0 40px rgba(0,0,0,0.9);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div style="width:100%;max-width:400px;padding:40px">
+    <div style="text-align:center;margin-bottom:40px">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,var(--green),#00a86b);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px;box-shadow:0 8px 24px rgba(0,214,143,0.3)">⚡</div>
+      <div style="font-size:28px;font-weight:800;color:var(--text)">Drop<span style="color:var(--green)">flow</span></div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-top:4px;letter-spacing:1px">CONTABILIDAD DROPSHIPPING</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px">
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px">Iniciar sesión</div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:24px">Ingresa tus credenciales para continuar</div>
+      <div style="margin-bottom:16px">
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:6px">Email</div>
+        <input id="login-email" type="email" placeholder="tu@email.com" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:10px 14px;font-family:var(--font-mono);font-size:12px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
+      </div>
+      <div style="margin-bottom:24px">
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:6px">Contraseña</div>
+        <input id="login-pass" type="password" placeholder="••••••••" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:10px 14px;font-family:var(--font-mono);font-size:12px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')hacerLogin()">
+      </div>
+      <div id="login-error" style="display:none;background:var(--red-bg);color:var(--red);border:1px solid rgba(244,63,94,0.2);border-radius:6px;padding:10px 14px;font-family:var(--font-mono);font-size:11px;margin-bottom:16px"></div>
+      <button onclick="hacerLogin()" id="login-btn" style="width:100%;background:linear-gradient(135deg,var(--green),#00a86b);border:none;color:#000;font-family:var(--font-display);font-size:14px;font-weight:700;padding:12px;border-radius:var(--radius2);cursor:pointer">Ingresar</button>
+      <div style="text-align:center;margin-top:16px">
+        <button onclick="abrirRegistro()" style="background:none;border:none;color:var(--green);font-family:var(--font-mono);font-size:11px;cursor:pointer;text-decoration:underline">¿Nuevo en Dropflow? Crea tu cuenta gratis →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REGISTRO -->
+<div id="modal-registro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:10000;overflow-y:auto;padding:40px 20px">
+  <div style="max-width:860px;margin:0 auto;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden">
+    <div style="padding:24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:18px;font-weight:800;color:var(--text)">Crea tu cuenta en <span style="color:var(--green)">Dropflow</span></div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-top:4px">Elige el plan que mejor se adapte a tu negocio</div>
+      </div>
+      <button onclick="cerrarRegistro()" style="background:none;border:none;color:var(--text3);font-size:24px;cursor:pointer">×</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;padding:24px">
+      <!-- Freemium -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column">
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:10px">FREEMIUM</div>
+        <div style="font-size:28px;font-weight:800;color:var(--text)">Gratis</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:20px">para siempre</div>
+        <div style="flex:1;font-size:12px;color:var(--text2);display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <div>✅ Dashboard básico</div><div>✅ Drag & drop Excel</div><div>✅ Hasta 50 pedidos/mes</div>
+          <div style="color:var(--text3)">✗ Meta Ads en vivo</div><div style="color:var(--text3)">✗ IA Dropflow</div>
+        </div>
+        <button onclick="iniciarRegistro('free')" style="width:100%;padding:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-family:var(--font-display);font-size:12px;font-weight:600;border-radius:var(--radius2);cursor:pointer">Comenzar gratis</button>
+      </div>
+      <!-- Pro -->
+      <div style="background:linear-gradient(135deg,rgba(0,230,153,0.08),rgba(6,182,212,0.05));border:2px solid rgba(0,230,153,0.4);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;position:relative">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;font-family:var(--font-mono);font-size:9px;font-weight:700;padding:3px 14px;border-radius:20px">⭐ MÁS POPULAR</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--green);letter-spacing:2px;margin-bottom:10px">PRO</div>
+        <div style="font-size:28px;font-weight:800;color:var(--text)">$9.990</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:20px">CLP / mes</div>
+        <div style="flex:1;font-size:12px;color:var(--text2);display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <div>✅ Todo del Freemium</div><div>✅ Pedidos ilimitados</div><div>✅ Meta Ads en vivo</div>
+          <div>✅ IA Dropflow</div><div>✅ Hasta 3 usuarios</div>
+        </div>
+        <button onclick="pagarConMP('pro')" style="width:100%;padding:10px;background:linear-gradient(135deg,var(--green),#00a86b);border:none;color:#000;font-family:var(--font-display);font-size:12px;font-weight:700;border-radius:var(--radius2);cursor:pointer">Suscribirse — $9.990/mes</button>
+      </div>
+      <!-- Business -->
+      <div style="background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(6,182,212,0.04));border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column">
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--purple);letter-spacing:2px;margin-bottom:10px">BUSINESS</div>
+        <div style="font-size:28px;font-weight:800;color:var(--text)">$19.990</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:20px">CLP / mes</div>
+        <div style="flex:1;font-size:12px;color:var(--text2);display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <div>✅ Todo del Pro</div><div>✅ Usuarios ilimitados</div><div>✅ Exportar PDF y Excel</div><div>✅ Soporte prioritario</div>
+        </div>
+        <button onclick="pagarConMP('business')" style="width:100%;padding:10px;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:var(--purple);font-family:var(--font-display);font-size:12px;font-weight:700;border-radius:var(--radius2);cursor:pointer">Suscribirse — $19.990/mes</button>
+      </div>
+    </div>
+    <!-- Form registro -->
+    <div id="form-registro" style="display:none;padding:24px;border-top:1px solid var(--border)">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Crear cuenta — Plan <span id="plan-seleccionado" style="color:var(--green)">Freemium</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div><div class="config-label" style="margin-bottom:4px">Nombre completo</div><input class="config-input" id="reg-nombre" placeholder="Felipe Hernández"></div>
+        <div><div class="config-label" style="margin-bottom:4px">Email</div><input class="config-input" id="reg-email" type="email" placeholder="felipe@email.com"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div><div class="config-label" style="margin-bottom:4px">Contraseña</div><input class="config-input" id="reg-pass" type="password" placeholder="min. 6 caracteres"></div>
+        <div><div class="config-label" style="margin-bottom:4px">Confirmar</div><input class="config-input" id="reg-pass2" type="password" placeholder="repite la contraseña"></div>
+      </div>
+      <div id="reg-error" style="display:none;background:var(--red-bg);color:var(--red);border:1px solid rgba(244,63,94,0.2);border-radius:6px;padding:10px;font-family:var(--font-mono);font-size:11px;margin-bottom:12px"></div>
+      <div style="display:flex;gap:10px">
+        <button onclick="cerrarFormRegistro()" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:var(--font-display);font-size:12px;border-radius:var(--radius2);cursor:pointer">← Volver</button>
+        <button onclick="enviarRegistro()" style="flex:2;padding:10px;background:linear-gradient(135deg,var(--green),#00a86b);border:none;color:#000;font-family:var(--font-display);font-size:13px;font-weight:700;border-radius:var(--radius2);cursor:pointer">Crear cuenta →</button>
+      </div>
+    </div>
+    <div style="text-align:center;padding:12px;font-family:var(--font-mono);font-size:9px;color:var(--text3)">* Próximamente · Pagos seguros via Mercado Pago · Cancela cuando quieras</div>
+  </div>
+</div>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-icon-box">D</div>
+      <div class="logo-text">DROPFLOW</div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-nav="dashboard" onclick="navegarA('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span class="nav-label">Resumen</span>
+      </button>
+      <button class="nav-item" data-nav="pedidos" onclick="navegarA('pedidos')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l2-1.14"/><circle cx="18.5" cy="15.5" r="2.5"/><path d="M20.27 17.27L22 19"/></svg>
+        <span class="nav-label">Pedidos</span>
+      </button>
+      <button class="nav-item" data-nav="cashflow" onclick="navegarA('cashflow')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span class="nav-label">Flujo de Caja</span>
+      </button>
+      <button class="nav-item" data-nav="proyeccion" onclick="navegarA('proyeccion')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="nav-label">Proyección</span>
+      </button>
+      <button class="nav-item" data-nav="meta" onclick="navegarA('meta')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        <span class="nav-label">Meta Ads</span>
+      </button>
+      <button class="nav-item" data-nav="graficos" onclick="navegarA('graficos')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="nav-label">Gráficos</span>
+      </button>
+      <button class="nav-item" data-nav="comparacion" onclick="navegarA('comparacion')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        <span class="nav-label">Comparación</span>
+      </button>
+      <button class="nav-item" data-nav="ia" onclick="navegarA('ia')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        <span class="nav-label">IA Dropflow</span>
+      </button>
+      <button class="nav-item" data-nav="config" onclick="navegarA('config')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span class="nav-label">Configuración</span>
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div style="margin-bottom:8px;padding:8px 12px;background:var(--bg2);border-radius:var(--radius2);border:1px solid var(--border)">
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text2);font-weight:600" id="user-nombre">—</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3)" id="user-email">—</div>
+      </div>
+      <button onclick="cerrarSesion()" style="width:100%;padding:7px;background:var(--red-bg);border:1px solid rgba(244,63,94,0.2);color:var(--red);font-family:var(--font-display);font-size:11px;font-weight:600;border-radius:var(--radius2);cursor:pointer;margin-bottom:8px">Cerrar sesión</button>
+      <div class="sync-indicator">
+        <div class="sync-dot" id="sync-dot"></div>
+        <div><div class="sync-text" id="sync-label">Sin datos</div><div class="sync-text" id="last-update" style="font-size:9px;margin-top:1px"></div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title" id="page-title">Contabilidad en vivo</h1>
+        <div id="date-badge" style="font-family:var(--font-mono);font-size:9px;color:var(--text3)"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex:1;justify-content:flex-end;padding-right:16px">
+        <div style="position:relative">
+          <button onclick="toggleDatePicker()" id="btn-periodo" style="display:flex;align-items:center;gap:6px;background:rgba(255,157,0,0.06);border:1px solid rgba(255,157,0,0.25);border-radius:var(--radius2);padding:6px 12px;color:var(--gold);font-family:var(--font-mono);font-size:10px;cursor:pointer;white-space:nowrap;font-weight:700">
+            📅 <span id="periodo-label">Este mes</span>
+          </button>
+          <div id="date-picker-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:16px;z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,0.5);min-width:280px">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Seleccionar período</div>
+            <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">
+              <button onclick="changePeriod('hoy')" class="filter-btn" id="qb-hoy">Hoy</button>
+              <button onclick="changePeriod('semana')" class="filter-btn" id="qb-semana">Esta semana</button>
+              <button onclick="changePeriod('mes')" class="filter-btn active" id="qb-mes">Este mes</button>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:12px">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:8px">RANGO PERSONALIZADO</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+                <input type="date" id="fecha-desde" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-family:var(--font-mono);font-size:11px;color:var(--text);outline:none">
+                <span style="color:var(--text3)">→</span>
+                <input type="date" id="fecha-hasta" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-family:var(--font-mono);font-size:11px;color:var(--text);outline:none">
+              </div>
+              <button onclick="aplicarFechaPersonalizada()" style="width:100%;padding:9px;background:var(--blue-bg);border:1px solid rgba(96,165,250,0.3);color:var(--blue2);font-family:var(--font-display);font-size:12px;font-weight:600;border-radius:var(--radius2);cursor:pointer">Aplicar rango</button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-refresh" onclick="refreshData()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          Actualizar
+        </button>
+        <button onclick="abrirPanelInsights()" style="display:flex;align-items:center;gap:6px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);color:var(--purple);font-family:var(--font-display);font-size:12px;font-weight:600;padding:7px 14px;border-radius:var(--radius2);cursor:pointer;position:relative">
+          💡 Insights
+          <span id="insights-badge" style="display:none;position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;font-family:var(--font-mono);font-size:9px;font-weight:700;padding:2px 5px;border-radius:10px">0</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="section active" id="sec-dashboard">
+        <div id="alertas-container" style="margin-bottom:8px"></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px">
+          <div class="db-kpi-card" style="--accent:#00f2ff"><div class="db-kpi-label">VENTAS TOTALES</div><div class="db-kpi-val cyan" id="kpi-ventas-total">$0</div><div class="db-kpi-delta" id="kpi-ventas-total-sub">todos los pedidos</div></div>
+          <div class="db-kpi-card" style="--accent:#ff9d00"><div class="db-kpi-label">PEDIDOS</div><div class="db-kpi-val gold" id="kpi-pedidos-n">0</div><div class="db-kpi-delta" id="kpi-pedidos-sub">total período</div></div>
+          <div class="db-kpi-card" style="--accent:#ff3355"><div class="db-kpi-label">GASTO ADS</div><div class="db-kpi-val red" id="kpi-gasto-ads">$0</div><div class="db-kpi-delta" id="kpi-gasto-ads-sub">Meta Ads período</div></div>
+          <div class="db-kpi-card" style="--accent:#00ffb3"><div class="db-kpi-label">ROAS PROMEDIO</div><div class="db-kpi-val green" id="kpi-roas-val">—</div><div class="db-kpi-delta" id="kpi-roas-sub">retorno sobre inversión</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+          <div class="db-card">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">Bienvenido de vuelta,</div>
+            <div style="font-size:18px;font-weight:900;color:var(--gold)" id="db-welcome-name">Admin</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+              <div style="background:rgba(0,255,179,0.05);border:1px solid rgba(0,255,179,0.2);border-radius:6px;padding:6px 8px"><div style="font-family:var(--font-mono);font-size:7px;color:var(--green)">COBRADO</div><div style="font-size:13px;font-weight:800;color:var(--green)" id="db-cobrado">$0</div></div>
+              <div style="background:rgba(255,51,85,0.05);border:1px solid rgba(255,51,85,0.2);border-radius:6px;padding:6px 8px"><div style="font-family:var(--font-mono);font-size:7px;color:var(--red)">COSTOS</div><div style="font-size:13px;font-weight:800;color:var(--red)" id="db-costos">$0</div></div>
+              <div style="background:rgba(255,157,0,0.05);border:1px solid rgba(255,157,0,0.2);border-radius:6px;padding:6px 8px"><div style="font-family:var(--font-mono);font-size:7px;color:var(--gold)">UTILIDAD</div><div style="font-size:13px;font-weight:800;color:var(--gold)" id="db-utilidad-real">$0</div></div>
+              <div style="background:rgba(176,96,255,0.05);border:1px solid rgba(176,96,255,0.2);border-radius:6px;padding:6px 8px"><div style="font-family:var(--font-mono);font-size:7px;color:var(--purple)">PROYECC.</div><div style="font-size:13px;font-weight:800;color:var(--purple)" id="db-proy">$0</div></div>
+            </div>
+          </div>
+          <div class="db-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:2px">VENTAS TOTALES</div>
+            <div style="font-size:32px;font-weight:900;color:var(--gold);margin:8px 0" id="gauge-ventas">$0</div>
+            <div style="font-size:16px;font-weight:700;color:var(--green)" id="gauge-delta">—</div>
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3)" id="gauge-delta-label">vs período anterior</div>
+            <div style="font-size:24px;font-weight:900;color:var(--gold);margin-top:8px" id="gauge-pct">0%</div>
+            <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:2px">MARGEN PROYECTADO</div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">ESTADO PEDIDOS</div>
+            <div id="status-grid" style="display:flex;flex-direction:column;gap:5px"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 280px;gap:10px;margin-bottom:10px">
+          <div class="db-card">
+            <div class="db-card-title">RENDIMIENTO DE CAMPAÑAS</div>
+            <div id="dash-campanas-tabla"></div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">FLUJO DE CAJA</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(0,255,179,0.04);border:1px solid rgba(0,255,179,0.15);border-radius:6px"><span style="font-family:var(--font-mono);font-size:9px;color:var(--green)">✅ COBRADO</span><span style="font-family:var(--font-mono);font-size:13px;font-weight:800;color:var(--green)" id="cf-mini-cobrado">$0</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,157,0,0.04);border:1px solid rgba(255,157,0,0.15);border-radius:6px"><span style="font-family:var(--font-mono);font-size:9px;color:var(--gold)">🚚 EN RUTA</span><span style="font-family:var(--font-mono);font-size:13px;font-weight:800;color:var(--gold)" id="cf-mini-porcobrar">$0</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,51,85,0.04);border:1px solid rgba(255,51,85,0.15);border-radius:6px"><span style="font-family:var(--font-mono);font-size:9px;color:var(--red)">💸 SALIDAS</span><span style="font-family:var(--font-mono);font-size:13px;font-weight:800;color:var(--red)" id="cf-mini-salidas">$0</span></div>
+              <div style="border-top:1px solid var(--border);padding-top:8px;display:flex;justify-content:space-between;align-items:center"><span style="font-family:var(--font-mono);font-size:9px;color:var(--text3)">CAJA HOY</span><span style="font-size:16px;font-weight:900" id="cf-mini-disponible">$0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PEDIDOS -->
+      <div class="section" id="sec-pedidos">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px">
+          <div class="kpi-card green"><div class="kpi-label">Total pedidos</div><div class="kpi-value" id="pk-total">0</div><div class="kpi-sub" id="pk-total-sub">en el período</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Entregados</div><div class="kpi-value" id="pk-entregados">0</div><div class="kpi-sub" id="pk-entregados-pct">0% del total</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">En camino</div><div class="kpi-value" id="pk-camino">0</div><div class="kpi-sub" id="pk-camino-pct">0% del total</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Devueltos / Cancelados</div><div class="kpi-value" id="pk-devueltos">0</div><div class="kpi-sub" id="pk-devueltos-pct">0% del total</div></div>
+        </div>
+        <div class="table-filters">
+          <button class="filter-btn active" data-filter="todos" onclick="setTableFilter('todos')">Todos</button>
+          <button class="filter-btn" data-filter="entregado" onclick="setTableFilter('entregado')">Entregados</button>
+          <button class="filter-btn" data-filter="transito" onclick="setTableFilter('transito')">En tránsito</button>
+          <button class="filter-btn" data-filter="pendiente" onclick="setTableFilter('pendiente')">Pendientes</button>
+          <button class="filter-btn" data-filter="devuelto" onclick="setTableFilter('devuelto')">Devueltos</button>
+          <button class="filter-btn" data-filter="cancelado" onclick="setTableFilter('cancelado')">Cancelados</button>
+          <input class="filter-search" id="filter-producto" placeholder="🔍 Buscar producto..." oninput="renderPedidos()">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>ID</th><th>Fecha</th><th>Producto</th><th>Estado</th>
+              <th style="text-align:right">Venta</th><th style="text-align:right">Proveedor</th>
+              <th style="text-align:right">Flete</th><th style="text-align:right">Utilidad</th>
+              <th style="text-align:right">Margen</th><th>Ciudad</th>
+            </tr></thead>
+            <tbody id="orders-table-body"><tr><td colspan="10"><div class="empty-state">Importa un Excel de Dropi para ver tus pedidos</div></td></tr></tbody>
+          </table>
+          <div class="table-footer"><span id="table-footer-info">—</span></div>
+        </div>
+      </div>
+
+      <!-- META ADS -->
+      <div class="section" id="sec-meta">
+        <div style="margin-bottom:12px;background:rgba(8,14,26,0.9);border:1px solid rgba(255,157,0,0.18);border-radius:var(--radius2);padding:10px 14px">
+          <span style="font-family:var(--font-mono);font-size:10px;color:var(--gold)">📊 MÉTRICAS GLOBALES META ADS</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+          <div class="meta-kpi"><div class="meta-kpi-label">Gasto total</div><div class="meta-kpi-val" id="meta-gasto">$0</div></div>
+          <div class="meta-kpi"><div class="meta-kpi-label">ROAS promedio</div><div class="meta-kpi-val" id="meta-roas" style="color:var(--green)">0x</div></div>
+          <div class="meta-kpi"><div class="meta-kpi-label">CPA promedio</div><div class="meta-kpi-val" id="meta-cpa">$0</div></div>
+          <div class="meta-kpi"><div class="meta-kpi-label">Compras</div><div class="meta-kpi-val" id="meta-compras">0</div></div>
+          <div class="meta-kpi"><div class="meta-kpi-label">Impresiones</div><div class="meta-kpi-val" id="meta-impresiones">0</div></div>
+          <div class="meta-kpi"><div class="meta-kpi-label">Clics</div><div class="meta-kpi-val" id="meta-clics">0</div></div>
+          <div class="meta-kpi"><div class="meta-kpi-label">CTR</div><div class="meta-kpi-val" id="meta-ctr">0%</div></div>
+          <div class="meta-kpi"><div class="meta-kpi-label">CPC</div><div class="meta-kpi-val" id="meta-cpc">$0</div></div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-title">📣 TODOS LOS ANUNCIOS</div>
+          <div class="table-wrap">
+            <table><thead><tr><th>Anuncio</th><th>Estado</th><th>Gasto</th><th>Compras</th><th>CPA</th><th>ROAS</th><th>CTR</th><th>CPM</th></tr></thead>
+            <tbody id="meta-tabla-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRÁFICOS -->
+      <div class="section" id="sec-graficos">
+        <div class="charts-layout">
+          <div class="chart-card full"><div class="chart-card-title">Ventas · Costos · Utilidad por día</div><div style="height:300px"><canvas id="chart-barras"></canvas></div></div>
+          <div class="chart-card"><div class="chart-card-title">Distribución de estados</div><div style="height:300px"><canvas id="chart-donut"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- COMPARACIÓN -->
+      <div class="section" id="sec-comparacion">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div><h2 style="font-size:16px;font-weight:700;color:var(--text)">Comparación de períodos</h2></div>
+          <div style="display:flex;gap:8px">
+            <button onclick="compararPeriodo('semana')" class="filter-btn active" id="cmp-semana">Semana vs anterior</button>
+            <button onclick="compararPeriodo('mes')" class="filter-btn" id="cmp-mes">Mes vs anterior</button>
+          </div>
+        </div>
+        <div id="comparacion-contenido"><div class="empty-state">Importa datos de Dropi para ver la comparación</div></div>
+      </div>
+
+      <!-- PROYECCIÓN -->
+      <div class="section" id="sec-proyeccion">
+        <div class="dash-grid">
+          <div class="dash-card full">
+            <div class="card-header"><span class="card-title">Proyección basada en pedidos reales</span></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">PEDIDOS PENDIENTES</div><div style="font-size:28px;font-weight:800;color:var(--amber)" id="proy-total-pend">0</div></div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">SE ENTREGARÁN</div><div style="font-size:28px;font-weight:800;color:var(--green)" id="proy-entregaran">0</div></div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">NO SE ENTREGARÁN</div><div style="font-size:28px;font-weight:800;color:var(--red)" id="proy-no-entregaran">0</div></div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">COSTO DEVOLUCIONES</div><div style="font-size:22px;font-weight:800;color:var(--red)" id="proy-costo-dev">$0</div></div>
+            </div>
+            <div class="total-neto-grid" style="margin-bottom:20px">
+              <div class="total-neto-card"><div class="total-neto-label">Utilidad real</div><div class="total-neto-val" style="color:var(--green)" id="proy-util-real">$0</div></div>
+              <div class="total-neto-op">+</div>
+              <div class="total-neto-card"><div class="total-neto-label">Utilidad proyectada</div><div class="total-neto-val" style="color:var(--amber)" id="proy-util-proy">$0</div></div>
+              <div class="total-neto-op">=</div>
+              <div class="total-neto-card"><div class="total-neto-label">Total estimado</div><div class="total-neto-val" style="color:var(--purple)" id="proy-util-total">$0</div></div>
+            </div>
+            <div style="height:260px"><canvas id="chart-proyeccion"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASHFLOW -->
+      <div class="section" id="sec-cashflow">
+        <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px">Flujo de caja</h2>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px">
+          <div class="kpi-card green"><div class="kpi-label">Cobrado confirmado</div><div class="kpi-value" id="cf-cobrado" style="font-size:18px">$0</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Pendientes</div><div class="kpi-value" id="cf-por-cobrar" style="font-size:18px">$0</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Total salidas</div><div class="kpi-value" id="cf-salidas" style="font-size:18px">$0</div></div>
+          <div class="kpi-card purple"><div class="kpi-label">Pérdida devoluciones</div><div class="kpi-value" id="cf-devoluciones" style="font-size:18px">$0</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Caja disponible HOY</div><div class="kpi-value" id="cf-disponible" style="font-size:18px">$0</div></div>
+        </div>
+        <div style="height:220px;margin-bottom:16px"><canvas id="chart-cashflow"></canvas></div>
+        <div id="cf-recomendacion" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px"></div>
+      </div>
+
+      <!-- IA -->
+      <div class="section" id="sec-ia">
+        <div style="max-width:780px;margin:0 auto">
+          <div style="margin-bottom:20px;padding:20px;background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(6,182,212,0.08));border:1px solid rgba(139,92,246,0.25);border-radius:var(--radius)">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--purple),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🤖</div>
+              <div><div style="font-size:15px;font-weight:700;color:var(--text)">IA Dropflow</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">Analiza tus datos en tiempo real · Powered by Claude</div></div>
+            </div>
+          </div>
+          <div id="ia-chat" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+            <div id="ia-mensajes" style="height:420px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <div class="ia-msg">
+                <div class="ia-avatar">🤖</div>
+                <div class="ia-burbuja"><p>Hola 👋 Soy la IA de Dropflow. Importa tus datos de Dropi y Meta Ads, luego pregúntame lo que quieras sobre tu negocio.</p></div>
+              </div>
+            </div>
+            <div style="border-top:1px solid var(--border);padding:16px;display:flex;gap:10px;align-items:flex-end">
+              <textarea id="ia-input" placeholder="Pregúntame sobre tus datos..." style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:10px 14px;font-family:var(--font-display);font-size:13px;color:var(--text);outline:none;resize:none;height:44px;max-height:120px" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensajeIA();}"></textarea>
+              <button onclick="enviarMensajeIA()" style="width:44px;height:44px;background:linear-gradient(135deg,var(--purple),var(--cyan));border:none;border-radius:var(--radius2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           CONFIGURACIÓN — SECCIÓN COMPLETA Y CORRECTA
+           ══════════════════════════════════════════ -->
+      <div class="section" id="sec-config">
+        <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px">Configuración</h2>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
+
+          <!-- COLUMNA IZQUIERDA -->
+          <div style="display:flex;flex-direction:column;gap:14px">
+
+            <!-- PARÁMETROS OPERACIONALES -->
+            <div class="config-section" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);border-radius:var(--radius);padding:18px">
+              <div class="config-section-title" style="color:var(--amber);border-color:rgba(251,191,36,0.2)">⚙️ Parámetros operacionales</div>
+              <div class="config-row">
+                <div class="config-field">
+                  <div class="config-label">Tasa de entrega estimada (%)</div>
+                  <input class="config-input" id="param-tasa" type="number" value="75">
+                </div>
+                <div class="config-field">
+                  <div class="config-label">Umbral alerta margen (%)</div>
+                  <input class="config-input" id="param-umbral" type="number" value="10">
+                </div>
+              </div>
+              <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(251,191,36,0.15)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">🎯 Umbrales Meta Ads</div>
+                <div class="config-row">
+                  <div class="config-field"><div class="config-label">CPA máximo ($)</div><input class="config-input" id="param-cpa-max" type="number" value="4000"></div>
+                  <div class="config-field"><div class="config-label">CPC máximo ($)</div><input class="config-input" id="param-cpc-max" type="number" value="250"></div>
+                </div>
+                <div class="config-row">
+                  <div class="config-field"><div class="config-label">CPM máximo ($)</div><input class="config-input" id="param-cpm-max" type="number" value="4500"></div>
+                  <div class="config-field"><div class="config-label">CTR mínimo (%)</div><input class="config-input" id="param-ctr-min" type="number" value="1.5" step="0.1"></div>
+                </div>
+                <div class="config-row">
+                  <div class="config-field"><div class="config-label">ROAS mínimo (x)</div><input class="config-input" id="param-roas-min" type="number" value="2" step="0.1"></div>
+                  <div class="config-field"></div>
+                </div>
+              </div>
+              <button class="config-btn" onclick="saveParams()" style="width:100%;margin-top:12px;justify-content:center">💾 Guardar configuración</button>
+            </div>
+
+            <!-- APARIENCIA -->
+            <div class="config-section" style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.2);border-radius:var(--radius);padding:18px">
+              <div class="config-section-title" style="color:var(--purple);border-color:rgba(167,139,250,0.2)">🎨 Apariencia</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                <div>
+                  <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Modo de visualización</div>
+                  <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">Alterna entre modo nocturno y modo día</div>
+                </div>
+                <button onclick="toggleModo()" id="btn-modo" style="display:flex;align-items:center;gap:8px;padding:9px 18px;border-radius:var(--radius2);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--font-display);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">
+                  <span id="modo-icono">☀️</span><span id="modo-texto">Modo día</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- GESTIÓN USUARIOS (solo admin) -->
+            <div class="config-section" id="admin-section" style="display:none;background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.2);border-radius:var(--radius);padding:18px">
+              <div class="config-section-title" style="color:var(--blue2);border-color:rgba(96,165,250,0.2)">👥 Gestión de usuarios</div>
+              <div id="lista-usuarios" style="margin-bottom:16px"></div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:16px">
+                <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Crear nuevo usuario</div>
+                <div class="config-row">
+                  <div class="config-field"><div class="config-label">Nombre</div><input class="config-input" id="new-nombre" placeholder="Felipe Hernández"></div>
+                  <div class="config-field"><div class="config-label">Email</div><input class="config-input" id="new-email" type="email" placeholder="felipe@email.com"></div>
+                </div>
+                <div class="config-row">
+                  <div class="config-field"><div class="config-label">Contraseña</div><input class="config-input" id="new-pass" type="password" placeholder="min. 6 caracteres"></div>
+                  <div class="config-field">
+                    <div class="config-label">Rol</div>
+                    <select class="config-input" id="new-rol">
+                      <option value="viewer">Viewer (solo lectura)</option>
+                      <option value="admin">Admin (acceso total)</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="config-btn" onclick="crearUsuario()" style="width:100%;justify-content:center">Crear usuario</button>
+                <div id="admin-msg" style="display:none;margin-top:8px;font-family:var(--font-mono);font-size:11px;padding:8px 12px;border-radius:6px"></div>
+              </div>
+            </div>
+
+          </div><!-- fin columna izquierda -->
+
+          <!-- COLUMNA DERECHA -->
+          <div style="display:flex;flex-direction:column;gap:14px">
+
+            <!-- SHOPIFY -->
+            <div class="config-section" style="background:rgba(0,210,150,0.06);border:1px solid rgba(0,210,150,0.25);border-radius:var(--radius);padding:18px">
+              <div class="config-section-title" style="color:#00d296;border-color:rgba(0,210,150,0.2)">🛍️ Shopify — Conexión en vivo</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px;background:rgba(0,210,150,0.08);border-radius:var(--radius2);border:1px solid rgba(0,210,150,0.2)">
+                <span style="font-size:22px">🟢</span>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:#00d296">Sincronización de pedidos en tiempo real</div>
+                  <div style="font-family:var(--font-mono);font-size:10px;color:var(--text2);margin-top:2px">Conecta tu tienda Shopify para importar pedidos automáticamente</div>
+                </div>
+              </div>
+              <div class="config-row" style="grid-template-columns:1fr">
+                <div class="config-field">
+                  <div class="config-label">Shopify Store URL</div>
+                  <input class="config-input" id="shopify-url" placeholder="dailyshop-cl.myshopify.com" style="border-color:rgba(0,210,150,0.3)">
+                </div>
+              </div>
+              <div class="config-row">
+                <div class="config-field">
+                  <div class="config-label">Client ID</div>
+                  <input class="config-input" id="shopify-client-id" placeholder="Desde Dev Dashboard" style="border-color:rgba(0,210,150,0.3)">
+                </div>
+                <div class="config-field">
+                  <div class="config-label">Client Secret</div>
+                  <input class="config-input" id="shopify-client-secret" type="password" placeholder="Secreto del cliente" style="border-color:rgba(0,210,150,0.3)">
+                </div>
+              </div>
+              <div class="config-row" style="grid-template-columns:1fr auto;align-items:end">
+                <div class="config-field">
+                  <div class="config-label">Flete promedio por pedido ($)</div>
+                  <input class="config-input" id="shopify-flete" type="number" placeholder="Ej: 3500" style="border-color:rgba(0,210,150,0.3)">
+                </div>
+                <button class="config-btn" onclick="conectarShopify()" style="background:rgba(0,210,150,0.15);border-color:rgba(0,210,150,0.3);color:#00d296">Conectar</button>
+              </div>
+              <div id="shopify-status" style="display:none;font-family:var(--font-mono);font-size:11px;padding:10px 14px;border-radius:6px;margin-top:10px"></div>
+              <div id="shopify-info" style="display:none;background:var(--bg3);border:1px solid rgba(0,210,150,0.2);border-radius:var(--radius2);padding:12px;margin-top:10px">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#00d296;margin-bottom:6px">CONECTADO ✅</div>
+                <div id="shopify-detalles" style="font-size:12px;color:var(--text2)"></div>
+                <button onclick="sincronizarShopify()" style="margin-top:10px;width:100%;padding:8px;background:rgba(0,210,150,0.15);border:1px solid rgba(0,210,150,0.3);color:#00d296;font-family:var(--font-display);font-size:12px;font-weight:600;border-radius:var(--radius2);cursor:pointer">🔄 Sincronizar pedidos ahora</button>
+              </div>
+            </div>
+
+            <!-- DROPI -->
+            <div class="config-section" style="background:rgba(255,120,50,0.06);border:1px solid rgba(255,120,50,0.25);border-radius:var(--radius);padding:18px">
+              <div class="config-section-title" style="color:#ff7832;border-color:rgba(255,120,50,0.2)">📦 Dropi — Importar datos</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px;background:rgba(255,120,50,0.08);border-radius:var(--radius2);border:1px solid rgba(255,120,50,0.2)">
+                <span style="font-size:22px">🔴</span>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:#ff7832">Importar Excel de Dropi</div>
+                  <div style="font-family:var(--font-mono);font-size:10px;color:var(--text2);margin-top:2px">Dropi → Mis Pedidos → Exportar Excel</div>
+                </div>
+              </div>
+              <!-- Dropi en vivo -->
+              <div style="margin-bottom:14px">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#ff7832;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">🔌 Conexión en vivo (opcional)</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+                  <div>
+                    <div class="config-label" style="margin-bottom:6px">Email de Dropi</div>
+                    <input class="config-input" id="dropi-email" type="email" placeholder="tu@email.com" style="border-color:rgba(255,120,50,0.3)">
+                  </div>
+                  <div>
+                    <div class="config-label" style="margin-bottom:6px">Contraseña de Dropi</div>
+                    <input class="config-input" id="dropi-password" type="password" placeholder="tu contraseña" style="border-color:rgba(255,120,50,0.3)">
+                  </div>
+                </div>
+                <button class="config-btn" onclick="conectarDropiVivo()" style="width:100%;justify-content:center;background:rgba(255,120,50,0.15);border-color:rgba(255,120,50,0.3);color:#ff7832">🔌 Conectar Dropi en vivo</button>
+                <div id="dropi-vivo-status" style="display:none;font-family:var(--font-mono);font-size:11px;padding:10px 14px;border-radius:6px;margin-top:8px"></div>
+              </div>
+              <!-- Importar Excel -->
+              <div style="border-top:1px solid rgba(255,120,50,0.15);padding-top:12px">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Importar Excel</div>
+                <div class="drop-zone" id="dz-dropi" onclick="document.getElementById('input-dropi').click()" style="border-color:rgba(255,120,50,0.3);background:rgba(255,120,50,0.04);padding:16px">
+                  <div class="drop-zone-icon" style="font-size:20px;margin-bottom:4px">📊</div>
+                  <div class="drop-zone-title" style="font-size:12px">Arrastra el Excel de Dropi aquí</div>
+                  <div class="drop-zone-sub">Dropi → Mis Pedidos → Exportar Excel · .xlsx</div>
+                </div>
+                <input type="file" id="input-dropi" accept=".xlsx,.xls" style="display:none" onchange="handleDropiFile(this.files[0])">
+                <div class="config-status" id="dropi-status"></div>
+              </div>
+            </div>
+
+            <!-- META ADS CONFIG -->
+            <div class="config-section" style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.25);border-radius:var(--radius);padding:18px">
+              <div class="config-section-title" style="color:var(--blue2);border-color:rgba(59,130,246,0.2)">📈 Meta Ads — Conexión en vivo</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px;background:rgba(59,130,246,0.08);border-radius:var(--radius2);border:1px solid rgba(59,130,246,0.2)">
+                <span style="font-size:22px">🔴</span>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--blue2)">EN VIVO · Actualización automática cada 15 min</div>
+                  <div style="font-family:var(--font-mono);font-size:10px;color:var(--text2);margin-top:2px">Campañas, gastos y métricas en tiempo real</div>
+                </div>
+              </div>
+              <div style="margin-bottom:12px">
+                <div class="config-label" style="margin-bottom:6px">1. Access Token de Meta</div>
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px;line-height:1.6">
+                  <span style="color:var(--blue2)">developers.facebook.com → Graph API Explorer → Generate Access Token</span><br>
+                  Permisos: <span style="color:var(--amber)">ads_read, ads_management</span>
+                </div>
+                <input class="config-input" id="meta-token-vivo" type="password" placeholder="EAAMxps..." style="border-color:rgba(59,130,246,0.3)">
+              </div>
+              <div style="margin-bottom:14px">
+                <div class="config-label" style="margin-bottom:6px">2. Ad Account ID</div>
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">Formato: <span style="color:var(--amber)">act_123456789</span></div>
+                <div style="display:flex;gap:8px">
+                  <input class="config-input" id="meta-account-vivo" placeholder="act_1234567890" style="border-color:rgba(59,130,246,0.3)">
+                  <button class="config-btn" onclick="conectarMetaVivo()" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3);color:var(--blue2)">Conectar</button>
+                </div>
+              </div>
+              <div id="meta-vivo-status" style="display:none;font-family:var(--font-mono);font-size:11px;padding:10px 14px;border-radius:6px;margin-bottom:12px"></div>
+              <div id="meta-vivo-info" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:12px;margin-bottom:12px">
+                <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:6px">ESTADO DE CONEXIÓN</div>
+                <div id="meta-vivo-detalles" style="font-size:12px;color:var(--text2)"></div>
+              </div>
+              <!-- CSV Manual -->
+              <div style="border-top:1px solid rgba(59,130,246,0.15);padding-top:12px">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">O importar manualmente (CSV)</div>
+                <div class="drop-zone" id="dz-meta" onclick="document.getElementById('input-meta').click()" style="padding:14px;border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.04)">
+                  <div class="drop-zone-icon" style="font-size:20px;margin-bottom:4px">📁</div>
+                  <div class="drop-zone-title" style="font-size:12px">Arrastra CSV de Meta Ads</div>
+                  <div class="drop-zone-sub">exportación manual desde Ads Manager</div>
+                </div>
+                <input type="file" id="input-meta" accept=".csv,.xlsx" style="display:none" onchange="handleMetaFile(this.files[0])">
+                <div class="config-status" id="meta-status"></div>
+              </div>
+            </div>
+
+          </div><!-- fin columna derecha -->
+
+        </div><!-- fin grid 2 columnas -->
+
+      </div><!-- fin sec-config -->
+
+    </div><!-- fin .content -->
+  </div><!-- fin .main -->
+</div><!-- fin .app-layout -->
+
+<!-- DROP OVERLAY -->
+<div id="drop-overlay" style="display:none;position:fixed;inset:0;background:rgba(255,157,0,0.05);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center">
+  <div class="drop-box"><div style="font-size:40px;margin-bottom:12px">📂</div><div style="font-size:16px;font-weight:700;color:var(--gold)">Suelta el archivo aquí</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">Excel de Dropi (.xlsx) o CSV de Meta Ads (.csv)</div></div>
+</div>
+
+<!-- INSIGHTS PANEL -->
+<div id="insights-panel" style="position:fixed;top:0;right:-420px;width:400px;height:100vh;background:var(--bg1);border-left:1px solid var(--border2);z-index:8000;display:flex;flex-direction:column;transition:right 0.3s cubic-bezier(0.16,1,0.3,1)">
+  <div style="padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:15px;font-weight:700;color:var(--text)">💡 Historial de Insights</div>
+    <button onclick="cerrarPanelInsights()" style="background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer">×</button>
+  </div>
+  <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap">
+    <button onclick="filtrarInsights('todos')" class="filter-btn active" id="ins-f-todos">Todos</button>
+    <button onclick="filtrarInsights('critica')" class="filter-btn" id="ins-f-critica">🔴 Críticas</button>
+    <button onclick="filtrarInsights('optimizacion')" class="filter-btn" id="ins-f-opt">🟡 Opt.</button>
+    <button onclick="filtrarInsights('escala')" class="filter-btn" id="ins-f-esc">🟢 Escala</button>
+    <button onclick="limpiarInsights()" style="margin-left:auto;background:none;border:none;color:var(--text3);font-family:var(--font-mono);font-size:10px;cursor:pointer">Limpiar</button>
+  </div>
+  <div id="insights-lista" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
+    <div class="empty-state">No hay insights guardados todavía.</div>
+  </div>
+</div>
+<div id="insights-overlay" onclick="cerrarPanelInsights()" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:7999;display:none;backdrop-filter:blur(2px)"></div>
+
+<!-- FLOAT BTN IA -->
+<button class="btn-ia-flotante" onclick="toggleIAPopup()" title="IA Dropflow">🤖</button>
+
+<!-- IA POPUP -->
+<div id="ia-popup" style="display:none;position:fixed;bottom:92px;right:28px;width:360px;background:var(--bg2);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius);box-shadow:0 8px 40px rgba(0,0,0,0.6);z-index:8000;overflow:hidden;flex-direction:column">
+  <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(6,182,212,0.12));border-bottom:1px solid rgba(139,92,246,0.25);display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--purple),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px">🤖</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">J.A.R.V.I.S</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--cyan)">● SISTEMA ACTIVO</div>
+      </div>
+    </div>
+    <button onclick="toggleIAPopup()" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer">×</button>
+  </div>
+  <div id="ia-popup-mensajes" style="height:280px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px"></div>
+  <div style="border-top:1px solid var(--border);padding:10px;display:flex;gap:8px">
+    <input id="ia-popup-input" placeholder="Pregunta sobre tus datos..." style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:8px 12px;font-family:var(--font-display);font-size:12px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')enviarIAPopup()">
+    <button onclick="enviarIAPopup()" style="width:36px;height:36px;background:linear-gradient(135deg,var(--purple),var(--cyan));border:none;border-radius:var(--radius2);cursor:pointer;font-size:16px">↑</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ══ AUTH ══════════════════════════════════════════════════════════════════════
+let TOKEN = localStorage.getItem('df_token') || null;
+let USUARIO = JSON.parse(localStorage.getItem('df_usuario') || 'null');
+
+// ══ ESTADO GLOBAL ════════════════════════════════════════════════════════════
+const S = {
+  pedidos:[], meta:null,
+  filtroDesde:'', filtroHasta:'', filtroTabla:'todos',
+  tasaEntrega:75, umbralMargen:10,
+  cpaMax:4000, cpcMax:250, cpmMax:4500, ctrMin:1.5, roasMin:2,
+  usuario: USUARIO
+};
+
+// ══ UTILIDADES ════════════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const tx = (id, v) => { const e=$(id); if(e) e.textContent=v; };
+const fmtCLP = n => '$'+Math.round(n||0).toLocaleString('es-CL');
+const fmtPct = n => (+(n||0)).toFixed(1)+'%';
+const TT = {backgroundColor:'#111827',borderColor:'rgba(255,255,255,0.08)',borderWidth:1,
+  titleColor:'#f0f4ff',bodyColor:'#8899bb',padding:12,cornerRadius:8,
+  titleFont:{family:'Outfit',size:12,weight:'600'},bodyFont:{family:'JetBrains Mono',size:11}};
+
+function toISOfecha(f) {
+  if(!f) return '';
+  const s = String(f).trim();
+  if(/^\d{2}-\d{2}-\d{4}$/.test(s)) { const [d,m,y]=s.split('-'); return y+'-'+m+'-'+d; }
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0,10);
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)) { const [d,m,y]=s.split('/'); return y+'-'+m+'-'+d; }
+  return s;
+}
+
+function filtF(pedidos) {
+  const de=S.filtroDesde, ha=S.filtroHasta;
+  if(!de&&!ha) return pedidos;
+  return pedidos.filter(p => {
+    const iso = toISOfecha(p.fecha);
+    if(!iso) return true;
+    if(de && iso < de) return false;
+    if(ha && iso > ha) return false;
+    return true;
+  });
+}
+
+function semaforo(pct) {
+  if(pct>=20) return `<span class="semaforo verde">▲ ${pct.toFixed(1)}%</span>`;
+  if(pct>=10) return `<span class="semaforo amarillo">● ${pct.toFixed(1)}%</span>`;
+  return `<span class="semaforo rojo">▼ ${pct.toFixed(1)}%</span>`;
+}
+
+function toast(msg, err=false) {
+  let t = document.querySelector('.df-toast');
+  if(!t) { t=document.createElement('div'); t.className='df-toast'; document.body.appendChild(t); }
+  t.textContent=msg; t.className='df-toast show '+(err?'err':'ok');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ══ ESTADOS ══════════════════════════════════════════════════════════════════
+const EM = {
+  entregado:['ENTREGADO'],
+  transito:['EN REPARTO','EN_REPARTO','EN TRANSITO','EN TRÁNSITO','GUIA_GENERADA','EN ESPERA EN OFICINA','NOVEDAD','EN DESTINO'],
+  pendiente:['PENDIENTE CONFIRMACION'],
+  devuelto:['DEVOLUCION','EN DEVOLUCIÓN','EN DEVOLUCION'],
+  cancelado:['CANCELADO']
+};
+function clsEst(r) {
+  const s=(r||'').toUpperCase().trim();
+  for(const[t,l] of Object.entries(EM)) if(l.includes(s)) return t;
+  return 'otro';
+}
+
+// ══ PARSER DROPI ═════════════════════════════════════════════════════════════
+function parseFila(f) {
+  const v=+f['VALOR DE COMPRA EN PRODUCTOS']||0, p=+f['TOTAL EN PRECIOS DE PROVEEDOR']||0;
+  const fl=+f['PRECIO FLETE']||0, c=+f['COMISION']||0, df=+f['COSTO DEVOLUCION FLETE']||0;
+  let u=parseFloat(f['GANANCIA']); if(isNaN(u)) u=v-p-fl-c-df;
+  const er=(f['ESTATUS']||'').trim();
+  const fechaNorm=toISOfecha(String(f['FECHA']||''));
+  return {id:String(f['ID']||''), fecha:fechaNorm, cliente:String(f['NOMBRE CLIENTE']||''),
+    ciudad:String(f['CIUDAD DESTINO']||''), producto:String(f['CATEGORÍAS']||f['TIENDA']||'Sin categoría'),
+    tienda:String(f['TIENDA']||''), estadoRaw:er, estado:clsEst(er),
+    venta:v, proveedor:p, flete:fl, comision:c, devFlete:df, utilidad:u, margen:v>0?(u/v)*100:0};
+}
+
+function importarDropi(file) {
+  return new Promise((res,rej) => {
+    const r=new FileReader();
+    r.onload=e => {
+      try {
+        const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+        const fs=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+        if(!fs.length) { rej(new Error('Archivo vacío')); return; }
+        if(!Object.keys(fs[0]).includes('ESTATUS')) { rej(new Error('No parece ser un Excel de Dropi')); return; }
+        res(fs.map(parseFila));
+      } catch(e) { rej(new Error('Error: '+e.message)); }
+    };
+    r.onerror=()=>rej(new Error('No se pudo leer'));
+    r.readAsArrayBuffer(file);
+  });
+}
+
+// ══ PARSER META ═══════════════════════════════════════════════════════════════
+function parsearCSV(texto) {
+  const lineas=texto.split('\n').filter(l=>l.trim());
+  const parsearLinea=l => {
+    const campos=[]; let actual=''; let dentroComillas=false;
+    for(let i=0;i<l.length;i++) {
+      const c=l[i];
+      if(c==='"') dentroComillas=!dentroComillas;
+      else if(c===','&&!dentroComillas) { campos.push(actual.trim()); actual=''; }
+      else actual+=c;
+    }
+    campos.push(actual.trim()); return campos;
+  };
+  const headers=parsearLinea(lineas[0]);
+  return lineas.slice(1).map(l => {
+    const vals=parsearLinea(l); const obj={};
+    headers.forEach((h,i)=>obj[h]=vals[i]||''); return obj;
+  });
+}
+
+function importarMeta(file) {
+  return new Promise((res,rej) => {
+    const r=new FileReader();
+    r.onload=e => {
+      try {
+        const filas=parsearCSV(e.target.result);
+        if(!filas.length) { rej(new Error('CSV vacío')); return; }
+        const n=v => { const p=parseFloat(String(v||'').replace(',','.')); return isNaN(p)?0:p; };
+        const ca=filas.map(f => ({
+          nombre:String(f['Nombre del anuncio']||'Sin nombre'),
+          estado:String(f['Entrega del anuncio']||'unknown'),
+          gasto:n(f['Importe gastado (CLP)']),
+          impresiones:n(f['Impresiones']),
+          clics:n(f['Clics únicos en el enlace']),
+          compras:n(f['Compras']),
+          roas:n(f['ROAS de compras']),
+          ctr:n(f['CTR único (porcentaje de clics en el enlace)']),
+          cpc:n(f['CPC (costo por clic en el enlace) (CLP)']),
+          cpm:n(f['CPM (costo por mil impresiones) (CLP)']),
+          frecuencia:n(f['Frecuencia']),
+        }));
+        const sm=k=>ca.reduce((s,c)=>s+(c[k]||0),0);
+        const gt=sm('gasto'),im=sm('impresiones'),cl=sm('clics'),co=sm('compras');
+        res({campanas:ca, gastoTotal:gt, impresiones:im, clics:cl, compras:co,
+          ctr:im>0?(cl/im)*100:0, cpa:co>0?gt/co:0});
+      } catch(e) { rej(new Error('Error CSV: '+e.message)); }
+    };
+    r.onerror=()=>rej(new Error('No se pudo leer'));
+    r.readAsText(file,'UTF-8');
+  });
+}
+
+// ══ CÁLCULO CENTRAL ══════════════════════════════════════════════════════════
+function calcR(pedidos) {
+  const tasa=S.tasaEntrega/100;
+  const fil=x=>pedidos.filter(p=>p.estado===x);
+  const suma=(a,k)=>a.reduce((s,p)=>s+(p[k]||0),0);
+  const en=fil('entregado'),tr=fil('transito'),pe=fil('pendiente'),de=fil('devuelto'),ca=fil('cancelado');
+  const camino=[...tr,...pe];
+  const ing=suma(en,'venta'), cp=suma(en,'proveedor'), cf=suma(en,'flete'), cc=suma(en,'comision');
+  const adsGasto=S.meta?S.meta.gastoTotal:0;
+  const utilidadReal=ing-cp-cf-cc-adsGasto;
+  const margenReal=ing>0?(utilidadReal/ing)*100:0;
+  const costosTotal=cp+cf+cc+adsGasto;
+  const ventaPend=suma(camino,'venta'), provPend=suma(camino,'proveedor');
+  const fletePend=suma(camino,'flete'), comPend=suma(camino,'comision');
+  const proyUtilidad=(ventaPend-provPend-fletePend-comPend)*tasa;
+  const utilidadTotal=utilidadReal+proyUtilidad;
+  const cg=en.length+tr.length+de.length+ca.length;
+  const tasaReal=cg>0?(en.length/cg)*100:0;
+  const cpaUnit=S.meta&&pedidos.length>0?adsGasto/pedidos.length:0;
+  return {total:pedidos.length, entregados:en.length, enTransito:tr.length, pendientes:pe.length,
+    devueltos:de.length, cancelados:ca.length, tasaReal, ingresosReales:ing,
+    costoProveedor:cp, costoFlete:cf, costoComision:cc, adsGasto, costosTotal,
+    utilidadReal, margenReal, proyUtilidad, utilidadTotal, camino, cpaUnit,
+    listas:{entregados:en,transito:tr,pendientes:pe,devueltos:de,cancelados:ca,todos:pedidos}};
+}
+
+// ══ API ═══════════════════════════════════════════════════════════════════════
+async function apiFetch(url, opts={}) {
+  const headers={'Content-Type':'application/json','Authorization':'Bearer '+TOKEN,...(opts.headers||{})};
+  const r=await fetch(url,{...opts,headers});
+  if(r.status===401) { cerrarSesion(); throw new Error('Sesión expirada'); }
+  return r;
+}
+
+async function cargarDatosServidor() {
+  try {
+    const r=await apiFetch('/api/datos'); const data=await r.json();
+    if(data.pedidos?.length) S.pedidos=data.pedidos.map(p=>({...p,fecha:toISOfecha(p.fecha)||p.fecha}));
+    if(data.meta) S.meta=data.meta;
+    if(data.config) {
+      S.tasaEntrega=data.config.tasaEntrega||75; S.umbralMargen=data.config.umbralMargen||10;
+      S.cpaMax=data.config.cpaMax||4000; S.cpcMax=data.config.cpcMax||250;
+      S.cpmMax=data.config.cpmMax||4500; S.ctrMin=data.config.ctrMin||1.5; S.roasMin=data.config.roasMin||2;
+    }
+  } catch(e) { console.warn('No se pudieron cargar datos:', e.message); }
+}
+
+async function guardarDatosServidor() {
+  try {
+    await apiFetch('/api/datos',{method:'POST',body:JSON.stringify({
+      pedidos:S.pedidos, meta:S.meta,
+      config:{tasaEntrega:S.tasaEntrega,umbralMargen:S.umbralMargen,
+        cpaMax:S.cpaMax,cpcMax:S.cpcMax,cpmMax:S.cpmMax,ctrMin:S.ctrMin,roasMin:S.roasMin}
+    })});
+  } catch(e) { console.warn('No se pudieron guardar datos:', e.message); }
+}
+
+// ══ AUTH FLOWS ════════════════════════════════════════════════════════════════
+async function hacerLogin() {
+  const email=($('login-email')?.value||'').trim();
+  const pass=$('login-pass')?.value||'';
+  const btn=$('login-btn');
+  if(!email||!pass) { mostrarLoginError('Completa todos los campos'); return; }
+  btn.textContent='Ingresando...'; btn.disabled=true;
+  try {
+    const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const data=await r.json();
+    if(!r.ok) { mostrarLoginError(data.error||'Error al ingresar'); return; }
+    TOKEN=data.token; USUARIO=data.usuario; S.usuario=data.usuario;
+    localStorage.setItem('df_token',TOKEN);
+    localStorage.setItem('df_usuario',JSON.stringify(USUARIO));
+    await cargarDatosServidor();
+    mostrarApp();
+  } catch(e) { mostrarLoginError('Error de conexión. Intenta de nuevo.'); }
+  finally { btn.textContent='Ingresar'; btn.disabled=false; }
+}
+
+function mostrarLoginError(msg) {
+  const e=$('login-error'); if(e){e.style.display='block';e.textContent=msg;}
+}
+
+function cerrarSesion() {
+  TOKEN=null; USUARIO=null;
+  localStorage.removeItem('df_token'); localStorage.removeItem('df_usuario');
+  S.pedidos=[]; S.meta=null;
+  $('login-screen').style.display='flex';
+  $('login-email').value=''; $('login-pass').value=''; $('login-error').style.display='none';
+  document.querySelector('.sidebar').style.display='none';
+  document.querySelector('.main').style.display='none';
+}
+
+let _planSeleccionado='free';
+function abrirRegistro(){ $('modal-registro').style.display='block'; }
+function cerrarRegistro(){ $('modal-registro').style.display='none'; $('form-registro').style.display='none'; }
+function iniciarRegistro(plan){ _planSeleccionado=plan; const labels={free:'Freemium',pro:'Pro — $9.990/mes',business:'Business — $19.990/mes'}; const el=$('plan-seleccionado'); if(el)el.textContent=labels[plan]||plan; $('form-registro').style.display='block'; }
+function cerrarFormRegistro(){ $('form-registro').style.display='none'; }
+async function enviarRegistro(){
+  const nombre=($('reg-nombre')?.value||'').trim(), email=($('reg-email')?.value||'').trim();
+  const pass=$('reg-pass')?.value, pass2=$('reg-pass2')?.value;
+  if(!nombre||!email||!pass){mostrarRegError('Completa todos los campos');return;}
+  if(pass!==pass2){mostrarRegError('Las contraseñas no coinciden');return;}
+  if(pass.length<6){mostrarRegError('Mínimo 6 caracteres');return;}
+  try {
+    const r=await fetch('/api/registro-publico',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,email,password:pass,plan:_planSeleccionado})});
+    const data=await r.json();
+    if(!r.ok){mostrarRegError(data.error||'Error al crear cuenta');return;}
+    const r2=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const data2=await r2.json();
+    if(r2.ok){TOKEN=data2.token;USUARIO=data2.usuario;localStorage.setItem('df_token',TOKEN);localStorage.setItem('df_usuario',JSON.stringify(USUARIO));cerrarRegistro();await cargarDatosServidor();mostrarApp();toast('✓ Cuenta creada — bienvenido!');}
+  } catch(e){mostrarRegError('Error de conexión');}
+}
+function mostrarRegError(msg){const el=$('reg-error');if(el){el.style.display='block';el.textContent=msg;}}
+
+async function pagarConMP(plan){
+  if(!TOKEN){toast('Primero crea tu cuenta',true);abrirRegistro();return;}
+  toast('Próximamente — escríbenos a hola@dropflow.cl');
+}
+
+function mostrarApp() {
+  $('login-screen').style.display='none';
+  document.querySelector('.sidebar').style.display='flex';
+  document.querySelector('.main').style.display='flex';
+  aplicarModoGuardado();
+  const hoy=new Date(), fmt=d=>d.toISOString().split('T')[0];
+  S.filtroDesde=fmt(new Date(hoy.getFullYear(),hoy.getMonth(),1));
+  S.filtroHasta=fmt(hoy);
+  tx('user-nombre',USUARIO?.nombre||'');
+  tx('user-email',USUARIO?.email||'');
+  const adm=$('admin-section');
+  if(adm) adm.style.display=USUARIO?.rol==='admin'?'block':'none';
+  if(USUARIO?.rol==='admin') cargarListaUsuarios();
+  // Rellenar config
+  setTimeout(()=>{
+    if($('param-tasa'))$('param-tasa').value=S.tasaEntrega;
+    if($('param-umbral'))$('param-umbral').value=S.umbralMargen;
+    if($('param-cpa-max'))$('param-cpa-max').value=S.cpaMax;
+    if($('param-cpc-max'))$('param-cpc-max').value=S.cpcMax;
+    if($('param-cpm-max'))$('param-cpm-max').value=S.cpmMax;
+    if($('param-ctr-min'))$('param-ctr-min').value=S.ctrMin;
+    if($('param-roas-min'))$('param-roas-min').value=S.roasMin;
+    if(S.pedidos.length){renderDashboard();renderPedidos();}
+    if(S.meta) renderMeta();
+  },200);
+  setTimeout(intentarReconectarMeta,2000);
+  actualizarBadgeInsights();
+}
+
+// ══ NAVEGACIÓN ════════════════════════════════════════════════════════════════
+function navegarA(sec) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  const s=$('sec-'+sec); if(s) s.classList.add('active');
+  const b=document.querySelector(`[data-nav="${sec}"]`); if(b) b.classList.add('active');
+  const t={dashboard:'Contabilidad en vivo',pedidos:'Pedidos',graficos:'Gráficos',
+    meta:'Meta Ads',comparacion:'Comparación',proyeccion:'Proyección',
+    cashflow:'Flujo de Caja',ia:'IA Dropflow',config:'Configuración'};
+  tx('page-title',t[sec]||sec);
+  if(sec==='graficos'&&S.pedidos.length) setTimeout(renderCharts,100);
+  if(sec==='proyeccion'&&S.pedidos.length) setTimeout(renderProyeccion,100);
+  if(sec==='meta'&&S.meta) setTimeout(renderMeta,100);
+  if(sec==='comparacion') setTimeout(()=>compararPeriodo('semana'),100);
+  if(sec==='dashboard'&&S.pedidos.length) setTimeout(renderDashboard,100);
+}
+
+// ══ PERÍODO ═══════════════════════════════════════════════════════════════════
+let _datePickerOpen=false;
+function toggleDatePicker(){
+  const m=$('date-picker-menu'); if(!m) return;
+  _datePickerOpen=!_datePickerOpen;
+  m.style.display=_datePickerOpen?'block':'none';
+}
+document.addEventListener('click',e=>{
+  if(_datePickerOpen&&!e.target.closest('#date-picker-menu')&&!e.target.closest('#btn-periodo')){
+    _datePickerOpen=false; const m=$('date-picker-menu'); if(m) m.style.display='none';
+  }
+});
+function setPeriodoLabel(label){ const e=$('periodo-label'); if(e) e.textContent=label; }
+function changePeriod(v) {
+  const hoy=new Date(), fmt=d=>d.toISOString().split('T')[0];
+  if(v==='hoy') S.filtroDesde=S.filtroHasta=fmt(hoy);
+  else if(v==='semana') { const l=new Date(hoy);l.setDate(hoy.getDate()-hoy.getDay()+1);S.filtroDesde=fmt(l);S.filtroHasta=fmt(hoy); }
+  else if(v==='mes') { S.filtroDesde=fmt(new Date(hoy.getFullYear(),hoy.getMonth(),1));S.filtroHasta=fmt(hoy); }
+  const labels={hoy:'Hoy',semana:'Esta semana',mes:'Este mes'};
+  setPeriodoLabel(labels[v]||v);
+  ['hoy','semana','mes'].forEach(id=>{ const b=$('qb-'+id); if(b)b.classList.toggle('active',id===v); });
+  _datePickerOpen=false; const m=$('date-picker-menu'); if(m) m.style.display='none';
+  aplicarPeriodoGlobal();
+}
+function aplicarFechaPersonalizada(){
+  const desde=$('fecha-desde')?.value, hasta=$('fecha-hasta')?.value;
+  if(!desde||!hasta){toast('Selecciona ambas fechas',true);return;}
+  S.filtroDesde=desde; S.filtroHasta=hasta;
+  const fmt=d=>d.split('-').reverse().join('/');
+  setPeriodoLabel(fmt(desde)+' → '+fmt(hasta));
+  _datePickerOpen=false; const m=$('date-picker-menu'); if(m) m.style.display='none';
+  aplicarPeriodoGlobal();
+}
+function aplicarPeriodoGlobal(){
+  renderDashboard(); renderPedidos();
+  if($('sec-graficos')?.classList.contains('active')) renderCharts();
+  if($('sec-proyeccion')?.classList.contains('active')) renderProyeccion();
+  if(S.meta) renderMeta();
+}
+
+// ══ HANDLERS ARCHIVOS ═════════════════════════════════════════════════════════
+function showStatus(id,msg,ok){
+  const e=$(id); if(!e) return;
+  e.style.display='block';
+  e.style.background=ok?'var(--green-bg)':'var(--red-bg)';
+  e.style.color=ok?'var(--green)':'var(--red)';
+  e.textContent=msg;
+}
+
+async function handleDropiFile(file){
+  if(!file) return;
+  const dz=$('dz-dropi');
+  if(dz) dz.innerHTML='<div class="drop-zone-icon">⏳</div><div class="drop-zone-title">Procesando...</div>';
+  try {
+    const raw=await importarDropi(file);
+    S.pedidos=raw.map(p=>({...p,fecha:toISOfecha(p.fecha)||p.fecha}));
+    try { await guardarDatosServidor(); } catch(e){}
+    showStatus('dropi-status',`✓ ${S.pedidos.length} pedidos importados`,true);
+    toast(`✓ ${S.pedidos.length} pedidos cargados`);
+    const dot=$('sync-dot'); if(dot) dot.className='sync-dot live';
+    tx('sync-label','Datos cargados');
+    renderDashboard(); renderPedidos();
+  } catch(e) {
+    showStatus('dropi-status','❌ '+e.message,false);
+    toast('❌ '+e.message,true);
+  } finally {
+    if(dz) dz.innerHTML='<div class="drop-zone-icon">📊</div><div class="drop-zone-title">Arrastra el Excel de Dropi aquí</div><div class="drop-zone-sub">o haz clic · .xlsx</div>';
+  }
+}
+
+async function handleMetaFile(file){
+  if(!file) return;
+  try {
+    S.meta=await importarMeta(file);
+    try { guardarDatosServidor(); } catch(e){}
+    showStatus('meta-status',`✓ ${S.meta.campanas.length} anuncios | Gasto: ${fmtCLP(S.meta.gastoTotal)}`,true);
+    toast(`✓ Meta Ads: ${fmtCLP(S.meta.gastoTotal)} gasto importado`);
+    renderMeta(); renderDashboard(); renderPedidos();
+  } catch(e) {
+    showStatus('meta-status','❌ '+e.message,false);
+    toast('❌ '+e.message,true);
+  }
+}
+
+// ══ RENDER DASHBOARD ══════════════════════════════════════════════════════════
+function renderDashboard(){
+  const R=calcR(filtF(S.pedidos));
+  const pedF=filtF(S.pedidos);
+  const ventasTot=pedF.reduce((s,p)=>s+p.venta,0);
+
+  // KPIs top
+  tx('kpi-ventas-total',fmtCLP(ventasTot));
+  tx('kpi-ventas-total-sub',pedF.length+' pedidos totales');
+  tx('kpi-pedidos-n',pedF.length.toString());
+  tx('kpi-pedidos-sub',R.entregados+' entregados');
+  tx('kpi-gasto-ads',fmtCLP(R.adsGasto));
+  const roasVal=R.adsGasto>0&&R.ingresosReales>0?(R.ingresosReales/R.adsGasto):0;
+  tx('kpi-roas-val',roasVal>0?roasVal.toFixed(2)+'x':'—');
+  tx('kpi-roas-sub',roasVal>=(S.roasMin||2)?'✓ Óptimo':'⚠ Bajo mínimo');
+  const roasEl=$('kpi-roas-val');
+  if(roasEl) roasEl.style.color=roasVal>=(S.roasMin||2)?'var(--green)':'var(--red)';
+
+  // Bienvenida
+  const uN=$('db-welcome-name');
+  if(uN&&S.usuario) uN.textContent=S.usuario.nombre||S.usuario.email?.split('@')[0]||'Admin';
+  tx('db-cobrado',fmtCLP(R.ingresosReales));
+  tx('db-costos',fmtCLP(R.costosTotal));
+  tx('db-utilidad-real',fmtCLP(R.utilidadReal));
+  tx('db-proy',fmtCLP(R.proyUtilidad));
+
+  // Gauge
+  tx('gauge-ventas',fmtCLP(ventasTot));
+  tx('gauge-delta',fmtCLP(R.ingresosReales));
+  tx('gauge-delta-label','ventas cobradas');
+  const ventasPT=[...R.listas.pendientes,...R.listas.transito].reduce((s,p)=>s+p.venta,0);
+  const vBase=R.ingresosReales+(ventasPT*(S.tasaEntrega/100));
+  const marg=vBase>0?(R.utilidadTotal/vBase)*100:0;
+  tx('gauge-pct',fmtPct(marg));
+
+  // Estado pedidos
+  const sg=$('status-grid');
+  if(sg) sg.innerHTML=[
+    {l:'Entregados',v:R.entregados,c:'#00ffb3'},
+    {l:'En tránsito',v:R.enTransito,c:'#00f2ff'},
+    {l:'Pendientes',v:R.pendientes,c:'#ff9d00'},
+    {l:'Devueltos',v:R.devueltos,c:'#ff3355'},
+    {l:'Cancelados',v:R.cancelados,c:'#9a6030'},
+  ].map(s=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,157,0,0.06)">
+    <div style="display:flex;align-items:center;gap:6px">
+      <div style="width:6px;height:6px;border-radius:50%;background:${s.c};flex-shrink:0"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:${s.c}">${s.l}</div>
+    </div>
+    <div style="font-size:13px;font-weight:800;color:${s.c}">${s.v}</div>
+  </div>`).join('');
+
+  // Alertas
+  renderAlertas(R, pedF);
+
+  // Campañas
+  renderDashCampanas();
+
+  // Mini cashflow
+  const ventaEnt=pedF.filter(p=>p.estado==='entregado').reduce((s,p)=>s+p.venta,0);
+  const ventaTrans=pedF.filter(p=>p.estado==='transito'||p.estado==='pendiente').reduce((s,p)=>s+p.venta,0)*(S.tasaEntrega/100);
+  const cajaHoy=ventaEnt-pedF.filter(p=>p.estado==='entregado').reduce((s,p)=>s+p.proveedor+p.flete+p.comision,0)-(R.adsGasto||0);
+  tx('cf-mini-cobrado',fmtCLP(ventaEnt));
+  tx('cf-mini-porcobrar',fmtCLP(ventaTrans));
+  tx('cf-mini-salidas',fmtCLP(R.costosTotal));
+  tx('cf-mini-disponible',fmtCLP(cajaHoy));
+  const cfDisp=$('cf-mini-disponible'); if(cfDisp) cfDisp.style.color=cajaHoy>=0?'var(--green)':'var(--red)';
+}
+
+function renderDashCampanas(){
+  const ct=$('dash-campanas-tabla'); if(!ct||!S.meta?.campanas?.length) return;
+  const camps=S.meta.campanas.filter(c=>c.gasto>0).sort((a,b)=>b.gasto-a.gasto).slice(0,8);
+  ct.innerHTML=`<table><thead><tr><th>CAMPAÑA</th><th style="text-align:right">GASTO</th><th style="text-align:right">CPA</th><th style="text-align:right">COMP.</th><th style="text-align:center">ESTADO</th></tr></thead>
+  <tbody>${camps.map(c=>{
+    const cpa=c.compras>0?c.gasto/c.compras:0;
+    const cpaColor=cpa>0&&cpa<=(S.cpaMax||4000)?'var(--green)':'var(--red)';
+    const dot=c.estado==='active'?'#00ffb3':'#ff3355';
+    return `<tr><td style="font-size:11px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+      <span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${dot};margin-right:4px;vertical-align:middle"></span>${c.nombre.substring(0,22)}
+    </td><td style="text-align:right;font-family:var(--font-mono);font-size:10px;color:var(--red)">${fmtCLP(c.gasto)}</td>
+    <td style="text-align:right;font-family:var(--font-mono);font-size:10px;color:${cpaColor}">${cpa>0?fmtCLP(Math.round(cpa)):'—'}</td>
+    <td style="text-align:right;font-family:var(--font-mono);font-size:10px;color:var(--cyan)">${c.compras||0}</td>
+    <td style="text-align:center"><span style="font-family:var(--font-mono);font-size:8px;color:${dot};background:${dot}20;border:1px solid ${dot}40;border-radius:20px;padding:2px 8px">${c.estado==='active'?'Activa':'Pausada'}</span></td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+// ══ RENDER PEDIDOS ════════════════════════════════════════════════════════════
+function renderPedidos(){
+  const tbody=$('orders-table-body'); if(!tbody) return;
+  let pedidos=filtF(S.pedidos);
+  renderPedidosKPIs(pedidos);
+  if(S.filtroTabla!=='todos') pedidos=pedidos.filter(p=>p.estado===S.filtroTabla);
+  const busq=($('filter-producto')?.value||'').toLowerCase().trim();
+  if(busq) pedidos=pedidos.filter(p=>p.producto.toLowerCase().includes(busq)||p.tienda.toLowerCase().includes(busq));
+  tx('table-footer-info',pedidos.length+' pedidos');
+  if(!pedidos.length){tbody.innerHTML=`<tr><td colspan="10"><div class="empty-state">${S.pedidos.length?'Sin pedidos para este filtro':'Importa un Excel de Dropi'}</div></td></tr>`;return;}
+  const adsGasto=S.meta?S.meta.gastoTotal:0;
+  const cpaUnit=adsGasto>0&&pedidos.length>0?adsGasto/pedidos.length:0;
+  tbody.innerHTML=pedidos.map(p=>{
+    const utilConAds=cpaUnit>0?p.utilidad-cpaUnit:p.utilidad;
+    const margenReal=p.venta>0?(utilConAds/p.venta)*100:p.margen;
+    return `<tr>
+      <td style="font-family:var(--font-mono);font-size:11px">${p.id}</td>
+      <td>${p.fecha}</td>
+      <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis">${p.producto}</td>
+      <td><span class="badge ${p.estado}">${p.estadoRaw}</span></td>
+      <td style="text-align:right">${fmtCLP(p.venta)}</td>
+      <td style="text-align:right">${fmtCLP(p.proveedor)}</td>
+      <td style="text-align:right">${fmtCLP(p.flete)}</td>
+      <td style="text-align:right;color:${utilConAds>=0?'var(--green)':'var(--red)'}">${fmtCLP(utilConAds)}</td>
+      <td style="text-align:right">${semaforo(margenReal)}</td>
+      <td>${p.ciudad}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPedidosKPIs(pedidos){
+  const R=calcR(pedidos); const tot=R.total;
+  tx('pk-total',tot); tx('pk-total-sub',tot+' pedidos en el período');
+  tx('pk-entregados',R.entregados); tx('pk-entregados-pct',tot>0?fmtPct(R.entregados/tot*100)+' del total':'0%');
+  tx('pk-camino',R.enTransito+R.pendientes); tx('pk-camino-pct',tot>0?fmtPct((R.enTransito+R.pendientes)/tot*100)+' del total':'0%');
+  tx('pk-devueltos',R.devueltos+R.cancelados); tx('pk-devueltos-pct',tot>0?fmtPct((R.devueltos+R.cancelados)/tot*100)+' del total':'0%');
+}
+
+function setTableFilter(f){
+  S.filtroTabla=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.querySelector(`[data-filter="${f}"]`); if(btn) btn.classList.add('active');
+  renderPedidos();
+}
+
+// ══ RENDER META ═══════════════════════════════════════════════════════════════
+function renderMeta(){
+  const m=S.meta; if(!m) return;
+  tx('meta-gasto',fmtCLP(m.gastoTotal));
+  tx('meta-impresiones',Math.round(m.impresiones).toLocaleString('es-CL'));
+  tx('meta-clics',Math.round(m.clics).toLocaleString('es-CL'));
+  tx('meta-compras',Math.ceil(m.compras).toString());
+  tx('meta-ctr',fmtPct(m.ctr));
+  tx('meta-cpa',fmtCLP(m.cpa));
+  const roasAvg=m.campanas.filter(c=>c.roas>0).reduce((s,c,_,a)=>s+c.roas/a.length,0);
+  tx('meta-roas',roasAvg>0?roasAvg.toFixed(2)+'x':'—');
+  renderTablaAnuncios();
+}
+
+function renderTablaAnuncios(){
+  const m=S.meta; if(!m) return;
+  const tbody=$('meta-tabla-body'); if(!tbody) return;
+  const sorted=[...m.campanas].filter(c=>c.gasto>0).sort((a,b)=>b.gasto-a.gasto);
+  if(!sorted.length){tbody.innerHTML='<tr><td colspan="8"><div class="empty-state">Sin datos</div></td></tr>';return;}
+  tbody.innerHTML=sorted.map(c=>{
+    const cpa=c.compras>0?c.gasto/c.compras:0;
+    const cpaColor=cpa>0&&cpa<=(S.cpaMax||4000)?'var(--green)':'var(--red)';
+    const roasColor=c.roas>=5?'var(--green)':c.roas>=3?'var(--amber)':c.roas>0?'var(--red)':'var(--text3)';
+    const dot=c.estado==='active'?'#00ffb3':c.estado==='not_delivering'?'#ff3355':'#9a6030';
+    return `<tr>
+      <td style="font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.nombre}</td>
+      <td><span style="font-family:var(--font-mono);font-size:9px;color:${dot};background:${dot}20;border:1px solid ${dot}40;border-radius:20px;padding:2px 8px">${c.estado}</span></td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:11px">${fmtCLP(c.gasto)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:11px;color:var(--purple)">${Math.ceil(c.compras)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:11px;color:${cpaColor}">${cpa>0?fmtCLP(Math.round(cpa)):'—'}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:11px;color:${roasColor}">${c.roas>0?c.roas.toFixed(2)+'x':'—'}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:11px">${fmtPct(c.ctr)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:11px">${fmtCLP(c.cpm)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ══ ALERTAS ════════════════════════════════════════════════════════════════════
+const _alertasCerradas=new Set(JSON.parse(localStorage.getItem('df_alertas_cerradas')||'[]'));
+
+function cerrarAlerta(btn){
+  const id=btn.dataset.id;
+  const alertaEl=$('alerta-'+id);
+  if(alertaEl){
+    guardarInsight({id,titulo:alertaEl.querySelector('[style*="font-weight:700"]')?.textContent||id,desc:'',accion:'',tipo:'optimizacion',fecha:new Date().toISOString()});
+    alertaEl.style.transition='all 0.3s'; alertaEl.style.opacity='0';
+    alertaEl.style.maxHeight='0'; alertaEl.style.padding='0'; alertaEl.style.marginBottom='0';
+    setTimeout(()=>alertaEl.remove(),300);
+  }
+  _alertasCerradas.add(id);
+  localStorage.setItem('df_alertas_cerradas',JSON.stringify([..._alertasCerradas]));
+  actualizarBadgeInsights();
+}
+
+function renderAlertas(R, pedidos){
+  const cont=$('alertas-container'); if(!cont) return;
+  const alertas=generarAlertas(R,pedidos).filter(a=>!_alertasCerradas.has(a.id));
+  if(!alertas.length){cont.innerHTML='';return;}
+  const COLORES={critica:{bg:'rgba(244,63,94,0.08)',border:'rgba(244,63,94,0.25)',color:'#f43f5e'},optimizacion:{bg:'rgba(245,158,11,0.08)',border:'rgba(245,158,11,0.25)',color:'#f59e0b'},escala:{bg:'rgba(0,214,143,0.08)',border:'rgba(0,214,143,0.25)',color:'#00d68f'}};
+  cont.innerHTML=alertas.map(a=>{
+    const c=COLORES[a.tipo];
+    return `<div id="alerta-${a.id}" style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:var(--radius2);border:1px solid ${c.border};background:${c.bg};position:relative;margin-bottom:6px">
+      <div style="font-size:18px;flex-shrink:0">${a.icono}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;color:${c.color};margin-bottom:3px">${a.titulo}</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text2);margin-bottom:5px">${a.desc}</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">👉 ${a.accion}</div>
+      </div>
+      <button data-id="${a.id}" onclick="cerrarAlerta(this)" style="position:absolute;top:8px;right:10px;background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:2px 6px">&#215;</button>
+    </div>`;
+  }).join('');
+}
+
+function generarAlertas(R,pedidos){
+  const alertas=[];
+  if(R.margenReal<0) alertas.push({id:'margen_neg',tipo:'critica',icono:'🚨',titulo:'Pérdida neta — pausar inmediatamente',desc:'Margen '+fmtPct(R.margenReal)+'. Los costos superan los ingresos.',accion:'Pausa los ads y revisa costos.'});
+  if(R.margenReal>=0&&R.margenReal<S.umbralMargen) alertas.push({id:'margen_bajo',tipo:'optimizacion',icono:'⚠️',titulo:'Margen bajo el umbral: '+fmtPct(R.margenReal),desc:'Mínimo configurado: '+S.umbralMargen+'%',accion:'Ajusta precio o reduce CPA.'});
+  if(R.margenReal>=25&&R.entregados>=10) alertas.push({id:'escala',tipo:'escala',icono:'🚀',titulo:'Oportunidad de escala detectada',desc:'Margen '+fmtPct(R.margenReal)+' con '+R.entregados+' pedidos entregados.',accion:'Puedes aumentar presupuesto en ads con seguridad.'});
+  return alertas;
+}
+
+// ══ INSIGHTS ══════════════════════════════════════════════════════════════════
+let _insightsFiltro='todos';
+function guardarInsight(ins){
+  const h=JSON.parse(localStorage.getItem('df_insights_hist')||'[]');
+  const hoy=new Date().toDateString();
+  if(!h.find(i=>i.id===ins.id&&new Date(i.fecha).toDateString()===hoy)) h.unshift(ins);
+  localStorage.setItem('df_insights_hist',JSON.stringify(h.slice(0,50)));
+  actualizarBadgeInsights();
+}
+function actualizarBadgeInsights(){
+  const h=JSON.parse(localStorage.getItem('df_insights_hist')||'[]');
+  const b=$('insights-badge'); if(!b) return;
+  if(h.length>0){b.style.display='block';b.textContent=h.length;}else{b.style.display='none';}
+}
+function abrirPanelInsights(){ $('insights-panel').style.right='0'; $('insights-overlay').style.display='block'; renderInsights(); }
+function cerrarPanelInsights(){ $('insights-panel').style.right='-420px'; $('insights-overlay').style.display='none'; }
+function filtrarInsights(tipo){ _insightsFiltro=tipo; ['todos','critica','opt','esc'].forEach(id=>{const b=$('ins-f-'+id);if(b)b.classList.remove('active');}); const m={todos:'ins-f-todos',critica:'ins-f-critica',optimizacion:'ins-f-opt',escala:'ins-f-esc'}; const btn=$(m[tipo]); if(btn)btn.classList.add('active'); renderInsights(); }
+function limpiarInsights(){ if(!confirm('¿Limpiar historial?')) return; localStorage.removeItem('df_insights_hist'); actualizarBadgeInsights(); renderInsights(); }
+function renderInsights(){
+  const lista=$('insights-lista'); if(!lista) return;
+  let h=JSON.parse(localStorage.getItem('df_insights_hist')||'[]');
+  if(_insightsFiltro!=='todos') h=h.filter(i=>i.tipo===_insightsFiltro);
+  if(!h.length){lista.innerHTML='<div class="empty-state">No hay insights guardados.</div>';return;}
+  const C={critica:{bg:'rgba(244,63,94,0.08)',border:'rgba(244,63,94,0.2)',color:'#f43f5e',label:'🔴 CRÍTICA'},optimizacion:{bg:'rgba(245,158,11,0.08)',border:'rgba(245,158,11,0.2)',color:'#f59e0b',label:'🟡 OPTIMIZACIÓN'},escala:{bg:'rgba(0,214,143,0.08)',border:'rgba(0,214,143,0.2)',color:'#00d68f',label:'🟢 ESCALA'}};
+  lista.innerHTML=h.map(ins=>{const c=C[ins.tipo]||C.optimizacion; const f=new Date(ins.fecha).toLocaleDateString('es-CL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    return `<div style="padding:14px;border-radius:var(--radius2);border:1px solid ${c.border};background:${c.bg}">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-family:var(--font-mono);font-size:9px;color:${c.color}">${c.label}</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--text3)">${f}</span></div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">${ins.titulo}</div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text2)">${ins.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ PROYECCIÓN ════════════════════════════════════════════════════════════════
+function renderProyeccion(){
+  const pedidos=filtF(S.pedidos); const R=calcR(pedidos);
+  const camino=R.camino; const totalPend=camino.length;
+  const entregaran=Math.round(totalPend*S.tasaEntrega/100);
+  const suma=(a,k)=>a.reduce((s,p)=>s+(p[k]||0),0);
+  const costoDev=suma(camino,'flete')*(1-S.tasaEntrega/100);
+  tx('proy-total-pend',totalPend); tx('proy-entregaran',entregaran);
+  tx('proy-no-entregaran',totalPend-entregaran); tx('proy-costo-dev',fmtCLP(costoDev));
+  tx('proy-util-real',fmtCLP(R.utilidadReal)); tx('proy-util-proy',fmtCLP(R.proyUtilidad)); tx('proy-util-total',fmtCLP(R.utilidadTotal));
+}
+
+// ══ GRÁFICOS ══════════════════════════════════════════════════════════════════
+const _ch={};
+function renderCharts(){
+  const pedidos=filtF(S.pedidos);
+  const toISO=d=>{const p=d.split('-');return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:d;};
+  const lbl=f=>{const p=f.split('-');return p.length===3?`${p[0]}/${p[1]}`:f;};
+  if(_ch.b){_ch.b.destroy();_ch.b=null;}
+  const cv1=$('chart-barras');
+  if(cv1&&pedidos.length){
+    const m={};pedidos.forEach(p=>{if(!m[p.fecha])m[p.fecha]={v:0,c:0,u:0};m[p.fecha].v+=p.venta;m[p.fecha].c+=p.proveedor+p.flete+p.comision;m[p.fecha].u+=p.utilidad;});
+    const fs=Object.keys(m).sort((a,b)=>toISO(a).localeCompare(toISO(b))).slice(-14);
+    _ch.b=new Chart(cv1,{type:'bar',data:{labels:fs.map(lbl),datasets:[
+      {label:'Ventas',data:fs.map(f=>m[f].v),backgroundColor:'rgba(0,214,143,0.7)',borderColor:'#00d68f',borderWidth:1,borderRadius:4},
+      {label:'Costos',data:fs.map(f=>m[f].c),backgroundColor:'rgba(244,63,94,0.7)',borderColor:'#f43f5e',borderWidth:1,borderRadius:4},
+      {label:'Utilidad',data:fs.map(f=>m[f].u),backgroundColor:'rgba(245,158,11,0.7)',borderColor:'#f59e0b',borderWidth:1,borderRadius:4},
+    ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#8899bb',usePointStyle:true}},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${fmtCLP(c.raw)}`}}},scales:{x:{ticks:{color:'#4a5a7a',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#4a5a7a',callback:v=>'$'+Math.round(Math.abs(v)/1000)+'K'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+  }
+  if(_ch.d){_ch.d.destroy();_ch.d=null;}
+  const cv2=$('chart-donut');
+  if(cv2){
+    const R=calcR(pedidos);
+    _ch.d=new Chart(cv2,{type:'doughnut',data:{labels:['Entregado','En tránsito','Pendiente','Devuelto','Cancelado'],datasets:[{data:[R.entregados,R.enTransito,R.pendientes,R.devueltos,R.cancelados],backgroundColor:['rgba(0,214,143,0.8)','rgba(96,165,250,0.8)','rgba(245,158,11,0.8)','rgba(244,63,94,0.8)','rgba(74,90,122,0.8)'],borderWidth:2,hoverOffset:16}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#8899bb',font:{size:10},usePointStyle:true}},tooltip:{...TT,callbacks:{label:c=>` ${c.label}: ${c.raw}`}}}}});
+  }
+}
+
+// ══ COMPARACIÓN ═══════════════════════════════════════════════════════════════
+function compararPeriodo(tipo){
+  document.querySelectorAll('[id^="cmp-"]').forEach(b=>b.classList.remove('active'));
+  $('cmp-'+tipo)?.classList.add('active');
+  if(!S.pedidos.length){const c=$('comparacion-contenido');if(c)c.innerHTML='<div class="empty-state">Importa datos de Dropi</div>';return;}
+  const hoy=new Date(), fmt=d=>d.toISOString().split('T')[0];
+  let aD,aH,bD,bH,lA,lB;
+  if(tipo==='semana'){
+    const lunes=new Date(hoy);lunes.setDate(hoy.getDate()-hoy.getDay()+1);
+    const lunesAnt=new Date(lunes);lunesAnt.setDate(lunes.getDate()-7);
+    const domAnt=new Date(lunes);domAnt.setDate(lunes.getDate()-1);
+    aD=fmt(lunes);aH=fmt(hoy);bD=fmt(lunesAnt);bH=fmt(domAnt);lA='Esta semana';lB='Semana anterior';
+  } else {
+    aD=fmt(new Date(hoy.getFullYear(),hoy.getMonth(),1));aH=fmt(hoy);
+    bD=fmt(new Date(hoy.getFullYear(),hoy.getMonth()-1,1));bH=fmt(new Date(hoy.getFullYear(),hoy.getMonth(),0));
+    lA='Este mes';lB='Mes anterior';
+  }
+  const filP=(desde,hasta)=>S.pedidos.filter(p=>{const iso=toISOfecha(p.fecha);return iso>=desde&&iso<=hasta;});
+  const A=calcR(filP(aD,aH)), B=calcR(filP(bD,bH));
+  const delta=(a,b)=>{if(!b)return{val:'+∞',color:'var(--green)'};const p=((a-b)/Math.abs(b))*100;return p>=0?{val:'+'+p.toFixed(1)+'%',color:'var(--green)'}:{val:p.toFixed(1)+'%',color:'var(--red)'};};
+  const cont=$('comparacion-contenido'); if(!cont) return;
+  const metricas=[
+    {label:'Ingresos',a:A.ingresosReales,b:B.ingresosReales,fmt:fmtCLP},
+    {label:'Pedidos entregados',a:A.entregados,b:B.entregados,fmt:v=>v},
+    {label:'Utilidad real',a:A.utilidadReal,b:B.utilidadReal,fmt:fmtCLP},
+    {label:'Margen real',a:A.margenReal,b:B.margenReal,fmt:fmtPct},
+    {label:'Devueltos',a:A.devueltos,b:B.devueltos,fmt:v=>v,invertir:true},
+  ];
+  cont.innerHTML='<div style="display:flex;flex-direction:column;gap:8px">'+metricas.map(m=>{
+    const d=delta(m.a,m.b);
+    const color=m.invertir?(d.val.startsWith('+')?'var(--red)':'var(--green)'):d.color;
+    return `<div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:center;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2)">
+      <div style="font-size:12px;color:var(--text2)">${m.label}</div>
+      <div style="text-align:right;font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text)">${m.fmt(m.a)}</div>
+      <div style="text-align:right;font-family:var(--font-mono);font-size:12px;color:var(--text3)">${m.fmt(m.b)}</div>
+      <div style="text-align:right;font-family:var(--font-mono);font-size:12px;font-weight:700;color:${color};min-width:60px">${d.val}</div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+// ══ CONFIG ════════════════════════════════════════════════════════════════════
+function saveParams(){
+  const t=parseFloat($('param-tasa')?.value), u=parseFloat($('param-umbral')?.value);
+  if(!isNaN(t)) S.tasaEntrega=t; if(!isNaN(u)) S.umbralMargen=u;
+  const cpaMax=parseFloat($('param-cpa-max')?.value);
+  const cpcMax=parseFloat($('param-cpc-max')?.value);
+  const cpmMax=parseFloat($('param-cpm-max')?.value);
+  const ctrMin=parseFloat($('param-ctr-min')?.value);
+  const roasMin=parseFloat($('param-roas-min')?.value);
+  if(!isNaN(cpaMax)) S.cpaMax=cpaMax; if(!isNaN(cpcMax)) S.cpcMax=cpcMax;
+  if(!isNaN(cpmMax)) S.cpmMax=cpmMax; if(!isNaN(ctrMin)) S.ctrMin=ctrMin;
+  if(!isNaN(roasMin)) S.roasMin=roasMin;
+  try{guardarDatosServidor();}catch(e){}
+  toast('✓ Configuración guardada');
+  if(S.pedidos.length) renderDashboard();
+}
+
+function toggleModo(){
+  const esDia=document.body.classList.toggle('modo-dia');
+  localStorage.setItem('df_modo',esDia?'dia':'noche');
+  const icono=$('modo-icono'), texto=$('modo-texto');
+  if(icono) icono.textContent=esDia?'🌙':'☀️';
+  if(texto) texto.textContent=esDia?'Modo noche':'Modo día';
+  toast(esDia?'☀️ Modo día':'🌙 Modo noche');
+}
+
+function aplicarModoGuardado(){
+  const modo=localStorage.getItem('df_modo');
+  if(modo==='dia'){
+    document.body.classList.add('modo-dia');
+    const i=$('modo-icono'), t=$('modo-texto');
+    if(i) i.textContent='🌙'; if(t) t.textContent='Modo noche';
+  }
+}
+
+function refreshData(){ renderDashboard(); renderPedidos(); toast('✓ Actualizado'); }
+
+// ══ USUARIOS ADMIN ════════════════════════════════════════════════════════════
+async function cargarListaUsuarios(){
+  try {
+    const r=await apiFetch('/api/usuarios');
+    const users=await r.json();
+    const cont=$('lista-usuarios'); if(!cont) return;
+    cont.innerHTML=users.map(u=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;margin-bottom:6px">
+      <div style="flex:1"><div style="font-size:12px;color:var(--text)">${u.nombre}</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">${u.email} · ${u.rol}</div></div>
+      ${u.id!==USUARIO?.id?`<button onclick="eliminarUsuario(${u.id})" style="padding:4px 10px;background:var(--red-bg);border:1px solid rgba(244,63,94,0.2);color:var(--red);border-radius:6px;font-size:11px;cursor:pointer">Eliminar</button>`:'<span style="font-family:var(--font-mono);font-size:9px;color:var(--green)">TÚ</span>'}
+    </div>`).join('');
+  } catch(e){ console.warn(e); }
+}
+async function crearUsuario(){
+  const nombre=($('new-nombre')?.value||'').trim(), email=($('new-email')?.value||'').trim();
+  const pass=$('new-pass')?.value, rol=$('new-rol')?.value;
+  if(!nombre||!email||!pass){mostrarAdminMsg('Completa todos los campos','error');return;}
+  try {
+    const r=await apiFetch('/api/registro',{method:'POST',body:JSON.stringify({nombre,email,password:pass,rol})});
+    const data=await r.json();
+    if(!r.ok){mostrarAdminMsg(data.error,'error');return;}
+    mostrarAdminMsg('Usuario creado correctamente','ok');
+    if($('new-nombre'))$('new-nombre').value=''; if($('new-email'))$('new-email').value=''; if($('new-pass'))$('new-pass').value='';
+    cargarListaUsuarios();
+  } catch(e){mostrarAdminMsg('Error al crear usuario','error');}
+}
+async function eliminarUsuario(id){ if(!confirm('¿Eliminar?')) return; await apiFetch('/api/usuarios/'+id,{method:'DELETE'}); cargarListaUsuarios(); }
+function mostrarAdminMsg(msg,tipo){ const el=$('admin-msg'); if(!el) return; el.style.display='block'; el.style.background=tipo==='ok'?'var(--green-bg)':'var(--red-bg)'; el.style.color=tipo==='ok'?'var(--green)':'var(--red)'; el.textContent=msg; }
+
+// ══ META EN VIVO ══════════════════════════════════════════════════════════════
+let _metaLiveInterval=null;
+
+async function conectarMetaVivo(){
+  const token=($('meta-token-vivo')?.value||'').trim();
+  const actId=($('meta-account-vivo')?.value||'').trim();
+  if(!token||!actId){mostrarMetaStatus('Completa token y Ad Account ID',false);return;}
+  if(!actId.startsWith('act_')){mostrarMetaStatus('El Ad Account ID debe comenzar con "act_"',false);return;}
+  mostrarMetaStatus('Conectando...',null);
+  try {
+    const r=await apiFetch('/api/meta/token',{method:'POST',body:JSON.stringify({token,adAccountId:actId})});
+    if(!r.ok){mostrarMetaStatus('Error guardando token',false);return;}
+    await cargarMetaLive();
+    mostrarMetaStatus('✓ Conectado — actualizando cada 15 min',true);
+    localStorage.setItem('df_meta_live',JSON.stringify({actId,conectado:true}));
+    if(_metaLiveInterval) clearInterval(_metaLiveInterval);
+    _metaLiveInterval=setInterval(cargarMetaLive,15*60*1000);
+    const infoEl=$('meta-vivo-info'); if(infoEl) infoEl.style.display='block';
+    toast('✓ Meta Ads conectado');
+  } catch(e){mostrarMetaStatus('Error: '+e.message,false);}
+}
+
+async function cargarMetaLive(){
+  const desde=S.filtroDesde||new Date(Date.now()-30*24*60*60*1000).toISOString().split('T')[0];
+  const hasta=S.filtroHasta||new Date().toISOString().split('T')[0];
+  const r=await apiFetch('/api/meta/live?desde='+desde+'&hasta='+hasta);
+  if(!r.ok){const err=await r.json();throw new Error(err.error||'Error cargando Meta');}
+  const data=await r.json();
+  procesarDatosMetaLive(data);
+}
+
+function procesarDatosMetaLive(data){
+  const {ads,fecha}=data; if(!ads||!ads.length) return;
+  const campanas=ads.map(ad=>({nombre:ad.nombre||ad.name||'Sin nombre',estado:ad.estado||'unknown',gasto:ad.gasto||0,impresiones:ad.impresiones||0,clics:ad.clics||0,compras:ad.compras||0,roas:ad.roas||0,ctr:ad.ctr||0,cpc:ad.cpc||0,cpm:ad.cpm||0,frecuencia:ad.frecuencia||0}));
+  const sm=k=>campanas.reduce((s,c)=>s+(c[k]||0),0);
+  S.meta={campanas,gastoTotal:sm('gasto'),impresiones:sm('impresiones'),clics:sm('clics'),compras:sm('compras'),ctr:0,cpa:0,esLive:true,ultimaActualizacion:fecha};
+  S.meta.ctr=S.meta.impresiones>0?(S.meta.clics/S.meta.impresiones)*100:0;
+  S.meta.cpa=S.meta.compras>0?S.meta.gastoTotal/S.meta.compras:0;
+  try{guardarDatosServidor();}catch(e){}
+  renderMeta(); renderDashboard();
+  const det=$('meta-vivo-detalles'); if(det) det.innerHTML='<span style="color:var(--green)">● EN VIVO</span> · '+campanas.length+' anuncios · '+new Date(fecha).toLocaleTimeString('es-CL');
+}
+
+function mostrarMetaStatus(msg,ok){
+  const el=$('meta-vivo-status'); if(!el) return;
+  el.style.display='block';
+  el.style.background=ok===true?'var(--green-bg)':ok===false?'var(--red-bg)':'var(--amber-bg)';
+  el.style.color=ok===true?'var(--green)':ok===false?'var(--red)':'var(--amber)';
+  el.textContent=msg;
+}
+
+async function intentarReconectarMeta(){
+  const saved=localStorage.getItem('df_meta_live'); if(!saved) return;
+  try {
+    if(!S.filtroDesde){const hoy=new Date();S.filtroDesde=new Date(hoy.getFullYear(),hoy.getMonth(),1).toISOString().split('T')[0];S.filtroHasta=hoy.toISOString().split('T')[0];}
+    await cargarMetaLive();
+    if(_metaLiveInterval) clearInterval(_metaLiveInterval);
+    _metaLiveInterval=setInterval(cargarMetaLive,15*60*1000);
+  } catch(e){ if(S.meta){renderMeta();renderDashboard();} }
+}
+
+// ══ SHOPIFY ════════════════════════════════════════════════════════════════════
+async function conectarShopify(){
+  const shopUrl=($('shopify-url')?.value||'').trim();
+  const clientId=($('shopify-client-id')?.value||'').trim();
+  const clientSecret=($('shopify-client-secret')?.value||'').trim();
+  if(!shopUrl||!clientId||!clientSecret){mostrarShopifyStatus('Completa todos los campos',false);return;}
+  mostrarShopifyStatus('Conectando...',null);
+  try {
+    const r=await apiFetch('/api/shopify/token',{method:'POST',body:JSON.stringify({shopUrl,clientId,clientSecret})});
+    if(!r.ok){mostrarShopifyStatus('Error guardando credenciales',false);return;}
+    const r2=await apiFetch('/api/shopify/test'); const data=await r2.json();
+    if(!r2.ok){mostrarShopifyStatus('Error: '+data.error,false);return;}
+    mostrarShopifyStatus('✅ Conectado a Shopify',true);
+    const infoEl=$('shopify-info'); if(infoEl) infoEl.style.display='block';
+    const det=$('shopify-detalles'); if(det) det.innerHTML='<strong>'+data.shop+'</strong>';
+    await sincronizarShopify();
+  } catch(e){mostrarShopifyStatus('Error: '+e.message,false);}
+}
+async function sincronizarShopify(){
+  const desde=S.filtroDesde||new Date(Date.now()-30*24*60*60*1000).toISOString().split('T')[0];
+  const hasta=S.filtroHasta||new Date().toISOString().split('T')[0];
+  const flete=parseFloat($('shopify-flete')?.value||0);
+  try {
+    const r=await apiFetch('/api/shopify/orders?desde='+desde+'&hasta='+hasta+'&flete_promedio='+flete);
+    const data=await r.json();
+    if(!r.ok){mostrarShopifyStatus('Error: '+data.error,false);return;}
+    const shopifyIds=new Set(data.pedidos.map(p=>p.id));
+    S.pedidos=[...S.pedidos.filter(p=>!shopifyIds.has(p.id)),...data.pedidos.map(p=>({...p,fuente:'shopify'}))];
+    await guardarDatosServidor(); renderDashboard(); renderPedidos();
+    mostrarShopifyStatus('✅ '+data.pedidos.length+' pedidos sincronizados',true);
+    toast('✅ Shopify: '+data.pedidos.length+' pedidos');
+  } catch(e){mostrarShopifyStatus('Error: '+e.message,false);}
+}
+function mostrarShopifyStatus(msg,ok){ const el=$('shopify-status'); if(!el) return; el.style.display='block'; el.style.background=ok===true?'var(--green-bg)':ok===false?'var(--red-bg)':'var(--amber-bg)'; el.style.color=ok===true?'var(--green)':ok===false?'var(--red)':'var(--amber)'; el.textContent=msg; }
+
+// ══ DROPI EN VIVO ═════════════════════════════════════════════════════════════
+async function conectarDropiVivo(){
+  const email=($('dropi-email')?.value||'').trim();
+  const password=($('dropi-password')?.value||'').trim();
+  if(!email||!password){mostrarDropiStatus('Completa email y contraseña',false);return;}
+  mostrarDropiStatus('Iniciando sesión en Dropi...',null);
+  try {
+    const r=await apiFetch('/api/dropi/login',{method:'POST',body:JSON.stringify({email,password})});
+    const data=await r.json();
+    if(!r.ok){mostrarDropiStatus('Error: '+(data.error||'Credenciales incorrectas'),false);return;}
+    mostrarDropiStatus('✓ Sesión iniciada — cargando pedidos...',null);
+    await cargarDropiVivo();
+    mostrarDropiStatus('✓ Dropi conectado',true);
+    toast('✓ Dropi en vivo — '+S.pedidos.length+' pedidos');
+  } catch(e){mostrarDropiStatus('Error: '+e.message,false);}
+}
+async function cargarDropiVivo(){
+  const desde=S.filtroDesde||new Date(Date.now()-30*24*60*60*1000).toISOString().split('T')[0];
+  const hasta=S.filtroHasta||new Date().toISOString().split('T')[0];
+  const r=await apiFetch('/api/dropi/pedidos?desde='+desde+'&hasta='+hasta);
+  if(!r.ok){const err=await r.json();throw new Error(err.error||'Error');}
+  const data=await r.json();
+  if(data.pedidos?.length){
+    S.pedidos=data.pedidos.map(p=>({...p,fecha:toISOfecha(p.fecha)||p.fecha}));
+    guardarDatosServidor(); renderDashboard(); renderPedidos();
+    const dot=$('sync-dot'); if(dot) dot.className='sync-dot live';
+    tx('sync-label',data.pedidos.length+' pedidos');
+  }
+}
+function mostrarDropiStatus(msg,ok){ const el=$('dropi-vivo-status'); if(!el) return; el.style.display='block'; el.style.background=ok===true?'var(--green-bg)':ok===false?'var(--red-bg)':'var(--amber-bg)'; el.style.color=ok===true?'var(--green)':ok===false?'var(--red)':'var(--amber)'; el.textContent=msg; }
+
+// ══ IA ════════════════════════════════════════════════════════════════════════
+let iaHistorial=[];
+let _iaPopupOpen=false;
+
+function toggleIAPopup(){
+  const popup=$('ia-popup'); if(!popup) return;
+  _iaPopupOpen=!_iaPopupOpen;
+  popup.style.display=_iaPopupOpen?'flex':'none';
+  if(_iaPopupOpen&&$('ia-popup-mensajes').children.length===0) agregarMensajePopup('Hola 👋 Soy JARVIS. Importa tus datos de Dropi y pregúntame lo que quieras.',false);
+}
+
+function agregarMensajePopup(texto,esUser,id=''){
+  const cont=$('ia-popup-mensajes'); if(!cont) return;
+  const div=document.createElement('div');
+  div.className='ia-msg '+(esUser?'ia-msg-user':'');
+  if(id) div.id=id;
+  div.innerHTML=`<div class="ia-avatar" style="width:26px;height:26px;font-size:12px">${esUser?'👤':'🤖'}</div><div class="ia-burbuja" style="font-size:12px;padding:8px 12px"><p>${texto}</p></div>`;
+  cont.appendChild(div); cont.scrollTop=cont.scrollHeight;
+}
+
+async function enviarIAPopup(){
+  const input=$('ia-popup-input');
+  const texto=(input?.value||'').trim(); if(!texto) return;
+  if(!S.pedidos.length){agregarMensajePopup('⚠️ Importa datos de Dropi primero',false);return;}
+  agregarMensajePopup(texto,true); input.value='';
+  const typingId='popup-t-'+Date.now();
+  agregarMensajePopup('...',false,typingId);
+  try {
+    const r=await apiFetch('/api/ia',{method:'POST',body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,system:construirContexto(),messages:[{role:'user',content:texto}]})});
+    const data=await r.json();
+    const t=$(typingId); if(t) t.remove();
+    if(data.content?.[0]) agregarMensajePopup(data.content[0].text,false);
+    else if(data.error) agregarMensajePopup('Error: '+data.error.message,false);
+  } catch(e){ const t=$(typingId);if(t)t.remove(); agregarMensajePopup('Error de conexión',false); }
+}
+
+function agregarMensaje(texto,esUser=false){
+  const cont=$('ia-mensajes'); if(!cont) return;
+  const div=document.createElement('div'); div.className='ia-msg '+(esUser?'ia-msg-user':'');
+  const html='<p>'+texto.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</p>';
+  div.innerHTML=`<div class="ia-avatar">${esUser?'👤':'🤖'}</div><div class="ia-burbuja">${html}</div>`;
+  cont.appendChild(div); cont.scrollTop=cont.scrollHeight;
+}
+
+function mostrarTyping(){
+  const cont=$('ia-mensajes'); if(!cont) return null;
+  const div=document.createElement('div'); div.className='ia-msg'; div.id='ia-typing-indicator';
+  div.innerHTML='<div class="ia-avatar">🤖</div><div class="ia-burbuja"><div class="ia-typing"><span></span><span></span><span></span></div></div>';
+  cont.appendChild(div); cont.scrollTop=cont.scrollHeight; return div;
+}
+
+async function enviarMensajeIA(){
+  const input=$('ia-input'); if(!input) return;
+  const texto=(input.value||'').trim(); if(!texto) return;
+  if(!S.pedidos.length){agregarMensaje('⚠️ Primero importa el Excel de Dropi.',false);return;}
+  agregarMensaje(texto,true); input.value=''; input.style.height='44px';
+  iaHistorial.push({role:'user',content:texto});
+  const typing=mostrarTyping();
+  try {
+    const r=await apiFetch('/api/ia',{method:'POST',body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:construirContexto(),messages:iaHistorial.slice(-8)})});
+    const data=await r.json();
+    if(typing) typing.remove();
+    if(data.content?.[0]){const txt=data.content[0].text;iaHistorial.push({role:'assistant',content:txt});agregarMensaje(txt,false);}
+    else if(data.error) agregarMensaje('Error: '+data.error.message,false);
+  } catch(e){if(typing)typing.remove();agregarMensaje('Error de conexión.',false);}
+}
+
+function preguntarIA(p){navegarA('ia');setTimeout(()=>{const i=$('ia-input');if(i){i.value=p;i.focus();enviarMensajeIA();}},100);}
+
+function construirContexto(){
+  if(!S.pedidos.length) return 'Eres la IA de Dropflow. No hay datos cargados aún.';
+  const R=calcR(S.pedidos);
+  return `Eres la IA de Dropflow, asistente de contabilidad para dropshipping en Chile. Responde en español con datos concretos.
+RESUMEN: ${R.total} pedidos | ${R.entregados} entregados | Ingresos: ${fmtCLP(R.ingresosReales)} | Utilidad real: ${fmtCLP(R.utilidadReal)} | Margen: ${R.margenReal.toFixed(1)}% | Gasto Meta Ads: ${fmtCLP(R.adsGasto)} | Proyección: ${fmtCLP(R.utilidadTotal)}`;
+}
+
+// ══ DRAG & DROP ═══════════════════════════════════════════════════════════════
+function setupDnD(){
+  const ov=$('drop-overlay'); let n=0;
+  document.addEventListener('dragenter',e=>{e.preventDefault();n++;if(ov)ov.style.display='flex';});
+  document.addEventListener('dragleave',()=>{n--;if(n<=0){n=0;if(ov)ov.style.display='none';}});
+  document.addEventListener('dragover',e=>e.preventDefault());
+  document.addEventListener('drop',e=>{e.preventDefault();n=0;if(ov)ov.style.display='none';const file=e.dataTransfer?.files?.[0];if(!file)return;const nm=file.name.toLowerCase();if(nm.endsWith('.xlsx')||nm.endsWith('.xls'))handleDropiFile(file);else if(nm.endsWith('.csv'))handleMetaFile(file);else toast('Formato no reconocido',true);});
+  ['dz-dropi','dz-meta'].forEach(id=>{const dz=$(id);if(!dz)return;dz.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();dz.classList.add('drag-over');});dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));dz.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();dz.classList.remove('drag-over');const file=e.dataTransfer?.files?.[0];if(!file)return;if(id==='dz-dropi')handleDropiFile(file);else handleMetaFile(file);});});
+}
+
+// ══ INIT ══════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  tx('date-badge',new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'}));
+  setupDnD();
+  document.querySelector('.sidebar').style.display='none';
+  document.querySelector('.main').style.display='none';
+  if(TOKEN&&USUARIO){
+    cargarDatosServidor().then(()=>{
+      mostrarApp();
+      if(S.pedidos.length){renderDashboard();renderPedidos();const dot=$('sync-dot');if(dot)dot.className='sync-dot live';tx('sync-label',S.pedidos.length+' pedidos cargados');}
+      if(S.meta) renderMeta();
+    }).catch(()=>cerrarSesion());
+  }
+});
+</script>
+</body>
+</html>
