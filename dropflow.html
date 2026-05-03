@@ -320,9 +320,29 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .exec-card-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-align:center;margin-top:6px;}
 
 /* Dashboard grids */
-.exec-main-grid{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:12px;margin-bottom:12px;}
+.exec-hero-layout{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:12px;margin-bottom:12px;align-items:stretch;}
+.exec-hero-left,.exec-hero-right{display:flex;flex-direction:column;gap:10px;}
+.exec-kpi-vert{background:rgba(4,8,18,0.94);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden;backdrop-filter:blur(20px);flex:1;}
+.exec-kpi-vert::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.exec-kpi-vert.cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent);box-shadow:0 0 20px rgba(0,238,255,0.5);}
+.exec-kpi-vert.gold::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 20px rgba(255,170,0,0.5);}
+.exec-kpi-vert.red::before{background:linear-gradient(90deg,transparent,var(--red),transparent);box-shadow:0 0 20px rgba(255,34,68,0.4);}
+.exec-kpi-vert.green::before{background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 20px rgba(0,255,179,0.4);}
+.exec-kpi-vert.nblue::before{background:linear-gradient(90deg,transparent,var(--neo-blue),transparent);box-shadow:0 0 20px rgba(0,136,255,0.5);}
+.exec-kpi-vert-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;}
+.exec-kpi-vert-val{font-size:26px;font-weight:900;line-height:1;margin-bottom:6px;font-variant-numeric:tabular-nums;letter-spacing:-1px;}
+.exec-kpi-vert.cyan .exec-kpi-vert-val{color:var(--neo-blue);text-shadow:0 0 30px rgba(0,136,255,0.8),0 0 60px rgba(0,136,255,0.3);}
+.exec-kpi-vert.gold .exec-kpi-vert-val{color:var(--neo-blue);text-shadow:0 0 30px rgba(0,136,255,0.8),0 0 60px rgba(0,136,255,0.3);}
+.exec-kpi-vert.red .exec-kpi-vert-val{color:var(--red);text-shadow:0 0 25px rgba(255,34,68,0.7),0 0 50px rgba(255,34,68,0.25);}
+.exec-kpi-vert.green .exec-kpi-vert-val{color:var(--green);text-shadow:0 0 25px rgba(0,255,179,0.7),0 0 50px rgba(0,255,179,0.25);}
+.exec-kpi-vert.nblue .exec-kpi-vert-val{color:var(--neo-blue);text-shadow:0 0 30px rgba(0,136,255,0.8),0 0 60px rgba(0,136,255,0.3);}
+.exec-kpi-vert-delta{font-family:var(--font-mono);font-size:10px;}
+.exec-kpi-vert-delta.pos{color:var(--green);text-shadow:0 0 8px rgba(0,255,179,0.5);}
+.exec-kpi-vert-delta.neg{color:var(--red);text-shadow:0 0 8px rgba(255,34,68,0.5);}
+.exec-kpi-vert-delta.neu{color:var(--text3);}
 .exec-second-grid{display:grid;grid-template-columns:1fr 2fr 1fr;gap:12px;margin-bottom:12px;}
 .exec-bottom-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-bottom:12px;}
+.exec-main-grid{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:12px;margin-bottom:12px;}
 
 /* Welcome card internals */
 .exec-welcome-name{font-size:22px;font-weight:900;color:var(--gold);margin-bottom:14px;text-shadow:0 0 25px rgba(255,170,0,0.6),0 0 50px rgba(255,170,0,0.2);}
@@ -622,69 +642,57 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
       <div class="section active" id="sec-dashboard">
         <div id="alertas-container" style="margin-bottom:8px"></div>
 
-        <!-- KPI ROW -->
-        <div class="exec-kpi-row">
-          <div class="exec-kpi cyan">
-            <div class="exec-kpi-label">Ventas Totales</div>
-            <div class="exec-kpi-val" id="kpi-ventas-total">$0</div>
-            <div class="exec-kpi-delta" id="kpi-ventas-total-sub">todos los pedidos</div>
-          </div>
-          <div class="exec-kpi gold">
-            <div class="exec-kpi-label">Pedidos</div>
-            <div class="exec-kpi-val" id="kpi-pedidos-n">0</div>
-            <div class="exec-kpi-delta" id="kpi-pedidos-sub">total período</div>
-          </div>
-          <div class="exec-kpi red">
-            <div class="exec-kpi-label">Gasto Ads</div>
-            <div class="exec-kpi-val" id="kpi-gasto-ads">$0</div>
-            <div class="exec-kpi-delta" id="kpi-gasto-ads-sub">Meta Ads período</div>
-          </div>
-          <div class="exec-kpi green">
-            <div class="exec-kpi-label">ROAS Promedio</div>
-            <div class="exec-kpi-val" id="kpi-roas-val">—</div>
-            <div class="exec-kpi-delta" id="kpi-roas-sub">retorno sobre inversión</div>
-          </div>
-        </div>
+        <!-- HERO LAYOUT: KPIs izquierda | Ring central | KPIs + Funnel derecha -->
+        <div class="exec-hero-layout">
 
-        <!-- MAIN ROW: Bienvenida+Comparativo | Ring Hero | Funnel -->
-        <div class="exec-main-grid">
-
-          <!-- Welcome + Comparativo -->
-          <div class="exec-card">
-            <div class="exec-card-label">Bienvenido de vuelta,</div>
-            <div class="exec-welcome-name" id="db-welcome-name">Admin</div>
-            <div class="exec-mini-stats">
-              <div class="exec-mini-stat green-s">
-                <div class="exec-mini-label">Cobrado</div>
-                <div class="exec-mini-val green" id="db-cobrado">$0</div>
-              </div>
-              <div class="exec-mini-stat red-s">
-                <div class="exec-mini-label">Costos</div>
-                <div class="exec-mini-val red" id="db-costos">$0</div>
-              </div>
-              <div class="exec-mini-stat gold-s">
-                <div class="exec-mini-label">Utilidad</div>
-                <div class="exec-mini-val gold" id="db-utilidad-real">$0</div>
-              </div>
-              <div class="exec-mini-stat purple-s">
-                <div class="exec-mini-label">Proyecc.</div>
-                <div class="exec-mini-val purple" id="db-proy">$0</div>
-              </div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                <div class="exec-card-label">Comparativo</div>
-                <div style="display:flex;gap:12px;font-family:var(--font-mono);font-size:9px">
-                  <span style="color:var(--gold);text-shadow:0 0 8px rgba(255,170,0,0.6)">● Ventas</span>
-                  <span style="color:var(--neo-blue);text-shadow:0 0 8px rgba(0,136,255,0.6)">● Gastos</span>
+          <!-- LEFT: KPIs + Comparativo -->
+          <div class="exec-hero-left">
+            <div class="exec-card" style="padding:14px 16px">
+              <div class="exec-card-label" style="font-size:8px">Bienvenido de vuelta,</div>
+              <div class="exec-welcome-name" id="db-welcome-name" style="font-size:18px;margin-bottom:8px">Admin</div>
+              <div class="exec-mini-stats" style="gap:6px">
+                <div class="exec-mini-stat green-s">
+                  <div class="exec-mini-label">Cobrado</div>
+                  <div class="exec-mini-val green" id="db-cobrado">$0</div>
+                </div>
+                <div class="exec-mini-stat red-s">
+                  <div class="exec-mini-label">Costos</div>
+                  <div class="exec-mini-val red" id="db-costos">$0</div>
+                </div>
+                <div class="exec-mini-stat" style="background:rgba(0,136,255,0.06);border:1px solid rgba(0,136,255,0.25)">
+                  <div class="exec-mini-label">Utilidad</div>
+                  <div class="exec-mini-val" style="color:var(--neo-blue);text-shadow:0 0 12px rgba(0,136,255,0.6)" id="db-utilidad-real">$0</div>
+                </div>
+                <div class="exec-mini-stat purple-s">
+                  <div class="exec-mini-label">Proyecc.</div>
+                  <div class="exec-mini-val purple" id="db-proy">$0</div>
                 </div>
               </div>
-              <div style="height:88px"><canvas id="chart-comparativo"></canvas></div>
+            </div>
+            <div class="exec-kpi-vert cyan">
+              <div class="exec-kpi-vert-label">Ventas Totales</div>
+              <div class="exec-kpi-vert-val" id="kpi-ventas-total">$0</div>
+              <div class="exec-kpi-vert-delta neu" id="kpi-ventas-total-sub">todos los pedidos</div>
+            </div>
+            <div class="exec-kpi-vert gold">
+              <div class="exec-kpi-vert-label">Pedidos</div>
+              <div class="exec-kpi-vert-val" id="kpi-pedidos-n">0</div>
+              <div class="exec-kpi-vert-delta neu" id="kpi-pedidos-sub">total período</div>
+            </div>
+            <div class="exec-card" style="padding:12px 14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <div class="exec-card-title" style="margin-bottom:0">Comparativo</div>
+                <div style="display:flex;gap:10px;font-family:var(--font-mono);font-size:8px">
+                  <span style="color:var(--gold)">● Ventas</span>
+                  <span style="color:var(--neo-blue)">● Gastos</span>
+                </div>
+              </div>
+              <div style="height:80px"><canvas id="chart-comparativo"></canvas></div>
             </div>
           </div>
 
-          <!-- Ring Hero -->
-          <div class="exec-card exec-ring-card">
+          <!-- CENTER: Ring Hero -->
+          <div class="exec-card exec-ring-card" style="min-height:420px;justify-content:center;background:radial-gradient(ellipse 100% 80% at 50% 50%,rgba(255,120,0,0.08) 0%,rgba(0,100,255,0.05) 40%,transparent 75%);">
             <div class="exec-ring-wrapper">
               <div class="exec-ring-ultra"></div>
               <div class="exec-ring-outer">
@@ -694,7 +702,7 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
                     <div class="exec-ring-main" id="gauge-ventas">$0</div>
                     <div class="exec-ring-delta" id="gauge-delta" style="color:var(--green)">—</div>
                     <div class="exec-ring-delta-label" id="gauge-delta-label">ventas cobradas</div>
-                    <div style="height:1px;background:rgba(255,157,0,0.2);margin:5px 8px"></div>
+                    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(255,170,0,0.3),rgba(0,238,255,0.3),transparent);margin:6px 8px"></div>
                     <div class="exec-ring-meta-label">Meta Mensual</div>
                     <div class="exec-ring-meta-val">—</div>
                     <div class="exec-ring-pct" id="gauge-pct">—</div>
@@ -704,11 +712,23 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
             </div>
           </div>
 
-          <!-- Funnel de ventas -->
-          <div class="exec-card">
-            <div class="exec-card-title">Funnel de Ventas</div>
-            <div id="exec-funnel">
-              <div class="empty-state" style="font-size:10px;padding:20px 10px">Sin datos</div>
+          <!-- RIGHT: KPIs + Funnel -->
+          <div class="exec-hero-right">
+            <div class="exec-kpi-vert red">
+              <div class="exec-kpi-vert-label">Gasto Ads</div>
+              <div class="exec-kpi-vert-val" id="kpi-gasto-ads">$0</div>
+              <div class="exec-kpi-vert-delta neu" id="kpi-gasto-ads-sub">Meta Ads período</div>
+            </div>
+            <div class="exec-kpi-vert green">
+              <div class="exec-kpi-vert-label">ROAS Promedio</div>
+              <div class="exec-kpi-vert-val" id="kpi-roas-val">—</div>
+              <div class="exec-kpi-vert-delta neu" id="kpi-roas-sub">retorno inversión</div>
+            </div>
+            <div class="exec-card" style="flex:1">
+              <div class="exec-card-title">Funnel de Ventas</div>
+              <div id="exec-funnel">
+                <div class="empty-state" style="font-size:10px;padding:20px 10px">Sin datos</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1494,9 +1514,12 @@ function mostrarApp() {
   document.querySelector('.sidebar').style.display='flex';
   document.querySelector('.main').style.display='flex';
   aplicarModoGuardado();
-  const hoy=new Date(), fmt=d=>d.toISOString().split('T')[0];
-  S.filtroDesde=fmt(new Date(hoy.getFullYear(),hoy.getMonth(),1));
-  S.filtroHasta=fmt(hoy);
+  // Solo setear filtro de mes si no hay datos cargados
+  if(!S.pedidos.length){
+    const hoy=new Date(), fmt=d=>d.toISOString().split('T')[0];
+    S.filtroDesde=fmt(new Date(hoy.getFullYear(),hoy.getMonth(),1));
+    S.filtroHasta=fmt(hoy);
+  }
   tx('user-nombre',USUARIO?.nombre||'');
   tx('user-email',USUARIO?.email||'');
   const av=$('user-avatar');
@@ -1593,6 +1616,14 @@ async function handleDropiFile(file){
   try {
     const raw=await importarDropi(file);
     S.pedidos=raw.map(p=>({...p,fecha:toISOfecha(p.fecha)||p.fecha}));
+    // Auto-detectar rango de fechas del archivo importado
+    const fechas=S.pedidos.map(p=>p.fecha).filter(Boolean).sort();
+    if(fechas.length){
+      S.filtroDesde=fechas[0];
+      S.filtroHasta=fechas[fechas.length-1];
+      const fmt=d=>{const[y,m,dd]=d.split('-');return `${dd}/${m}/${y}`;}
+      setPeriodoLabel(fmt(fechas[0])+' → '+fmt(fechas[fechas.length-1]));
+    }
     try { await guardarDatosServidor(); } catch(e){}
     showStatus('dropi-status',`✓ ${S.pedidos.length} pedidos importados`,true);
     toast(`✓ ${S.pedidos.length} pedidos cargados`);
@@ -1627,7 +1658,7 @@ function renderDashboard(){
   const pedF=filtF(S.pedidos);
   const ventasTot=pedF.reduce((s,p)=>s+p.venta,0);
 
-  // KPIs top
+  // KPIs laterales
   tx('kpi-ventas-total',fmtCLP(ventasTot));
   tx('kpi-ventas-total-sub',pedF.length+' pedidos totales');
   tx('kpi-pedidos-n',pedF.length.toString());
@@ -1635,9 +1666,12 @@ function renderDashboard(){
   tx('kpi-gasto-ads',fmtCLP(R.adsGasto));
   const roasVal=R.adsGasto>0&&R.ingresosReales>0?(R.ingresosReales/R.adsGasto):0;
   tx('kpi-roas-val',roasVal>0?roasVal.toFixed(2)+'x':'—');
-  tx('kpi-roas-sub',roasVal>=(S.roasMin||2)?'✓ Óptimo':'⚠ Bajo mínimo');
+  const roasOk=roasVal>=(S.roasMin||2);
+  tx('kpi-roas-sub',roasOk?'✓ Óptimo':'⚠ Bajo mínimo');
   const roasEl=$('kpi-roas-val');
-  if(roasEl) roasEl.style.color=roasVal>=(S.roasMin||2)?'var(--green)':'var(--red)';
+  if(roasEl){roasEl.style.color=roasOk?'var(--green)':'var(--red)';roasEl.style.textShadow=roasOk?'0 0 25px rgba(0,255,179,0.7)':'0 0 25px rgba(255,34,68,0.7)';}
+  // Delta classes para KPIs verticales
+  ['kpi-roas-sub'].forEach(id=>{const el=$(id);if(el)el.className='exec-kpi-vert-delta '+(roasOk?'pos':'neg');});
 
   // Bienvenida / avatar
   const uN=$('db-welcome-name');
