@@ -316,8 +316,8 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 /* Executive card base */
 .exec-card{background:rgba(4,8,18,0.94);border:1px solid rgba(255,170,0,0.18);border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden;backdrop-filter:blur(20px);box-shadow:0 4px 30px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.03);}
 .exec-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,170,0,0.55),transparent);}
-.exec-card-title{font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:14px;text-shadow:0 0 12px rgba(255,170,0,0.5);}
-.exec-card-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.exec-card-title{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:14px;text-shadow:0 0 12px rgba(255,170,0,0.5);}
+.exec-card-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .exec-card-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-align:center;margin-top:6px;}
 
 /* Dashboard grids */
@@ -353,7 +353,7 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .exec-mini-stat.red-s{background:rgba(255,34,68,0.06);border:1px solid rgba(255,34,68,0.25);box-shadow:0 0 20px rgba(255,34,68,0.04);}
 .exec-mini-stat.gold-s{background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.25);box-shadow:0 0 20px rgba(255,170,0,0.04);}
 .exec-mini-stat.purple-s{background:rgba(191,112,255,0.06);border:1px solid rgba(191,112,255,0.25);box-shadow:0 0 20px rgba(191,112,255,0.04);}
-.exec-mini-label{font-family:var(--font-mono);font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;}
+.exec-mini-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;}
 .exec-mini-val{font-size:14px;font-weight:800;}
 .exec-mini-val.green{color:var(--green);text-shadow:0 0 12px rgba(0,255,179,0.5);}
 .exec-mini-val.red{color:var(--red);text-shadow:0 0 12px rgba(255,34,68,0.5);}
@@ -362,26 +362,28 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 
 /* ── SVG RING HERO ──────────────────────────────────────────────── */
 .ring-hero-container{position:relative;display:flex;align-items:center;justify-content:center;
-  background:transparent;padding:8px 0;}
-.ring-svg{width:100%;max-width:430px;height:auto;overflow:visible;filter:drop-shadow(0 0 40px rgba(255,140,0,0.08));}
-.ring-center-content{position:absolute;text-align:center;width:210px;pointer-events:none;}
-.ring-label{font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;}
-.ring-main-val{font-size:30px;font-weight:900;color:var(--gold);letter-spacing:-1px;
-  text-shadow:0 0 30px rgba(255,170,0,0.9),0 0 60px rgba(255,170,0,0.4),0 0 100px rgba(255,170,0,0.15);
-  line-height:1.1;margin-bottom:4px;}
-.ring-delta-val{font-size:13px;font-weight:700;margin-bottom:1px;}
+  background:transparent;padding:4px 0;}
+.ring-svg{width:100%;max-width:440px;height:auto;overflow:visible;filter:drop-shadow(0 0 40px rgba(0,255,100,0.05));}
+.ring-center-content{position:absolute;text-align:center;width:200px;pointer-events:none;}
+.ring-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;}
+.ring-main-val{font-size:34px;font-weight:900;color:var(--green);letter-spacing:-1px;
+  text-shadow:0 0 30px rgba(0,255,179,0.9),0 0 60px rgba(0,255,179,0.4),0 0 100px rgba(0,255,179,0.15);
+  line-height:1.05;margin-bottom:3px;}
+.ring-delta-val{font-size:14px;font-weight:700;margin-bottom:1px;}
 .ring-delta-val.pos{color:var(--green);text-shadow:0 0 12px rgba(0,255,179,0.7);}
 .ring-delta-val.neg{color:var(--red);text-shadow:0 0 12px rgba(255,34,68,0.7);}
-.ring-delta-sub{font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-bottom:8px;}
-.ring-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,170,0,0.35),rgba(0,136,255,0.35),transparent);margin:6px 20px 8px;}
-.ring-meta-label{font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
-.ring-meta-val{font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px;}
-.ring-progress-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;}
-.ring-progress-bar{width:100px;height:3px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
-.ring-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--neo-blue),var(--cyan));
-  box-shadow:0 0 8px rgba(0,170,255,0.8);transition:width 0.8s cubic-bezier(0.4,0,0.2,1);width:0%;}
-.ring-pct{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--cyan);
-  text-shadow:0 0 16px rgba(0,238,255,0.8);}
+.ring-delta-sub{font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-bottom:6px;}
+.ring-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,179,0.25),rgba(0,136,255,0.25),transparent);margin:5px 10px 6px;}
+.ring-mini-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:3px;}
+.ring-mini-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ring-mini-label{font-family:var(--font-mono);font-size:8px;color:var(--text3);}
+.ring-mini-val{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--num);}
+.ring-progress-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:4px;}
+.ring-progress-bar{width:90px;height:3px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.ring-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),#00ffb3);
+  box-shadow:0 0 8px rgba(0,255,179,0.8);transition:width 0.8s cubic-bezier(0.4,0,0.2,1);width:0%;}
+.ring-pct{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--green);
+  text-shadow:0 0 16px rgba(0,255,179,0.8);}
 
 /* keep keyframes for other elements */
 @keyframes ringOrange{0%,100%{opacity:0.85;}50%{opacity:1;}}
@@ -397,6 +399,20 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .exec-funnel-right{display:flex;flex-direction:column;gap:2px;}
 .exec-funnel-num{font-size:14px;font-weight:800;color:var(--text);}
 .exec-funnel-conv{font-family:var(--font-mono);font-size:9px;}
+
+/* Funnel diagnostic alert */
+.funnel-alert{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;margin-top:6px;border:1px solid;}
+.funnel-alert.ok{background:rgba(0,255,179,0.05);border-color:rgba(0,255,179,0.2);}
+.funnel-alert.warn{background:rgba(255,170,0,0.06);border-color:rgba(255,170,0,0.2);}
+.funnel-alert.bad{background:rgba(255,34,68,0.06);border-color:rgba(255,34,68,0.2);}
+.funnel-alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.funnel-alert.ok .funnel-alert-dot{background:#00ffb3;box-shadow:0 0 6px rgba(0,255,179,0.8);}
+.funnel-alert.warn .funnel-alert-dot{background:#ffaa00;box-shadow:0 0 6px rgba(255,170,0,0.8);}
+.funnel-alert.bad .funnel-alert-dot{background:#ff2244;box-shadow:0 0 6px rgba(255,34,68,0.8);}
+.funnel-alert-text{font-family:var(--font-mono);font-size:9px;}
+.funnel-alert.ok .funnel-alert-text{color:var(--green);}
+.funnel-alert.warn .funnel-alert-text{color:var(--gold);}
+.funnel-alert.bad .funnel-alert-text{color:var(--red);}
 
 /* Gauge */
 .exec-gauge-card{display:flex;flex-direction:column;align-items:center;}
@@ -433,9 +449,9 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .db-stat-row:hover{background:rgba(0,136,255,0.05);border-color:rgba(0,136,255,0.15);}
 .db-stat-left{display:flex;align-items:center;gap:8px;}
 .db-stat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.db-stat-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;}
-.db-stat-val{font-size:15px;font-weight:800;color:var(--num);font-variant-numeric:tabular-nums;}
-.db-stat-val.money{font-size:13px;}
+.db-stat-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;}
+.db-stat-val{font-size:17px;font-weight:800;color:var(--num);font-variant-numeric:tabular-nums;}
+.db-stat-val.money{font-size:14px;}
 .db-stat-pct{font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-left:6px;}
 
 /* ── META SELECT DROPDOWN ─────────────────────────────────────────────── */
@@ -458,9 +474,9 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .perf-grid{display:flex;flex-direction:column;gap:4px;margin-top:8px;}
 .perf-row{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;
   border-radius:6px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.03);}
-.perf-name{font-family:var(--font-mono);font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.perf-name{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
 .perf-right{display:flex;align-items:center;gap:6px;}
-.perf-val{font-size:12px;font-weight:800;color:var(--num);font-variant-numeric:tabular-nums;}
+.perf-val{font-size:13px;font-weight:800;color:var(--num);font-variant-numeric:tabular-nums;}
 .perf-semaf{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .perf-semaf.ok{background:#00ffb3;box-shadow:0 0 6px rgba(0,255,179,0.7);}
 .perf-semaf.warn{background:#ffaa00;box-shadow:0 0 6px rgba(255,170,0,0.7);}
@@ -469,8 +485,8 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 /* ── META GLOBAL SUMMARY CARDS ────────────────────────────────────────── */
 .meta-sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;}
 .meta-sum-card{background:rgba(0,0,0,0.3);border:1px solid rgba(0,136,255,0.12);border-radius:8px;padding:7px 10px;text-align:center;}
-.meta-sum-label{font-family:var(--font-mono);font-size:7.5px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
-.meta-sum-val{font-size:14px;font-weight:800;color:var(--num);line-height:1;}
+.meta-sum-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.meta-sum-val{font-size:15px;font-weight:800;color:var(--num);line-height:1;}
 
 /* ── DONUT LEFT ────────────────────────────────────────────────────────── */
 .donut-left-wrap{display:flex;align-items:center;gap:10px;margin-top:8px;}
@@ -744,13 +760,37 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
               <!-- Ventas totales $ (big) -->
               <div style="padding:8px 12px;background:rgba(0,136,255,0.07);border:1px solid rgba(0,136,255,0.2);border-radius:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
                 <div>
-                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px">Ventas Totales</div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px">Ventas Totales</div>
                   <div style="font-size:20px;font-weight:900;color:var(--num);text-shadow:0 0 20px rgba(200,222,255,0.3)" id="kpi-ventas-total">$0</div>
                 </div>
                 <div style="text-align:right">
-                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-bottom:2px">Pedidos</div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:2px">Pedidos</div>
                   <div style="font-size:18px;font-weight:900;color:var(--num)" id="kpi-pedidos-n">0</div>
                 </div>
+              </div>
+
+              <!-- Cost & delivery boxes: 2x2 grid + devueltos -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px">
+                <div style="background:rgba(191,112,255,0.05);border:1px solid rgba(191,112,255,0.18);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label" style="color:rgba(191,112,255,0.8)">Costo Proveedor</div>
+                  <div style="font-size:14px;font-weight:800;color:var(--num)" id="box-costo-prov">$0</div>
+                </div>
+                <div style="background:rgba(255,170,0,0.05);border:1px solid rgba(255,170,0,0.18);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label" style="color:rgba(255,170,0,0.8)">Costo Despacho</div>
+                  <div style="font-size:14px;font-weight:800;color:var(--num)" id="box-costo-flete">$0</div>
+                </div>
+                <div style="background:rgba(0,255,179,0.05);border:1px solid rgba(0,255,179,0.18);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label" style="color:rgba(0,255,179,0.8)">Entregados</div>
+                  <div style="font-size:14px;font-weight:800;color:var(--green)" id="box-entregados">0</div>
+                </div>
+                <div style="background:rgba(0,136,255,0.05);border:1px solid rgba(0,136,255,0.18);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label" style="color:rgba(0,136,255,0.8)">Pendientes</div>
+                  <div style="font-size:14px;font-weight:800;color:var(--neo-blue)" id="box-pendientes">0</div>
+                </div>
+              </div>
+              <div style="background:rgba(255,34,68,0.05);border:1px solid rgba(255,34,68,0.18);border-radius:7px;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <div class="exec-mini-label" style="color:rgba(255,68,80,0.9)">Devueltos (valor $ perdido)</div>
+                <div style="font-size:15px;font-weight:800;color:var(--red)" id="box-devueltos">$0</div>
               </div>
 
               <!-- Status breakdown rows -->
@@ -813,82 +853,142 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 
           <!-- CENTER: SVG Ring Hero (sin card border) -->
           <div class="ring-hero-container">
-            <svg class="ring-svg" viewBox="0 0 430 430" xmlns="http://www.w3.org/2000/svg">
+            <svg class="ring-svg" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <filter id="f-org" x="-60%" y="-60%" width="220%" height="220%">
+                <!-- Green glow filter (utilidad) -->
+                <filter id="f-grn" x="-60%" y="-60%" width="220%" height="220%">
                   <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
                 </filter>
-                <filter id="f-org2" x="-100%" y="-100%" width="300%" height="300%">
+                <filter id="f-grn2" x="-100%" y="-100%" width="300%" height="300%">
                   <feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/></feMerge>
                 </filter>
+                <!-- Red glow filter (gastos) -->
+                <filter id="f-red" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="f-red2" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur stdDeviation="11" result="b"/><feMerge><feMergeNode in="b"/></feMerge>
+                </filter>
+                <!-- Blue glow filter (meta ads) -->
                 <filter id="f-cyn" x="-70%" y="-70%" width="240%" height="240%">
-                  <feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
                 </filter>
                 <filter id="f-cyn2" x="-100%" y="-100%" width="300%" height="300%">
-                  <feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/></feMerge>
+                  <feGaussianBlur stdDeviation="13" result="b"/><feMerge><feMergeNode in="b"/></feMerge>
+                </filter>
+                <!-- Gold glow filter (pedidos) -->
+                <filter id="f-org" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
                 </filter>
               </defs>
 
-              <!-- Ghost outer ring -->
-              <circle cx="215" cy="215" r="208" fill="none" stroke="rgba(255,150,0,0.06)" stroke-width="1" stroke-dasharray="2 8"/>
+              <!-- Ghost outer decorative ring -->
+              <circle cx="220" cy="220" r="212" fill="none" stroke="rgba(0,255,179,0.05)" stroke-width="1" stroke-dasharray="2 9"/>
 
               <!-- Tick marks (generated by JS) -->
               <g id="ring-ticks"></g>
 
-              <!-- Orange bloom glow (behind main arc) -->
-              <circle cx="215" cy="215" r="196" fill="none" stroke="rgba(255,130,0,0.4)"
-                stroke-width="18" filter="url(#f-org2)"
-                stroke-dasharray="1109 1232" stroke-linecap="round"
-                transform="rotate(108, 215, 215)" id="ring-orange-bloom"/>
-
-              <!-- Main orange neon arc (~305°) -->
-              <circle cx="215" cy="215" r="196" fill="none" stroke="#ff9200"
-                stroke-width="5.5" stroke-linecap="round"
-                stroke-dasharray="1109 1232"
-                transform="rotate(108, 215, 215)"
-                filter="url(#f-org)" id="ring-orange-arc"/>
-
-              <!-- Secondary orange dashed ring -->
-              <circle cx="215" cy="215" r="184" fill="none" stroke="rgba(255,150,0,0.22)"
-                stroke-width="1.5" stroke-dasharray="4 10" transform="rotate(-15, 215, 215)"/>
+              <!-- ═══ RING 1: GREEN — Utilidad Real (outer, protagonist) ═══ -->
+              <!-- Track ghost -->
+              <circle cx="220" cy="220" r="200" fill="none" stroke="rgba(0,255,179,0.07)"
+                stroke-width="8" stroke-dasharray="1068 1257"
+                transform="rotate(108, 220, 220)"/>
+              <!-- Bloom glow -->
+              <circle cx="220" cy="220" r="200" fill="none" stroke="rgba(0,255,179,0.38)"
+                stroke-width="18" filter="url(#f-grn2)"
+                stroke-dasharray="0 1257" stroke-linecap="round"
+                transform="rotate(108, 220, 220)" id="ring-green-bloom"/>
+              <!-- Main arc -->
+              <circle cx="220" cy="220" r="200" fill="none" stroke="#00ffb3"
+                stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="0 1257"
+                transform="rotate(108, 220, 220)"
+                filter="url(#f-grn)" id="ring-green-arc"/>
 
               <!-- Dot ring (generated by JS) -->
               <g id="ring-dots"></g>
 
-              <!-- Inner thin deco ring -->
-              <circle cx="215" cy="215" r="168" fill="none" stroke="rgba(0,170,255,0.12)"
-                stroke-width="1" stroke-dasharray="2 7"/>
+              <!-- ═══ RING 2: RED — Gastos Totales ═══ -->
+              <!-- Track ghost -->
+              <circle cx="220" cy="220" r="176" fill="none" stroke="rgba(255,34,68,0.07)"
+                stroke-width="6" stroke-dasharray="941 1106"
+                transform="rotate(108, 220, 220)"/>
+              <!-- Bloom glow -->
+              <circle cx="220" cy="220" r="176" fill="none" stroke="rgba(255,34,68,0.35)"
+                stroke-width="16" filter="url(#f-red2)"
+                stroke-dasharray="0 1106" stroke-linecap="round"
+                transform="rotate(108, 220, 220)" id="ring-red-bloom"/>
+              <!-- Main arc -->
+              <circle cx="220" cy="220" r="176" fill="none" stroke="#ff2244"
+                stroke-width="5.5" stroke-linecap="round"
+                stroke-dasharray="0 1106"
+                transform="rotate(108, 220, 220)"
+                filter="url(#f-red)" id="ring-red-arc"/>
 
-              <!-- Cyan bloom glow (progress) -->
-              <circle cx="215" cy="215" r="156" fill="none" stroke="rgba(0,150,255,0.4)"
-                stroke-width="18" filter="url(#f-cyn2)"
-                stroke-dasharray="0 980" stroke-linecap="round"
-                transform="rotate(-90, 215, 215)" id="ring-cyan-bloom"/>
+              <!-- ═══ RING 3: BLUE — Gasto Meta Ads ═══ -->
+              <!-- Track ghost -->
+              <circle cx="220" cy="220" r="154" fill="none" stroke="rgba(0,136,255,0.08)"
+                stroke-width="5" stroke-dasharray="823 968"
+                transform="rotate(108, 220, 220)"/>
+              <!-- Bloom glow -->
+              <circle cx="220" cy="220" r="154" fill="none" stroke="rgba(0,136,255,0.35)"
+                stroke-width="14" filter="url(#f-cyn2)"
+                stroke-dasharray="0 968" stroke-linecap="round"
+                transform="rotate(108, 220, 220)" id="ring-blue-bloom"/>
+              <!-- Main arc -->
+              <circle cx="220" cy="220" r="154" fill="none" stroke="#0088ff"
+                stroke-width="5" stroke-linecap="round"
+                stroke-dasharray="0 968"
+                transform="rotate(108, 220, 220)"
+                filter="url(#f-cyn)" id="ring-blue-arc"/>
 
-              <!-- Blue progress arc -->
-              <circle cx="215" cy="215" r="156" fill="none" stroke="#00aaff"
-                stroke-width="9" stroke-linecap="round"
-                stroke-dasharray="0 980"
-                transform="rotate(-90, 215, 215)"
-                filter="url(#f-cyn)" id="ring-cyan-arc"/>
+              <!-- ═══ RING 4: GOLD — Pedidos Totales (inner) ═══ -->
+              <!-- Track ghost: fixed 300° decorative -->
+              <circle cx="220" cy="220" r="133" fill="none" stroke="rgba(255,170,0,0.08)"
+                stroke-width="4" stroke-dasharray="2 8"
+                transform="rotate(-20, 220, 220)"/>
+              <!-- Bloom -->
+              <circle cx="220" cy="220" r="133" fill="none" stroke="rgba(255,160,0,0.28)"
+                stroke-width="12" filter="url(#f-org)"
+                stroke-dasharray="0 836" stroke-linecap="round"
+                transform="rotate(108, 220, 220)" id="ring-gold-bloom"/>
+              <!-- Main arc -->
+              <circle cx="220" cy="220" r="133" fill="none" stroke="#ffaa00"
+                stroke-width="4" stroke-linecap="round"
+                stroke-dasharray="0 836"
+                transform="rotate(108, 220, 220)"
+                filter="url(#f-org)" id="ring-gold-arc"/>
 
-              <!-- Innermost deco -->
-              <circle cx="215" cy="215" r="140" fill="none" stroke="rgba(0,136,255,0.08)" stroke-width="1" stroke-dasharray="1 5"/>
+              <!-- Inner deco separator ring -->
+              <circle cx="220" cy="220" r="117" fill="none" stroke="rgba(0,255,179,0.06)" stroke-width="1" stroke-dasharray="1 5"/>
 
               <!-- Dark fill for center content -->
-              <circle cx="215" cy="215" r="132" fill="rgba(1,3,12,0.90)"/>
-              <circle cx="215" cy="215" r="132" fill="none" stroke="rgba(255,160,0,0.07)" stroke-width="1"/>
+              <circle cx="220" cy="220" r="110" fill="rgba(1,3,12,0.93)"/>
+              <circle cx="220" cy="220" r="110" fill="none" stroke="rgba(0,255,179,0.08)" stroke-width="1"/>
             </svg>
 
             <!-- Floating center text -->
             <div class="ring-center-content">
-              <div class="ring-label">Ventas Totales</div>
+              <div class="ring-label">Utilidad Real</div>
               <div class="ring-main-val" id="gauge-ventas">$0</div>
               <div class="ring-delta-val pos" id="gauge-delta">—</div>
-              <div class="ring-delta-sub" id="gauge-delta-label">ventas cobradas</div>
+              <div class="ring-delta-sub">entregados + 75% pendientes</div>
               <div class="ring-divider"></div>
-              <div class="ring-meta-label">Meta Mensual</div>
-              <div class="ring-meta-val" id="ring-meta-val">—</div>
+              <div class="ring-mini-row">
+                <div class="ring-mini-dot" style="background:#ff2244;box-shadow:0 0 4px rgba(255,34,68,0.8)"></div>
+                <span class="ring-mini-label">Gastos</span>
+                <span class="ring-mini-val" id="ring-gastos-val">$0</span>
+              </div>
+              <div class="ring-mini-row">
+                <div class="ring-mini-dot" style="background:#0088ff;box-shadow:0 0 4px rgba(0,136,255,0.8)"></div>
+                <span class="ring-mini-label">Meta Ads</span>
+                <span class="ring-mini-val" id="ring-meta-ads-val">$0</span>
+              </div>
+              <div class="ring-mini-row">
+                <div class="ring-mini-dot" style="background:#ffaa00;box-shadow:0 0 4px rgba(255,170,0,0.8)"></div>
+                <span class="ring-mini-label">Pedidos</span>
+                <span class="ring-mini-val" id="ring-pedidos-val">0</span>
+              </div>
               <div class="ring-progress-wrap">
                 <div class="ring-progress-bar"><div class="ring-progress-fill" id="ring-pbar"></div></div>
                 <div class="ring-pct" id="gauge-pct">—</div>
@@ -1908,32 +2008,43 @@ function renderDashboard(){
   if(av&&S.usuario) av.textContent=(S.usuario.nombre||'A')[0].toUpperCase();
   tx('db-cobrado',fmtCLP(R.ingresosReales));
   tx('db-costos',fmtCLP(R.costosTotal));
-  // Utilidad: verde si positivo, rojo si negativo
   const utilEl=$('db-utilidad-real');
   if(utilEl){utilEl.textContent=fmtCLP(R.utilidadReal);utilEl.style.color=R.utilidadReal>=0?'var(--green)':'var(--red)';utilEl.style.textShadow=R.utilidadReal>=0?'0 0 12px rgba(0,255,179,0.5)':'0 0 12px rgba(255,34,68,0.5)';}
   tx('db-proy',fmtCLP(R.proyUtilidad));
 
-  // Dropi stat rows
+  // Left column
   renderDashLeft(R, pedF);
 
-  // SVG Ring hero
-  tx('gauge-ventas',fmtCLP(ventasTot));
-  tx('gauge-delta',fmtCLP(R.ingresosReales));
-  tx('gauge-delta-label','ventas cobradas');
-  const gdEl=$('gauge-delta');
-  if(gdEl){gdEl.className='ring-delta-val '+(R.ingresosReales>=0?'pos':'neg');}
-  // Meta progress
+  // ── SVG RINGS ──
+  // Utilidad Real = cobrado (entregados) + 75% pendientes como referencia
+  const ventasPend=[...R.listas.pendientes,...R.listas.transito].reduce((s,p)=>s+p.venta,0);
+  const utilidadRealRing=R.utilidadReal+(ventasPend*(S.tasaEntrega/100)*0.35); // approx
+  const utilReal75=R.ingresosReales + R.proyUtilidad; // entregados + proy
+
+  // Center text: show utilidad real
+  const mainVal=$('gauge-ventas');
+  if(mainVal){mainVal.textContent=fmtCLP(R.utilidadReal);mainVal.style.color=R.utilidadReal>=0?'var(--green)':'var(--red)';mainVal.style.textShadow=R.utilidadReal>=0?'0 0 30px rgba(0,255,179,0.9),0 0 60px rgba(0,255,179,0.4)':'0 0 30px rgba(255,34,68,0.9),0 0 60px rgba(255,34,68,0.4)';}
+  const deltaEl=$('gauge-delta');
+  const margenPct=R.ingresosReales>0?(R.utilidadReal/R.ingresosReales*100):0;
+  if(deltaEl){deltaEl.textContent=(margenPct>=0?'+':'')+margenPct.toFixed(1)+'% margen';deltaEl.className='ring-delta-val '+(margenPct>=0?'pos':'neg');}
+
+  // Mini rows in center
+  tx('ring-gastos-val',fmtCLP(R.costosTotal));
+  tx('ring-meta-ads-val',fmtCLP(R.adsGasto));
+  tx('ring-pedidos-val',pedF.length);
+
+  // Progress bar vs meta mensual
   const metaMensual=S.metaMensual||0;
-  const metaEl=$('ring-meta-val');
-  if(metaEl) metaEl.textContent=metaMensual>0?fmtCLP(metaMensual):'Sin meta configurada';
-  const pctMeta=metaMensual>0?Math.min(100,(ventasTot/metaMensual)*100):0;
+  const pctMeta=metaMensual>0?Math.min(100,(R.utilidadReal/metaMensual)*100):Math.min(100,Math.max(0,margenPct));
   const pbarEl=$('ring-pbar'); if(pbarEl) pbarEl.style.width=pctMeta.toFixed(1)+'%';
-  tx('gauge-pct',pctMeta>0?pctMeta.toFixed(1)+'%':'—');
-  updateRingProgress(pctMeta);
-  // Margen proyectado
-  const ventasPT=[...R.listas.pendientes,...R.listas.transito].reduce((s,p)=>s+p.venta,0);
-  const vBase=R.ingresosReales+(ventasPT*(S.tasaEntrega/100));
-  const marg=vBase>0?(R.utilidadTotal/vBase)*100:0;
+  tx('gauge-pct',margenPct.toFixed(1)+'%');
+
+  // Update all 4 rings
+  const pctGreen=R.ingresosReales>0?Math.max(0,Math.min(100,(R.utilidadReal/R.ingresosReales)*100)):0;
+  const pctRed=R.ingresosReales>0?Math.min(100,(R.costosTotal/(R.ingresosReales+R.costosTotal))*100):50;
+  const pctBlue=R.costosTotal>0?Math.min(100,(R.adsGasto/R.costosTotal)*100):0;
+  const pctGold=R.total>0?(R.entregados/R.total)*100:0;
+  updateAllRings({pctGreen,pctRed,pctBlue,pctGold});
 
   // Estado pedidos
   const sg=$('status-grid');
@@ -1995,7 +2106,6 @@ function renderExecCharts(){
   renderVentasAdsChart(pedidos);
   renderCanalChart(pedidos);
   renderMargenGauge();
-  // Funnel is rendered via renderFunnelCampaign inside renderMetaRight
   const selVal=$('funnel-camp-select')?.value||'__all__';
   renderFunnelCampaign(selVal);
 }
@@ -2152,6 +2262,15 @@ function renderDashLeft(R, pedF){
   const tot=R.total||0;
   const pct=n=>tot>0?((n/tot)*100).toFixed(0)+'%':'0%';
 
+  // Cost breakdown boxes
+  tx('box-costo-prov',fmtCLP(R.costoProveedor));
+  tx('box-costo-flete',fmtCLP(R.costoFlete));
+  tx('box-entregados',R.entregados);
+  tx('box-pendientes',R.pendientes+R.enTransito);
+  // Devueltos: valor perdido = flete de devueltos
+  const devFleteVal=R.listas.devueltos.reduce((s,p)=>s+(p.flete||0)+(p.comision||0),0);
+  tx('box-devueltos',fmtCLP(devFleteVal));
+
   tx('dropi-ent-n',R.entregados);    tx('dropi-ent-pct',pct(R.entregados));
   tx('dropi-pen-n',R.pendientes+R.enTransito); tx('dropi-pen-pct',pct(R.pendientes+R.enTransito));
   tx('dropi-can-n',R.cancelados);    tx('dropi-can-pct',pct(R.cancelados));
@@ -2213,8 +2332,7 @@ function renderMetaRight(R){
 
   // Populate dropdowns
   populateCampaignDropdowns();
-  // Render funnel and perf
-  renderFunnelCampaign('__all__');
+  renderFunnelCampaign('__all__',R);
   renderMetaPerf('__all__');
 }
 
@@ -2227,49 +2345,91 @@ function populateCampaignDropdowns(){
   });
 }
 
-function renderFunnelCampaign(idx){
+function renderFunnelCampaign(idx,_R){
   const el=$('exec-funnel'); if(!el) return;
-  const R=calcR(filtF(S.pedidos));
+  const R=_R||calcR(filtF(S.pedidos));
   const tot=R.total||1;
 
-  // If Meta is connected and a specific campaign is selected, show Meta funnel
-  if(S.meta?.campanas?.length&&idx!=='__all__'){
-    const c=S.meta.campanas[parseInt(idx)];
-    if(c){
-      const steps=[
-        {l:'IMPRESIONES',v:Math.round(c.impresiones||0),pct:100,c:'#ff9d00'},
-        {l:'CLICS',v:Math.round(c.clics||0),pct:c.impresiones>0?(c.clics/c.impresiones)*100:0,c:'#00c8ff'},
-        {l:'COMPRAS',v:Math.round(c.compras||0),pct:c.clics>0?(c.compras/c.clics)*100:0,c:'#00ffb3'},
-      ];
-      el.innerHTML=_funnelHtml(steps); return;
+  // If Meta is connected show Meta funnel with diagnostics
+  if(S.meta?.campanas?.length||S.meta?.impresiones){
+    const m=S.meta;
+    let imp=0,cl=0,comp=0,ctr=0,cpa=0,cpm=0;
+    if(idx!=='__all__'){
+      const c=m.campanas[parseInt(idx)];
+      if(c){imp=c.impresiones||0;cl=c.clics||0;comp=c.compras||0;ctr=c.ctr||0;cpa=c.compras>0?c.gasto/c.compras:0;cpm=c.cpm||0;}
+    } else {
+      imp=m.impresiones||0;cl=m.clics||0;comp=m.compras||0;ctr=m.ctr||0;cpa=m.cpa||0;
+      cpm=m.campanas?.length?m.campanas.reduce((s,c)=>s+(c.cpm||0),0)/m.campanas.length:0;
     }
+    const clickRate=imp>0?(cl/imp)*100:0;
+    const convRate=cl>0?(comp/cl)*100:0;
+
+    const metaSteps=[
+      {l:'IMPRESIONES (Alcance)',v:Math.round(imp),pct:100,c:'#ffaa00'},
+      {l:'CLICS (CTR: '+clickRate.toFixed(2)+'%)',v:Math.round(cl),pct:imp>0?(cl/imp)*100:0,c:'#00c8ff'},
+      {l:'COMPRAS (Conv: '+convRate.toFixed(2)+'%)',v:Math.round(comp),pct:cl>0?(comp/cl)*100:0,c:'#00ffb3'},
+    ];
+
+    // Diagnostic semaphores
+    const diags=_metaDiagnostics({ctr,cpa,cpm,convRate,comp,roas:m.gastoTotal>0&&R.ingresosReales>0?R.ingresosReales/m.gastoTotal:0});
+    el.innerHTML=_funnelMetaHtml(metaSteps)+diags;
+    return;
   }
 
-  // Default: Dropi conversion funnel
+  // Default: Dropi conversion funnel (no Meta)
   const steps=[
-    {l:'PEDIDOS TOTALES',v:R.total,pct:100,c:'#ff9d00'},
+    {l:'PEDIDOS TOTALES',v:R.total,pct:100,c:'#ffaa00'},
     {l:'EN PROCESO',v:R.enTransito+R.pendientes,pct:(R.enTransito+R.pendientes)/tot*100,c:'#00c8ff'},
     {l:'ENTREGADOS',v:R.entregados,pct:R.entregados/tot*100,c:'#00ffb3'},
-    {l:'BAJAS',v:R.devueltos+R.cancelados,pct:(R.devueltos+R.cancelados)/tot*100,c:'#ff2244'},
+    {l:'BAJAS (dev+cancel)',v:R.devueltos+R.cancelados,pct:(R.devueltos+R.cancelados)/tot*100,c:'#ff2244'},
   ];
-  el.innerHTML=_funnelHtml(steps);
+  el.innerHTML=_funnelMetaHtml(steps);
 }
 
-function _funnelHtml(steps){
+function _funnelMetaHtml(steps){
   return steps.map((s,i)=>{
-    const wPct=Math.max(30,s.pct);
-    const prevPct=i>0?steps[i-1].pct:100;
-    const convPct=prevPct>0?(s.pct/prevPct*100).toFixed(1)+'%':null;
+    const wPct=Math.max(28,Math.min(100,s.pct));
+    const prevPct=i>0?Math.max(steps[i-1].pct,0.1):100;
+    const convPct=i>0?(s.pct/prevPct*100).toFixed(1)+'%':null;
     return `<div class="funnel-step">
-      <div class="funnel-bar" style="width:${wPct}%;background:${s.c}18;border-left:3px solid ${s.c};box-shadow:inset 0 0 12px ${s.c}08">
+      <div class="funnel-bar" style="width:${wPct}%;background:${s.c}15;border-left:3px solid ${s.c};box-shadow:inset 0 0 14px ${s.c}10">
         <span class="funnel-label" style="color:${s.c}">${s.l}</span>
       </div>
       <div class="funnel-meta">
-        <div class="funnel-num">${s.v.toLocaleString('es-CL')}</div>
+        <div class="funnel-num">${typeof s.v==='number'?s.v.toLocaleString('es-CL'):s.v}</div>
         ${i>0&&convPct?`<div class="funnel-conv-pct" style="color:${s.c}">${convPct}</div>`:''}
       </div>
     </div>`;
   }).join('');
+}
+
+function _metaDiagnostics({ctr,cpa,cpm,convRate,comp,roas}){
+  const ctrMin=S.ctrMin||1.5, cpaMax=S.cpaMax||4000, cpmMax=S.cpmMax||4500, roasMin=S.roasMin||2;
+  const alerts=[];
+
+  // Creative diagnosis (CTR)
+  if(ctr<ctrMin*0.5) alerts.push({c:'bad',t:`Creativos: CTR ${ctr.toFixed(2)}% — revisar imágenes/copy`});
+  else if(ctr<ctrMin) alerts.push({c:'warn',t:`Creativos: CTR ${ctr.toFixed(2)}% bajo umbral (${ctrMin}%)`});
+  else alerts.push({c:'ok',t:`Creativos: CTR ${ctr.toFixed(2)}% ✓`});
+
+  // Landing / form (conversion click→purchase)
+  if(convRate<1) alerts.push({c:'bad',t:`Landing/Form: Conv ${convRate.toFixed(2)}% — problema en página o checkout`});
+  else if(convRate<3) alerts.push({c:'warn',t:`Landing: Conv ${convRate.toFixed(2)}% — optimizar CTA o formulario`});
+  else alerts.push({c:'ok',t:`Landing: Conv ${convRate.toFixed(2)}% ✓`});
+
+  // Audience saturation (CPM)
+  if(cpm>cpmMax*1.5) alerts.push({c:'bad',t:`Audiencia: CPM ${fmtCLP(Math.round(cpm))} — saturación o competencia alta`});
+  else if(cpm>cpmMax) alerts.push({c:'warn',t:`Audiencia: CPM ${fmtCLP(Math.round(cpm))} sobre umbral`});
+
+  // ROAS overall
+  if(roas>0&&roas<roasMin*0.5) alerts.push({c:'bad',t:`ROAS ${roas.toFixed(2)}x — rentabilidad crítica`});
+  else if(roas>0&&roas<roasMin) alerts.push({c:'warn',t:`ROAS ${roas.toFixed(2)}x bajo mínimo (${roasMin}x)`});
+  else if(roas>0) alerts.push({c:'ok',t:`ROAS ${roas.toFixed(2)}x ✓`});
+
+  if(!alerts.length) return '';
+  return '<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px">'+
+    alerts.map(a=>`<div class="funnel-alert ${a.c}"><div class="funnel-alert-dot"></div><span class="funnel-alert-text">${a.t}</span></div>`).join('')+
+  '</div>';
 }
 
 function renderMetaPerf(idx){
@@ -2823,56 +2983,68 @@ function setupDnD(){
 // ══ INIT ══════════════════════════════════════════════════════════════════════
 // ══ SVG RING BUILDERS ════════════════════════════════════════════════════════
 function buildRingDecorations(){
-  const cx=215,cy=215;
-  // Tick marks around orange arc (r=196, arc from 108° covering 305°)
+  const cx=220,cy=220;
+  // Tick marks around the outer edge (r=212) — 300° arc, 60° gap at bottom
   const tg=document.getElementById('ring-ticks');
   if(tg){
-    const n=90,rOuter=193,gapStart=108+305,gapEnd=108+360;
+    const n=90, rOuter=212;
     let h='';
     for(let i=0;i<n;i++){
       const deg=(i/n)*360;
-      // skip gap zone (approx 53° gap centered at bottom)
       const absDeg=(deg+108)%360;
-      if(absDeg>=305&&absDeg<=360) continue;
+      if(absDeg>=302&&absDeg<=360) continue;
       const rad=(deg-90)*Math.PI/180;
       const major=i%9===0;
-      const len=major?11:5;
-      const x1=(cx+(rOuter)*Math.cos(rad)).toFixed(1);
-      const y1=(cy+(rOuter)*Math.sin(rad)).toFixed(1);
+      const len=major?10:4;
+      const x1=(cx+rOuter*Math.cos(rad)).toFixed(1);
+      const y1=(cy+rOuter*Math.sin(rad)).toFixed(1);
       const x2=(cx+(rOuter-len)*Math.cos(rad)).toFixed(1);
       const y2=(cy+(rOuter-len)*Math.sin(rad)).toFixed(1);
-      h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(255,155,0,${major?0.65:0.28})" stroke-width="${major?1.8:0.9}"/>`;
+      h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(0,255,179,${major?0.5:0.18})" stroke-width="${major?1.6:0.8}"/>`;
     }
     tg.innerHTML=h;
   }
-  // Dots at r=175
+  // Dots between ring 1 (r=200) and ring 2 (r=176), at r=188
   const dg=document.getElementById('ring-dots');
   if(dg){
-    const n=48,r=175;
+    const n=48,r=188;
     let h='';
     for(let i=0;i<n;i++){
       const deg=(i/n)*360;
       const absDeg=(deg+108)%360;
-      if(absDeg>=305&&absDeg<=360) continue;
+      if(absDeg>=302&&absDeg<=360) continue;
       const rad=(deg-90)*Math.PI/180;
       const major=i%6===0;
       const x=(cx+r*Math.cos(rad)).toFixed(1);
       const y=(cy+r*Math.sin(rad)).toFixed(1);
-      h+=`<circle cx="${x}" cy="${y}" r="${major?2.2:1.2}" fill="rgba(255,150,0,${major?0.55:0.22})"/>`;
+      h+=`<circle cx="${x}" cy="${y}" r="${major?2.0:1.0}" fill="rgba(0,255,179,${major?0.45:0.18})"/>`;
     }
     dg.innerHTML=h;
   }
 }
 
-function updateRingProgress(pct){
-  const r=156, circ=2*Math.PI*r;
-  const filled=Math.min(1,Math.max(0,pct/100))*circ;
-  const da=`${filled.toFixed(1)} ${circ.toFixed(1)}`;
-  const arc=document.getElementById('ring-cyan-arc');
-  const bloom=document.getElementById('ring-cyan-bloom');
-  if(arc) arc.setAttribute('stroke-dasharray',da);
-  if(bloom) bloom.setAttribute('stroke-dasharray',da);
+// updateAllRings — feeds all 4 SVG progress arcs
+// Each ring: max arc = 2*PI*r * (300/360) starting at rotate(108)
+// pctGreen=utilidad/ingresos, pctRed=gastos/ingresos, pctBlue=ads/gastos, pctGold=entregados/total
+function updateAllRings({pctGreen=0,pctRed=0,pctBlue=0,pctGold=0}){
+  function setArc(arcId,bloomId,r,pct){
+    const maxDeg=300;
+    const circ=2*Math.PI*r;
+    const maxArc=circ*(maxDeg/360);
+    const filled=Math.min(1,Math.max(0,pct/100))*maxArc;
+    const da=`${filled.toFixed(1)} ${circ.toFixed(1)}`;
+    const arc=document.getElementById(arcId);
+    const bloom=document.getElementById(bloomId);
+    if(arc) arc.setAttribute('stroke-dasharray',da);
+    if(bloom) bloom.setAttribute('stroke-dasharray',da);
+  }
+  setArc('ring-green-arc','ring-green-bloom',200,pctGreen);
+  setArc('ring-red-arc',  'ring-red-bloom',  176,pctRed);
+  setArc('ring-blue-arc', 'ring-blue-bloom', 154,pctBlue);
+  setArc('ring-gold-arc', 'ring-gold-bloom', 133,pctGold);
 }
+
+function updateRingProgress(pct){ updateAllRings({pctGreen:pct}); }
 
 document.addEventListener('DOMContentLoaded',()=>{
   tx('date-badge',new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'}));
