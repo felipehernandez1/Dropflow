@@ -15,6 +15,7 @@
   --neo-blue:#0088ff;--neo-blue-dim:rgba(0,136,255,0.15);--neo-blue-glow:rgba(0,136,255,0.6);
   --green:#00ffb3;--red:#ff2244;--purple:#bf70ff;
   --text:#e8f4ff;--text2:#6888aa;--text3:#8a5822;
+  --num:#c8deff;
   --border:rgba(255,170,0,0.14);--border2:rgba(255,170,0,0.30);
   --radius:14px;--radius2:10px;
   --font-display:'Outfit',sans-serif;--font-mono:'JetBrains Mono',monospace;
@@ -426,6 +427,60 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .canal-legend{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
 .canal-legend-item{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;color:var(--text3);}
 .canal-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── STAT ROW (left col dropi stats) ─────────────────────────────────── */
+.db-stat-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:8px;margin-bottom:5px;border:1px solid rgba(255,255,255,0.04);background:rgba(0,0,0,0.25);transition:all 0.2s;}
+.db-stat-row:hover{background:rgba(0,136,255,0.05);border-color:rgba(0,136,255,0.15);}
+.db-stat-left{display:flex;align-items:center;gap:8px;}
+.db-stat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.db-stat-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;}
+.db-stat-val{font-size:15px;font-weight:800;color:var(--num);font-variant-numeric:tabular-nums;}
+.db-stat-val.money{font-size:13px;}
+.db-stat-pct{font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-left:6px;}
+
+/* ── META SELECT DROPDOWN ─────────────────────────────────────────────── */
+.db-select{background:rgba(0,0,0,0.5);border:1px solid rgba(0,136,255,0.2);color:var(--text2);
+  font-family:var(--font-mono);font-size:9px;padding:4px 8px;border-radius:6px;outline:none;
+  cursor:pointer;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.db-select:focus{border-color:rgba(0,136,255,0.5);}
+
+/* ── VISUAL FUNNEL (trapezoidal) ──────────────────────────────────────── */
+.funnel-wrap{display:flex;flex-direction:column;gap:3px;padding:4px 0;}
+.funnel-step{position:relative;display:flex;align-items:center;gap:8px;}
+.funnel-bar{border-radius:0 4px 4px 0;height:26px;display:flex;align-items:center;padding:0 10px;flex-shrink:0;min-width:30%;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);}
+.funnel-label{font-family:var(--font-mono);font-size:7.5px;font-weight:700;white-space:nowrap;letter-spacing:0.5px;}
+.funnel-meta{display:flex;flex-direction:column;gap:1px;}
+.funnel-num{font-size:13px;font-weight:800;color:var(--num);font-variant-numeric:tabular-nums;}
+.funnel-conv{font-family:var(--font-mono);font-size:8px;color:var(--text3);}
+.funnel-conv-pct{font-family:var(--font-mono);font-size:8px;font-weight:700;}
+
+/* ── PERF METRICS TABLE ───────────────────────────────────────────────── */
+.perf-grid{display:flex;flex-direction:column;gap:4px;margin-top:8px;}
+.perf-row{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;
+  border-radius:6px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.03);}
+.perf-name{font-family:var(--font-mono);font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.perf-right{display:flex;align-items:center;gap:6px;}
+.perf-val{font-size:12px;font-weight:800;color:var(--num);font-variant-numeric:tabular-nums;}
+.perf-semaf{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.perf-semaf.ok{background:#00ffb3;box-shadow:0 0 6px rgba(0,255,179,0.7);}
+.perf-semaf.warn{background:#ffaa00;box-shadow:0 0 6px rgba(255,170,0,0.7);}
+.perf-semaf.bad{background:#ff2244;box-shadow:0 0 6px rgba(255,34,68,0.7);}
+
+/* ── META GLOBAL SUMMARY CARDS ────────────────────────────────────────── */
+.meta-sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;}
+.meta-sum-card{background:rgba(0,0,0,0.3);border:1px solid rgba(0,136,255,0.12);border-radius:8px;padding:7px 10px;text-align:center;}
+.meta-sum-label{font-family:var(--font-mono);font-size:7.5px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.meta-sum-val{font-size:14px;font-weight:800;color:var(--num);line-height:1;}
+
+/* ── DONUT LEFT ────────────────────────────────────────────────────────── */
+.donut-left-wrap{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.donut-left-chart{position:relative;flex-shrink:0;width:80px;height:80px;}
+.donut-left-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.donut-left-total{font-size:16px;font-weight:900;color:var(--num);}
+.donut-left-sub{font-family:var(--font-mono);font-size:7px;color:var(--text3);}
+.donut-left-legend{flex:1;display:flex;flex-direction:column;gap:4px;}
+.donut-left-item{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:8px;color:var(--text3);}
+.donut-left-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -653,49 +708,106 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
         <!-- HERO LAYOUT: KPIs izquierda | Ring central | KPIs + Funnel derecha -->
         <div class="exec-hero-layout">
 
-          <!-- LEFT: KPIs + Comparativo -->
+          <!-- LEFT: Dropi / Contabilidad Stats + Donut -->
           <div class="exec-hero-left">
-            <div class="exec-card" style="padding:14px 16px">
-              <div class="exec-card-label" style="font-size:8px">Bienvenido de vuelta,</div>
-              <div class="exec-welcome-name" id="db-welcome-name" style="font-size:18px;margin-bottom:8px">Admin</div>
-              <div class="exec-mini-stats" style="gap:6px">
-                <div class="exec-mini-stat green-s">
+            <!-- Welcome + financials -->
+            <div class="exec-card" style="padding:12px 14px">
+              <div class="exec-card-label" style="font-size:8px">Bienvenido,</div>
+              <div class="exec-welcome-name" id="db-welcome-name" style="font-size:16px;margin-bottom:8px">Admin</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+                <div style="background:rgba(0,255,179,0.05);border:1px solid rgba(0,255,179,0.2);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Cobrado</div>
-                  <div class="exec-mini-val green" id="db-cobrado">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:var(--green)" id="db-cobrado">$0</div>
                 </div>
-                <div class="exec-mini-stat red-s">
+                <div style="background:rgba(255,34,68,0.05);border:1px solid rgba(255,34,68,0.2);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Costos</div>
-                  <div class="exec-mini-val red" id="db-costos">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:var(--red)" id="db-costos">$0</div>
                 </div>
-                <div class="exec-mini-stat" style="background:rgba(0,136,255,0.06);border:1px solid rgba(0,136,255,0.25)">
+                <div style="background:rgba(0,136,255,0.05);border:1px solid rgba(0,136,255,0.2);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Utilidad</div>
-                  <div class="exec-mini-val" style="color:var(--neo-blue);text-shadow:0 0 12px rgba(0,136,255,0.6)" id="db-utilidad-real">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px" id="db-utilidad-real">$0</div>
                 </div>
-                <div class="exec-mini-stat purple-s">
+                <div style="background:rgba(191,112,255,0.05);border:1px solid rgba(191,112,255,0.2);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Proyecc.</div>
-                  <div class="exec-mini-val purple" id="db-proy">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:var(--purple)" id="db-proy">$0</div>
                 </div>
               </div>
             </div>
-            <div class="exec-kpi-vert cyan">
-              <div class="exec-kpi-vert-label">Ventas Totales</div>
-              <div class="exec-kpi-vert-val" id="kpi-ventas-total">$0</div>
-              <div class="exec-kpi-vert-delta neu" id="kpi-ventas-total-sub">todos los pedidos</div>
+
+            <!-- Dropi Stats breakdown -->
+            <div class="exec-card" style="padding:12px 14px;flex:1">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                <div class="exec-card-title" style="margin-bottom:0">Resumen Dropi</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="dropi-periodo-label">—</div>
+              </div>
+
+              <!-- Ventas totales $ (big) -->
+              <div style="padding:8px 12px;background:rgba(0,136,255,0.07);border:1px solid rgba(0,136,255,0.2);border-radius:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px">Ventas Totales</div>
+                  <div style="font-size:20px;font-weight:900;color:var(--num);text-shadow:0 0 20px rgba(200,222,255,0.3)" id="kpi-ventas-total">$0</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-bottom:2px">Pedidos</div>
+                  <div style="font-size:18px;font-weight:900;color:var(--num)" id="kpi-pedidos-n">0</div>
+                </div>
+              </div>
+
+              <!-- Status breakdown rows -->
+              <div id="dropi-stat-rows">
+                <div class="db-stat-row">
+                  <div class="db-stat-left"><div class="db-stat-dot" style="background:#00ffb3"></div><span class="db-stat-label">Entregados</span></div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span class="db-stat-pct" id="dropi-ent-pct">0%</span>
+                    <span class="db-stat-val" id="dropi-ent-n">0</span>
+                  </div>
+                </div>
+                <div class="db-stat-row">
+                  <div class="db-stat-left"><div class="db-stat-dot" style="background:#00c8ff"></div><span class="db-stat-label">Pendientes</span></div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span class="db-stat-pct" id="dropi-pen-pct">0%</span>
+                    <span class="db-stat-val" id="dropi-pen-n">0</span>
+                  </div>
+                </div>
+                <div class="db-stat-row">
+                  <div class="db-stat-left"><div class="db-stat-dot" style="background:#ff9d00"></div><span class="db-stat-label">Cancelados</span></div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span class="db-stat-pct" id="dropi-can-pct">0%</span>
+                    <span class="db-stat-val" id="dropi-can-n">0</span>
+                  </div>
+                </div>
+                <div class="db-stat-row" style="margin-bottom:0">
+                  <div class="db-stat-left"><div class="db-stat-dot" style="background:#ff2244"></div><span class="db-stat-label">Devueltos</span></div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span class="db-stat-pct" id="dropi-dev-pct">0%</span>
+                    <span class="db-stat-val" id="dropi-dev-n">0</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Donut dist -->
+              <div class="donut-left-wrap">
+                <div class="donut-left-chart">
+                  <canvas id="chart-donut-left" width="80" height="80"></canvas>
+                  <div class="donut-left-center">
+                    <div class="donut-left-total" id="donut-left-total">0</div>
+                    <div class="donut-left-sub">pedidos</div>
+                  </div>
+                </div>
+                <div class="donut-left-legend" id="donut-left-legend"></div>
+              </div>
             </div>
-            <div class="exec-kpi-vert gold">
-              <div class="exec-kpi-vert-label">Pedidos</div>
-              <div class="exec-kpi-vert-val" id="kpi-pedidos-n">0</div>
-              <div class="exec-kpi-vert-delta neu" id="kpi-pedidos-sub">total período</div>
-            </div>
-            <div class="exec-card" style="padding:12px 14px">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+
+            <!-- Comparativo chart mini -->
+            <div class="exec-card" style="padding:10px 12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
                 <div class="exec-card-title" style="margin-bottom:0">Comparativo</div>
                 <div style="display:flex;gap:10px;font-family:var(--font-mono);font-size:8px">
                   <span style="color:var(--gold)">● Ventas</span>
                   <span style="color:var(--neo-blue)">● Gastos</span>
                 </div>
               </div>
-              <div style="height:80px"><canvas id="chart-comparativo"></canvas></div>
+              <div style="height:70px"><canvas id="chart-comparativo"></canvas></div>
             </div>
           </div>
 
@@ -784,22 +896,75 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
             </div>
           </div>
 
-          <!-- RIGHT: KPIs + Funnel -->
+          <!-- RIGHT: Meta Ads performance + Funnel -->
           <div class="exec-hero-right">
-            <div class="exec-kpi-vert red">
-              <div class="exec-kpi-vert-label">Gasto Ads</div>
-              <div class="exec-kpi-vert-val" id="kpi-gasto-ads">$0</div>
-              <div class="exec-kpi-vert-delta neu" id="kpi-gasto-ads-sub">Meta Ads período</div>
+
+            <!-- Meta Global KPIs summary -->
+            <div class="exec-card" style="padding:12px 14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                <div class="exec-card-title" style="margin-bottom:0">Meta Ads · Global</div>
+                <div id="meta-live-badge" style="display:none;font-family:var(--font-mono);font-size:7px;color:var(--green);background:rgba(0,255,179,0.1);border:1px solid rgba(0,255,179,0.3);padding:2px 7px;border-radius:20px">● LIVE</div>
+              </div>
+              <div class="meta-sum-grid" id="meta-sum-grid">
+                <div class="meta-sum-card">
+                  <div class="meta-sum-label">Gasto Total</div>
+                  <div class="meta-sum-val" style="color:var(--red)" id="kpi-gasto-ads">$0</div>
+                </div>
+                <div class="meta-sum-card">
+                  <div class="meta-sum-label">ROAS</div>
+                  <div class="meta-sum-val" id="kpi-roas-val">—</div>
+                </div>
+                <div class="meta-sum-card">
+                  <div class="meta-sum-label">CPA</div>
+                  <div class="meta-sum-val" id="meta-dash-cpa">$0</div>
+                </div>
+                <div class="meta-sum-card">
+                  <div class="meta-sum-label">Compras</div>
+                  <div class="meta-sum-val" id="meta-dash-compras">0</div>
+                </div>
+                <div class="meta-sum-card">
+                  <div class="meta-sum-label">CPM</div>
+                  <div class="meta-sum-val" id="meta-dash-cpm">$0</div>
+                </div>
+                <div class="meta-sum-card">
+                  <div class="meta-sum-label">CTR</div>
+                  <div class="meta-sum-val" id="meta-dash-ctr">0%</div>
+                </div>
+                <div class="meta-sum-card">
+                  <div class="meta-sum-label">CPC</div>
+                  <div class="meta-sum-val" id="meta-dash-cpc">$0</div>
+                </div>
+                <div class="meta-sum-card">
+                  <div class="meta-sum-label">Val. Conv.</div>
+                  <div class="meta-sum-val" style="color:var(--green)" id="meta-dash-valconv">$0</div>
+                </div>
+              </div>
+              <div id="kpi-roas-sub" style="font-family:var(--font-mono);font-size:8px;color:var(--text3);text-align:center"></div>
             </div>
-            <div class="exec-kpi-vert green">
-              <div class="exec-kpi-vert-label">ROAS Promedio</div>
-              <div class="exec-kpi-vert-val" id="kpi-roas-val">—</div>
-              <div class="exec-kpi-vert-delta neu" id="kpi-roas-sub">retorno inversión</div>
-            </div>
-            <div class="exec-card" style="flex:1">
-              <div class="exec-card-title">Funnel de Ventas</div>
-              <div id="exec-funnel">
+
+            <!-- Funnel with campaign dropdown -->
+            <div class="exec-card" style="padding:12px 14px;flex:1">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                <div class="exec-card-title" style="margin-bottom:0">Embudo de Conversión</div>
+                <select class="db-select" id="funnel-camp-select" onchange="renderFunnelCampaign(this.value)">
+                  <option value="__all__">Todas las campañas</option>
+                </select>
+              </div>
+              <div class="funnel-wrap" id="exec-funnel">
                 <div class="empty-state" style="font-size:10px;padding:20px 10px">Sin datos</div>
+              </div>
+            </div>
+
+            <!-- Performance metrics with dropdown + semaphores -->
+            <div class="exec-card" style="padding:12px 14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <div class="exec-card-title" style="margin-bottom:0">Rendimiento</div>
+                <select class="db-select" id="perf-camp-select" onchange="renderMetaPerf(this.value)">
+                  <option value="__all__">Global</option>
+                </select>
+              </div>
+              <div class="perf-grid" id="meta-perf-grid">
+                <div class="empty-state" style="font-size:10px;padding:10px">Conecta Meta Ads</div>
               </div>
             </div>
           </div>
@@ -834,8 +999,8 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
               </div>
             </div>
             <div style="display:flex;gap:14px;margin-bottom:8px;font-family:var(--font-mono);font-size:9px">
-              <span style="color:var(--cyan);text-shadow:0 0 8px rgba(0,238,255,0.6)">● Ventas</span>
-              <span style="color:var(--gold);text-shadow:0 0 8px rgba(255,170,0,0.6)">● Gasto Ads</span>
+              <span style="color:var(--neo-blue);text-shadow:0 0 8px rgba(0,136,255,0.7)">● Meta Ads Spend</span>
+              <span style="color:var(--red);text-shadow:0 0 8px rgba(255,34,68,0.6)">● Costos Totales</span>
             </div>
             <div style="height:130px"><canvas id="chart-ventas-ads"></canvas></div>
           </div>
@@ -1732,18 +1897,9 @@ function renderDashboard(){
 
   // KPIs laterales
   tx('kpi-ventas-total',fmtCLP(ventasTot));
-  tx('kpi-ventas-total-sub',pedF.length+' pedidos totales');
   tx('kpi-pedidos-n',pedF.length.toString());
-  tx('kpi-pedidos-sub',R.entregados+' entregados');
-  tx('kpi-gasto-ads',fmtCLP(R.adsGasto));
   const roasVal=R.adsGasto>0&&R.ingresosReales>0?(R.ingresosReales/R.adsGasto):0;
-  tx('kpi-roas-val',roasVal>0?roasVal.toFixed(2)+'x':'—');
   const roasOk=roasVal>=(S.roasMin||2);
-  tx('kpi-roas-sub',roasOk?'✓ Óptimo':'⚠ Bajo mínimo');
-  const roasEl=$('kpi-roas-val');
-  if(roasEl){roasEl.style.color=roasOk?'var(--green)':'var(--red)';roasEl.style.textShadow=roasOk?'0 0 25px rgba(0,255,179,0.7)':'0 0 25px rgba(255,34,68,0.7)';}
-  // Delta classes para KPIs verticales
-  ['kpi-roas-sub'].forEach(id=>{const el=$(id);if(el)el.className='exec-kpi-vert-delta '+(roasOk?'pos':'neg');});
 
   // Bienvenida / avatar
   const uN=$('db-welcome-name');
@@ -1752,8 +1908,13 @@ function renderDashboard(){
   if(av&&S.usuario) av.textContent=(S.usuario.nombre||'A')[0].toUpperCase();
   tx('db-cobrado',fmtCLP(R.ingresosReales));
   tx('db-costos',fmtCLP(R.costosTotal));
-  tx('db-utilidad-real',fmtCLP(R.utilidadReal));
+  // Utilidad: verde si positivo, rojo si negativo
+  const utilEl=$('db-utilidad-real');
+  if(utilEl){utilEl.textContent=fmtCLP(R.utilidadReal);utilEl.style.color=R.utilidadReal>=0?'var(--green)':'var(--red)';utilEl.style.textShadow=R.utilidadReal>=0?'0 0 12px rgba(0,255,179,0.5)':'0 0 12px rgba(255,34,68,0.5)';}
   tx('db-proy',fmtCLP(R.proyUtilidad));
+
+  // Dropi stat rows
+  renderDashLeft(R, pedF);
 
   // SVG Ring hero
   tx('gauge-ventas',fmtCLP(ventasTot));
@@ -1793,7 +1954,8 @@ function renderDashboard(){
   // Alertas
   renderAlertas(R, pedF);
 
-  // Campañas
+  // Meta right column + campañas
+  renderMetaRight(R);
   renderDashCampanas();
 
   // Activity feed (cashflow)
@@ -1833,7 +1995,9 @@ function renderExecCharts(){
   renderVentasAdsChart(pedidos);
   renderCanalChart(pedidos);
   renderMargenGauge();
-  renderFunnel();
+  // Funnel is rendered via renderFunnelCampaign inside renderMetaRight
+  const selVal=$('funnel-camp-select')?.value||'__all__';
+  renderFunnelCampaign(selVal);
 }
 
 function renderComparativoChart(pedidos){
@@ -1881,9 +2045,10 @@ function renderVentasAdsChart(pedidos){
     const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     const shortL=sorted.map(d=>{const p=d.split('-');return parseInt(p[2])+' '+MES[parseInt(p[1])-1];});
     const adsPD=S.meta?.gastoTotal&&sorted.length?sorted.map(()=>S.meta.gastoTotal/sorted.length):sorted.map(()=>0);
+    const costsPD=sorted.map(wk_d=>{const peds=pedidos.filter(p=>p.fecha&&p.fecha>=wk_d&&p.fecha<wk_d);return peds.reduce((s,p)=>s+(p.proveedor||0)+(p.flete||0)+(p.comision||0),0);});
     _ch.ventasAds=new Chart(ctx,{type:'line',data:{labels:shortL,datasets:[
-      {label:'Ventas',data:sorted.map(d=>wk[d]),borderColor:'#00eeff',backgroundColor:'rgba(0,238,255,0.07)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
-      {label:'Gasto Ads',data:adsPD,borderColor:'#ffaa00',backgroundColor:'rgba(255,170,0,0.05)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[4,3],fill:false},
+      {label:'Meta Ads Spend',data:adsPD,borderColor:'#0088ff',backgroundColor:'rgba(0,136,255,0.07)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
+      {label:'Costos Totales',data:costsPD,borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.04)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[4,3],fill:false},
     ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${fmtCLP(c.raw)}`}}},
       scales:{x:{ticks:{color:'#4a5a7a',font:{size:8},maxTicksLimit:8},grid:{display:false}},
@@ -1894,9 +2059,10 @@ function renderVentasAdsChart(pedidos){
   const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   const shortL=sorted.map(d=>{const p=d.split('-');return parseInt(p[2])+' '+MES[parseInt(p[1])-1];});
   const adsPD=S.meta?.gastoTotal&&sorted.length?sorted.map(()=>S.meta.gastoTotal/sorted.length):sorted.map(()=>0);
+  const costsPD=sorted.map(d=>{const peds=pedidos.filter(p=>p.fecha===d);return peds.reduce((s,p)=>s+(p.proveedor||0)+(p.flete||0)+(p.comision||0),0);});
   _ch.ventasAds=new Chart(ctx,{type:'line',data:{labels:shortL,datasets:[
-    {label:'Ventas',data:sorted.map(d=>days[d]||0),borderColor:'#00eeff',backgroundColor:'rgba(0,238,255,0.07)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
-    {label:'Gasto Ads',data:adsPD,borderColor:'#ffaa00',backgroundColor:'rgba(255,170,0,0.05)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[4,3],fill:false},
+    {label:'Meta Ads Spend',data:adsPD,borderColor:'#0088ff',backgroundColor:'rgba(0,136,255,0.07)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
+    {label:'Costos Totales',data:costsPD,borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.04)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[4,3],fill:false},
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${fmtCLP(c.raw)}`}}},
     scales:{x:{ticks:{color:'#4a5a7a',font:{size:8},maxTicksLimit:8},grid:{display:false}},
@@ -1978,6 +2144,166 @@ function renderDashCampanas(){
     <td style="text-align:center"><span style="font-family:var(--font-mono);font-size:8px;color:${dot};background:${dot}20;border:1px solid ${dot}40;border-radius:20px;padding:2px 8px">${c.estado==='active'?'Activa':'Pausada'}</span></td>
     </tr>`;
   }).join('')}</tbody></table>`;
+}
+
+// ══ DASH LEFT — Dropi stats + mini donut ═════════════════════════════════════
+let _ch_donutLeft=null;
+function renderDashLeft(R, pedF){
+  const tot=R.total||0;
+  const pct=n=>tot>0?((n/tot)*100).toFixed(0)+'%':'0%';
+
+  tx('dropi-ent-n',R.entregados);    tx('dropi-ent-pct',pct(R.entregados));
+  tx('dropi-pen-n',R.pendientes+R.enTransito); tx('dropi-pen-pct',pct(R.pendientes+R.enTransito));
+  tx('dropi-can-n',R.cancelados);    tx('dropi-can-pct',pct(R.cancelados));
+  tx('dropi-dev-n',R.devueltos);     tx('dropi-dev-pct',pct(R.devueltos));
+  tx('donut-left-total',tot);
+
+  const lbl=$('dropi-periodo-label');
+  if(lbl&&S.filtroDesde&&S.filtroHasta){
+    const f=d=>{const[y,m,dd]=d.split('-');return dd+'/'+m;};
+    lbl.textContent=f(S.filtroDesde)+' → '+f(S.filtroHasta);
+  }
+
+  // Mini donut
+  const ctx=$('chart-donut-left'); if(!ctx) return;
+  if(_ch_donutLeft){_ch_donutLeft.destroy();_ch_donutLeft=null;}
+  const entVal=R.entregados, penVal=R.pendientes+R.enTransito, canVal=R.cancelados, devVal=R.devueltos;
+  const clrs=['#00ffb3','#00c8ff','#ff9d00','#ff2244'];
+  const lg=$('donut-left-legend');
+  if(lg) lg.innerHTML=[
+    {l:'Entregados',v:entVal,c:clrs[0]},
+    {l:'Pendientes',v:penVal,c:clrs[1]},
+    {l:'Cancelados',v:canVal,c:clrs[2]},
+    {l:'Devueltos',v:devVal,c:clrs[3]},
+  ].map(x=>`<div class="donut-left-item"><div class="donut-left-dot" style="background:${x.c}"></div><span>${x.l}</span><span style="margin-left:auto;color:var(--num)">${x.v}</span></div>`).join('');
+  _ch_donutLeft=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[entVal,penVal,canVal,devVal],backgroundColor:clrs,borderWidth:0,hoverOffset:4}]},
+    options:{responsive:false,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+}
+
+// ══ META RIGHT — global KPIs + funnel + performance ═══════════════════════════
+function renderMetaRight(R){
+  const m=S.meta;
+  const hasLive=m?.esLive;
+  const badge=$('meta-live-badge');
+  if(badge) badge.style.display=hasLive?'block':'none';
+
+  // Global KPIs
+  const gasto=m?m.gastoTotal:0;
+  const roasVal=gasto>0&&R.ingresosReales>0?(R.ingresosReales/gasto):0;
+  const roasOk=roasVal>=(S.roasMin||2);
+  const cpa=m?m.cpa:0; const cpaOk=cpa>0&&cpa<=(S.cpaMax||4000);
+  const ctr=m?m.ctr:0; const ctrOk=ctr>=(S.ctrMin||1.5);
+  const camps=m?.campanas||[];
+  const cpm=camps.length?camps.reduce((s,c)=>s+c.cpm,0)/camps.length:0;
+  const cpc=m?m.clics>0?m.gastoTotal/m.clics:0:0;
+  const compras=m?m.compras:0;
+  const valConv=gasto>0&&roasVal>0?gasto*roasVal:0;
+
+  tx('kpi-gasto-ads',fmtCLP(gasto));
+  const rv=$('kpi-roas-val');
+  if(rv){rv.textContent=roasVal>0?roasVal.toFixed(2)+'x':'—';rv.style.color=roasOk?'var(--green)':'var(--red)';rv.style.textShadow=roasOk?'0 0 16px rgba(0,255,179,0.7)':'0 0 16px rgba(255,34,68,0.7)';}
+  const rs=$('kpi-roas-sub');
+  if(rs){rs.textContent=roasOk?'✓ ROAS Óptimo':'⚠ ROAS Bajo mínimo';rs.style.color=roasOk?'var(--green)':'var(--red)';}
+  tx('meta-dash-cpa',cpa>0?fmtCLP(Math.round(cpa)):'$0');
+  tx('meta-dash-compras',compras);
+  tx('meta-dash-cpm',cpm>0?fmtCLP(Math.round(cpm)):'$0');
+  tx('meta-dash-ctr',(ctr||0).toFixed(2)+'%');
+  tx('meta-dash-cpc',cpc>0?fmtCLP(Math.round(cpc)):'$0');
+  tx('meta-dash-valconv',fmtCLP(Math.round(valConv)));
+
+  // Populate dropdowns
+  populateCampaignDropdowns();
+  // Render funnel and perf
+  renderFunnelCampaign('__all__');
+  renderMetaPerf('__all__');
+}
+
+function populateCampaignDropdowns(){
+  const camps=(S.meta?.campanas||[]).filter(c=>c.gasto>0).sort((a,b)=>b.gasto-a.gasto);
+  ['funnel-camp-select','perf-camp-select'].forEach(id=>{
+    const sel=$(id); if(!sel) return;
+    const firstOpt=sel.options[0]?.value==='__all__'?sel.options[0].outerHTML:'<option value="__all__">'+( id==='funnel-camp-select'?'Todas las campañas':'Global')+'</option>';
+    sel.innerHTML=firstOpt+camps.map((c,i)=>`<option value="${i}">${c.nombre.substring(0,28)}</option>`).join('');
+  });
+}
+
+function renderFunnelCampaign(idx){
+  const el=$('exec-funnel'); if(!el) return;
+  const R=calcR(filtF(S.pedidos));
+  const tot=R.total||1;
+
+  // If Meta is connected and a specific campaign is selected, show Meta funnel
+  if(S.meta?.campanas?.length&&idx!=='__all__'){
+    const c=S.meta.campanas[parseInt(idx)];
+    if(c){
+      const steps=[
+        {l:'IMPRESIONES',v:Math.round(c.impresiones||0),pct:100,c:'#ff9d00'},
+        {l:'CLICS',v:Math.round(c.clics||0),pct:c.impresiones>0?(c.clics/c.impresiones)*100:0,c:'#00c8ff'},
+        {l:'COMPRAS',v:Math.round(c.compras||0),pct:c.clics>0?(c.compras/c.clics)*100:0,c:'#00ffb3'},
+      ];
+      el.innerHTML=_funnelHtml(steps); return;
+    }
+  }
+
+  // Default: Dropi conversion funnel
+  const steps=[
+    {l:'PEDIDOS TOTALES',v:R.total,pct:100,c:'#ff9d00'},
+    {l:'EN PROCESO',v:R.enTransito+R.pendientes,pct:(R.enTransito+R.pendientes)/tot*100,c:'#00c8ff'},
+    {l:'ENTREGADOS',v:R.entregados,pct:R.entregados/tot*100,c:'#00ffb3'},
+    {l:'BAJAS',v:R.devueltos+R.cancelados,pct:(R.devueltos+R.cancelados)/tot*100,c:'#ff2244'},
+  ];
+  el.innerHTML=_funnelHtml(steps);
+}
+
+function _funnelHtml(steps){
+  return steps.map((s,i)=>{
+    const wPct=Math.max(30,s.pct);
+    const prevPct=i>0?steps[i-1].pct:100;
+    const convPct=prevPct>0?(s.pct/prevPct*100).toFixed(1)+'%':null;
+    return `<div class="funnel-step">
+      <div class="funnel-bar" style="width:${wPct}%;background:${s.c}18;border-left:3px solid ${s.c};box-shadow:inset 0 0 12px ${s.c}08">
+        <span class="funnel-label" style="color:${s.c}">${s.l}</span>
+      </div>
+      <div class="funnel-meta">
+        <div class="funnel-num">${s.v.toLocaleString('es-CL')}</div>
+        ${i>0&&convPct?`<div class="funnel-conv-pct" style="color:${s.c}">${convPct}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderMetaPerf(idx){
+  const grid=$('meta-perf-grid'); if(!grid) return;
+  const m=S.meta;
+  if(!m){grid.innerHTML='<div class="empty-state" style="font-size:10px;padding:10px">Conecta Meta Ads</div>';return;}
+
+  let data;
+  if(idx==='__all__'||!m.campanas?.length){
+    const camps=m.campanas||[];
+    const cpm=camps.length?camps.reduce((s,c)=>s+c.cpm,0)/camps.length:0;
+    const cpc=m.clics>0?m.gastoTotal/m.clics:0;
+    data={cpm,cpa:m.cpa,ctr:m.ctr,cpc,compras:m.compras,gasto:m.gastoTotal};
+  } else {
+    const c=m.campanas[parseInt(idx)]; if(!c){return;}
+    data={cpm:c.cpm,cpa:c.compras>0?c.gasto/c.compras:0,ctr:c.ctr,cpc:c.cpc,compras:c.compras,gasto:c.gasto};
+  }
+
+  const semaf=(v,ok,warn)=>v<=ok?'ok':v<=warn?'warn':'bad';
+  const rows=[
+    {n:'CPM',v:fmtCLP(Math.round(data.cpm)),s:semaf(data.cpm,S.cpmMax||4500,(S.cpmMax||4500)*1.5)},
+    {n:'CPA',v:fmtCLP(Math.round(data.cpa)),s:semaf(data.cpa,S.cpaMax||4000,(S.cpaMax||4000)*1.5)},
+    {n:'CTR',v:data.ctr.toFixed(2)+'%',s:data.ctr>=(S.ctrMin||1.5)?'ok':data.ctr>=(S.ctrMin||1.5)*0.6?'warn':'bad'},
+    {n:'CPC',v:fmtCLP(Math.round(data.cpc)),s:semaf(data.cpc,S.cpcMax||250,(S.cpcMax||250)*1.5)},
+    {n:'Compras',v:data.compras,s:data.compras>0?'ok':'warn'},
+    {n:'Gasto Total',v:fmtCLP(Math.round(data.gasto)),s:'neu'},
+  ];
+  grid.innerHTML=rows.map(r=>`<div class="perf-row">
+    <span class="perf-name">${r.n}</span>
+    <div class="perf-right">
+      <span class="perf-val">${r.v}</span>
+      ${r.s!=='neu'?`<div class="perf-semaf ${r.s}"></div>`:''}
+    </div>
+  </div>`).join('');
 }
 
 // ══ RENDER PEDIDOS ════════════════════════════════════════════════════════════
