@@ -400,6 +400,17 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .exec-funnel-num{font-size:14px;font-weight:800;color:var(--text);}
 .exec-funnel-conv{font-family:var(--font-mono);font-size:9px;}
 
+/* ── VISUAL TRAPEZOID FUNNEL ─────────────────────────────────────────── */
+.vtrap-funnel{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:4px 0 4px;}
+.vtrap-row{display:flex;align-items:center;width:100%;position:relative;height:52px;}
+.vtrap-bar{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:clip-path 0.6s cubic-bezier(0.4,0,0.2,1);}
+.vtrap-label{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(0,0,0,0.75);text-shadow:none;}
+.vtrap-val{font-size:18px;font-weight:900;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.35);line-height:1;}
+.vtrap-conv{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:1px;pointer-events:none;padding-right:2px;}
+.vtrap-conv-pct{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--num);}
+.vtrap-conv-lbl{font-family:var(--font-mono);font-size:8px;color:var(--text3);}
+.vtrap-arrow{font-family:var(--font-mono);font-size:10px;color:var(--text3);}
+
 /* Funnel diagnostic alert */
 .funnel-alert{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;margin-top:6px;border:1px solid;}
 .funnel-alert.ok{background:rgba(0,255,179,0.05);border-color:rgba(0,255,179,0.2);}
@@ -438,6 +449,21 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 
 /* Nav badge */
 .nav-badge{position:absolute;top:6px;right:6px;background:var(--red);color:#fff;font-family:var(--font-mono);font-size:8px;font-weight:700;padding:1px 5px;border-radius:10px;min-width:14px;text-align:center;}
+
+/* ── CASHFLOW PANEL ──────────────────────────────────────────────────── */
+.cf-kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.cf-kpi{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:8px 10px;text-align:center;}
+.cf-kpi-label{font-family:var(--font-mono);font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.cf-kpi-val{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums;}
+.cf-rows{display:flex;flex-direction:column;gap:4px;margin-top:8px;}
+.cf-row{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border-radius:6px;background:rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.03);}
+.cf-row-left{display:flex;align-items:center;gap:6px;}
+.cf-row-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.cf-row-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);}
+.cf-row-val{font-size:13px;font-weight:800;color:var(--num);font-variant-numeric:tabular-nums;}
+.cf-saldo-bar{margin-top:10px;padding:10px 12px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;}
+.cf-saldo-label{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;}
+.cf-saldo-val{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums;}
 
 /* Canal legend */
 .canal-legend{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
@@ -686,9 +712,9 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
           <div id="date-picker-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:16px;z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,0.5);min-width:280px">
             <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Seleccionar período</div>
             <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">
-              <button onclick="changePeriod('hoy')" class="filter-btn" id="qb-hoy">Hoy</button>
-              <button onclick="changePeriod('semana')" class="filter-btn" id="qb-semana">Esta semana</button>
-              <button onclick="changePeriod('mes')" class="filter-btn active" id="qb-mes">Este mes</button>
+              <button onclick="changePeriod('todos')" class="filter-btn" id="qb-todos">Todos los datos</button>
+              <button onclick="changePeriod('mes')" class="filter-btn active" id="qb-mes">Último mes datos</button>
+              <button onclick="changePeriod('semana')" class="filter-btn" id="qb-semana">Última semana datos</button>
             </div>
             <div style="border-top:1px solid var(--border);padding-top:12px">
               <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:8px">RANGO PERSONALIZADO</div>
@@ -1089,20 +1115,21 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
             </div>
           </div>
 
-          <!-- Ventas vs Gasto Ads -->
+          <!-- Ventas · Ads · Costos -->
           <div class="exec-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-              <div class="exec-card-title">Ventas vs Gasto Ads</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div class="exec-card-title" style="margin-bottom:0">Ventas · Ads · Costos</div>
               <div style="display:flex;gap:4px">
                 <button class="exec-chip active" id="chip-diario" onclick="setVsAdsMode('diario',this)">Diario</button>
                 <button class="exec-chip" id="chip-semanal" onclick="setVsAdsMode('semanal',this)">Semanal</button>
               </div>
             </div>
-            <div style="display:flex;gap:14px;margin-bottom:8px;font-family:var(--font-mono);font-size:9px">
-              <span style="color:var(--neo-blue);text-shadow:0 0 8px rgba(0,136,255,0.7)">● Meta Ads Spend</span>
-              <span style="color:var(--red);text-shadow:0 0 8px rgba(255,34,68,0.6)">● Costos Totales</span>
+            <div style="display:flex;gap:12px;margin-bottom:8px;font-family:var(--font-mono);font-size:8px">
+              <span style="color:#00ffb3;text-shadow:0 0 8px rgba(0,255,179,0.7)">● Ventas (cobr+pend)</span>
+              <span style="color:#0088ff;text-shadow:0 0 8px rgba(0,136,255,0.7)">● Meta Ads</span>
+              <span style="color:#ff2244;text-shadow:0 0 8px rgba(255,34,68,0.6)">● Gastos Totales</span>
             </div>
-            <div style="height:130px"><canvas id="chart-ventas-ads"></canvas></div>
+            <div style="height:128px"><canvas id="chart-ventas-ads"></canvas></div>
           </div>
 
           <!-- Ventas por Canal -->
@@ -1130,40 +1157,56 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
             </div>
           </div>
 
-          <!-- Actividades + Estado pedidos -->
-          <div class="exec-card">
-            <div class="exec-card-title">Actividades Recientes</div>
-            <div class="exec-activity-item">
-              <div class="exec-activity-icon" style="background:rgba(0,255,179,0.1);color:var(--green)">✅</div>
-              <div class="exec-activity-content">
-                <div class="exec-activity-text">Cobrado confirmado</div>
-                <div class="exec-activity-time" id="act-cobrado">$0</div>
+          <!-- Flujo de Caja -->
+          <div class="exec-card" style="padding:14px 16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <div class="exec-card-title" style="margin-bottom:0">Flujo de Caja</div>
+              <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-periodo-lbl">—</div>
+            </div>
+            <!-- KPIs top row -->
+            <div class="cf-kpi-row">
+              <div class="cf-kpi">
+                <div class="cf-kpi-label">Ingresos</div>
+                <div class="cf-kpi-val" style="color:var(--green)" id="cf-ingresos">$0</div>
+              </div>
+              <div class="cf-kpi">
+                <div class="cf-kpi-label">Egresos</div>
+                <div class="cf-kpi-val" style="color:var(--red)" id="cf-egresos">$0</div>
+              </div>
+              <div class="cf-kpi">
+                <div class="cf-kpi-label">Flujo Neto</div>
+                <div class="cf-kpi-val" id="cf-neto">$0</div>
               </div>
             </div>
-            <div class="exec-activity-item">
-              <div class="exec-activity-icon" style="background:rgba(255,157,0,0.1);color:var(--gold)">🚚</div>
-              <div class="exec-activity-content">
-                <div class="exec-activity-text">Pedidos en ruta</div>
-                <div class="exec-activity-time" id="act-ruta">$0 estimado</div>
+            <!-- Cashflow chart -->
+            <div style="height:90px;margin-bottom:8px"><canvas id="chart-cashflow"></canvas></div>
+            <!-- Breakdown rows -->
+            <div class="cf-rows" id="cf-rows">
+              <div class="cf-row">
+                <div class="cf-row-left"><div class="cf-row-dot" style="background:#00ffb3"></div><span class="cf-row-label">Ventas cobradas (entregados)</span></div>
+                <span class="cf-row-val" id="cf-cobrado">$0</span>
+              </div>
+              <div class="cf-row">
+                <div class="cf-row-left"><div class="cf-row-dot" style="background:#ffaa00"></div><span class="cf-row-label">Proyectado (75% pend.)</span></div>
+                <span class="cf-row-val" style="color:var(--gold)" id="cf-proyectado">$0</span>
+              </div>
+              <div class="cf-row">
+                <div class="cf-row-left"><div class="cf-row-dot" style="background:#bf70ff"></div><span class="cf-row-label">Costo Proveedor</span></div>
+                <span class="cf-row-val" id="cf-proveedor">$0</span>
+              </div>
+              <div class="cf-row">
+                <div class="cf-row-left"><div class="cf-row-dot" style="background:#ff9d00"></div><span class="cf-row-label">Costo Despacho</span></div>
+                <span class="cf-row-val" id="cf-flete">$0</span>
+              </div>
+              <div class="cf-row">
+                <div class="cf-row-left"><div class="cf-row-dot" style="background:#0088ff"></div><span class="cf-row-label">Gasto Meta Ads</span></div>
+                <span class="cf-row-val" style="color:var(--neo-blue)" id="cf-ads">$0</span>
               </div>
             </div>
-            <div class="exec-activity-item">
-              <div class="exec-activity-icon" style="background:rgba(255,51,85,0.1);color:var(--red)">💸</div>
-              <div class="exec-activity-content">
-                <div class="exec-activity-text">Total salidas</div>
-                <div class="exec-activity-time" id="act-salidas">$0</div>
-              </div>
-            </div>
-            <div class="exec-activity-item" style="border-top:1px solid rgba(255,157,0,0.1);padding-top:10px;margin-top:2px">
-              <div class="exec-activity-icon" style="background:rgba(0,242,255,0.1);color:var(--cyan)">💰</div>
-              <div class="exec-activity-content">
-                <div class="exec-activity-text">Caja disponible HOY</div>
-                <div class="exec-activity-time" id="act-caja" style="font-size:14px;font-weight:800;color:var(--cyan)">$0</div>
-              </div>
-            </div>
-            <div style="margin-top:10px;border-top:1px solid rgba(255,157,0,0.08);padding-top:10px">
-              <div class="exec-card-title" style="margin-bottom:8px">Estado de Pedidos</div>
-              <div id="status-grid" style="display:flex;flex-direction:column;gap:4px"></div>
+            <!-- Saldo disponible -->
+            <div class="cf-saldo-bar" id="cf-saldo-bar" style="background:rgba(0,255,179,0.07);border:1px solid rgba(0,255,179,0.2);margin-top:8px">
+              <span class="cf-saldo-label" style="color:var(--text3)">Saldo Disponible</span>
+              <span class="cf-saldo-val" style="color:var(--green)" id="cf-saldo">$0</span>
             </div>
           </div>
         </div>
@@ -1911,13 +1954,23 @@ document.addEventListener('click',e=>{
 });
 function setPeriodoLabel(label){ const e=$('periodo-label'); if(e) e.textContent=label; }
 function changePeriod(v) {
-  const hoy=new Date(), fmt=d=>d.toISOString().split('T')[0];
-  if(v==='hoy') S.filtroDesde=S.filtroHasta=fmt(hoy);
-  else if(v==='semana') { const l=new Date(hoy);l.setDate(hoy.getDate()-hoy.getDay()+1);S.filtroDesde=fmt(l);S.filtroHasta=fmt(hoy); }
-  else if(v==='mes') { S.filtroDesde=fmt(new Date(hoy.getFullYear(),hoy.getMonth(),1));S.filtroHasta=fmt(hoy); }
-  const labels={hoy:'Hoy',semana:'Esta semana',mes:'Este mes'};
-  setPeriodoLabel(labels[v]||v);
-  ['hoy','semana','mes'].forEach(id=>{ const b=$('qb-'+id); if(b)b.classList.toggle('active',id===v); });
+  const fmt=d=>d.toISOString().split('T')[0];
+  // Use last date in data as reference so periods work with historical data
+  const fechas=S.pedidos.map(p=>p.fecha).filter(Boolean).sort();
+  const refDate=fechas.length?new Date(fechas[fechas.length-1]+'T12:00:00'):new Date();
+  const firstDate=fechas.length?new Date(fechas[0]+'T12:00:00'):refDate;
+
+  if(v==='todos'){ S.filtroDesde=''; S.filtroHasta=''; setPeriodoLabel('Todos los datos'); }
+  else if(v==='semana'){
+    const l=new Date(refDate); l.setDate(refDate.getDate()-6);
+    S.filtroDesde=fmt(l); S.filtroHasta=fmt(refDate);
+    setPeriodoLabel('Última semana');
+  } else if(v==='mes'){
+    S.filtroDesde=fmt(new Date(refDate.getFullYear(),refDate.getMonth(),1));
+    S.filtroHasta=fmt(refDate);
+    setPeriodoLabel('Último mes');
+  }
+  ['todos','semana','mes'].forEach(id=>{ const b=$('qb-'+id); if(b)b.classList.toggle('active',id===v); });
   _datePickerOpen=false; const m=$('date-picker-menu'); if(m) m.style.display='none';
   aplicarPeriodoGlobal();
 }
@@ -2106,6 +2159,7 @@ function renderExecCharts(){
   renderVentasAdsChart(pedidos);
   renderCanalChart(pedidos);
   renderMargenGauge();
+  renderCashflowChart(pedidos);
   const selVal=$('funnel-camp-select')?.value||'__all__';
   renderFunnelCampaign(selVal);
 }
@@ -2136,47 +2190,112 @@ function renderComparativoChart(pedidos){
 function renderVentasAdsChart(pedidos){
   const ctx=$('chart-ventas-ads'); if(!ctx) return;
   if(_ch.ventasAds){_ch.ventasAds.destroy();_ch.ventasAds=null;}
-  const days={};
+  const tasa=S.tasaEntrega/100;
+
+  // Build daily maps
+  const byDay={}; // {date: {ventaEnt, ventaPend, costos}}
   pedidos.forEach(p=>{
     const d=p.fecha||''; if(!d) return;
-    if(!days[d]) days[d]=0;
-    days[d]+=p.venta||0;
+    if(!byDay[d]) byDay[d]={ventaEnt:0,ventaPend:0,costos:0};
+    if(p.estado==='entregado') byDay[d].ventaEnt+=p.venta||0;
+    else if(p.estado==='transito'||p.estado==='pendiente') byDay[d].ventaPend+=p.venta||0;
+    byDay[d].costos+=(p.proveedor||0)+(p.flete||0)+(p.comision||0);
   });
-  let sorted=Object.keys(days).sort();
+
+  let sorted=Object.keys(byDay).sort();
+  const adsTotal=S.meta?.gastoTotal||0;
+  const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const opts={responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${fmtCLP(c.raw)}`}}},
+    scales:{x:{ticks:{color:'#4a5a7a',font:{size:8},maxTicksLimit:10},grid:{display:false}},
+      y:{ticks:{color:'#4a5a7a',font:{size:8},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.03)'}}}};
+
   if(_vsAdsMode==='semanal'){
     const wk={};
     sorted.forEach(d=>{
       const dt=new Date(d+'T00:00:00');
       const mon=new Date(dt);mon.setDate(dt.getDate()-((dt.getDay()+6)%7));
       const key=mon.toISOString().split('T')[0];
-      if(!wk[key]) wk[key]=0; wk[key]+=days[d];
+      if(!wk[key]) wk[key]={ve:0,vp:0,co:0};
+      wk[key].ve+=byDay[d].ventaEnt; wk[key].vp+=byDay[d].ventaPend; wk[key].co+=byDay[d].costos;
     });
-    sorted=Object.keys(wk).sort().slice(-10);
-    const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    sorted=Object.keys(wk).sort().slice(-12);
     const shortL=sorted.map(d=>{const p=d.split('-');return parseInt(p[2])+' '+MES[parseInt(p[1])-1];});
-    const adsPD=S.meta?.gastoTotal&&sorted.length?sorted.map(()=>S.meta.gastoTotal/sorted.length):sorted.map(()=>0);
-    const costsPD=sorted.map(wk_d=>{const peds=pedidos.filter(p=>p.fecha&&p.fecha>=wk_d&&p.fecha<wk_d);return peds.reduce((s,p)=>s+(p.proveedor||0)+(p.flete||0)+(p.comision||0),0);});
+    const adsPD=adsTotal&&sorted.length?sorted.map(()=>adsTotal/sorted.length):sorted.map(()=>0);
     _ch.ventasAds=new Chart(ctx,{type:'line',data:{labels:shortL,datasets:[
-      {label:'Meta Ads Spend',data:adsPD,borderColor:'#0088ff',backgroundColor:'rgba(0,136,255,0.07)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
-      {label:'Costos Totales',data:costsPD,borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.04)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[4,3],fill:false},
-    ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${fmtCLP(c.raw)}`}}},
-      scales:{x:{ticks:{color:'#4a5a7a',font:{size:8},maxTicksLimit:8},grid:{display:false}},
-        y:{ticks:{color:'#4a5a7a',font:{size:8},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.03)'}}}}});
-    return;
+      {label:'Ventas (cob+pend)',data:sorted.map(d=>wk[d].ve+wk[d].vp*tasa),borderColor:'#00ffb3',backgroundColor:'rgba(0,255,179,0.06)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
+      {label:'Meta Ads',data:adsPD,borderColor:'#0088ff',backgroundColor:'rgba(0,136,255,0.04)',tension:0.4,borderWidth:2,pointRadius:0,fill:false},
+      {label:'Gastos Totales',data:sorted.map((d,i)=>wk[d].co+adsPD[i]),borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.03)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[5,3],fill:false},
+    ]},options:opts}); return;
   }
-  sorted=sorted.slice(-20);
-  const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  sorted=sorted.slice(-25);
   const shortL=sorted.map(d=>{const p=d.split('-');return parseInt(p[2])+' '+MES[parseInt(p[1])-1];});
-  const adsPD=S.meta?.gastoTotal&&sorted.length?sorted.map(()=>S.meta.gastoTotal/sorted.length):sorted.map(()=>0);
-  const costsPD=sorted.map(d=>{const peds=pedidos.filter(p=>p.fecha===d);return peds.reduce((s,p)=>s+(p.proveedor||0)+(p.flete||0)+(p.comision||0),0);});
+  const adsPD=adsTotal&&sorted.length?sorted.map(()=>adsTotal/sorted.length):sorted.map(()=>0);
   _ch.ventasAds=new Chart(ctx,{type:'line',data:{labels:shortL,datasets:[
-    {label:'Meta Ads Spend',data:adsPD,borderColor:'#0088ff',backgroundColor:'rgba(0,136,255,0.07)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
-    {label:'Costos Totales',data:costsPD,borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.04)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[4,3],fill:false},
+    {label:'Ventas (cob+pend)',data:sorted.map(d=>(byDay[d]?.ventaEnt||0)+(byDay[d]?.ventaPend||0)*tasa),borderColor:'#00ffb3',backgroundColor:'rgba(0,255,179,0.06)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
+    {label:'Meta Ads',data:adsPD,borderColor:'#0088ff',backgroundColor:'rgba(0,136,255,0.04)',tension:0.4,borderWidth:2,pointRadius:0,fill:false},
+    {label:'Gastos Totales',data:sorted.map((d,i)=>(byDay[d]?.costos||0)+adsPD[i]),borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.03)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[5,3],fill:false},
+  ]},options:opts});
+}
+
+// ══ CASHFLOW CHART ═══════════════════════════════════════════════════════════
+let _ch_cf=null;
+function renderCashflowChart(pedidos){
+  // Update cashflow KPI text values
+  const R=calcR(pedidos);
+  const ventaEnt=R.listas.entregados.reduce((s,p)=>s+p.venta,0);
+  const ventaPend=[...R.listas.transito,...R.listas.pendientes].reduce((s,p)=>s+p.venta,0)*(S.tasaEntrega/100);
+  const adsG=R.adsGasto;
+  const costoP=R.costoProveedor, costoF=R.costoFlete;
+  const egresos=costoP+costoF+R.costoComision+adsG;
+  const ingresos=ventaEnt; // confirmed cash in
+  const saldo=ingresos-egresos;
+
+  tx('cf-ingresos',fmtCLP(ingresos));
+  tx('cf-egresos',fmtCLP(egresos));
+  const netoEl=$('cf-neto'); if(netoEl){netoEl.textContent=fmtCLP(saldo);netoEl.style.color=saldo>=0?'var(--green)':'var(--red)';}
+  tx('cf-cobrado',fmtCLP(ventaEnt));
+  tx('cf-proyectado',fmtCLP(ventaPend));
+  tx('cf-proveedor',fmtCLP(costoP));
+  tx('cf-flete',fmtCLP(costoF));
+  tx('cf-ads',fmtCLP(adsG));
+  const saldoEl=$('cf-saldo'); if(saldoEl){saldoEl.textContent=fmtCLP(saldo);saldoEl.style.color=saldo>=0?'var(--green)':'var(--red)';}
+  const saldoBar=$('cf-saldo-bar');
+  if(saldoBar){saldoBar.style.background=saldo>=0?'rgba(0,255,179,0.07)':'rgba(255,34,68,0.07)';saldoBar.style.borderColor=saldo>=0?'rgba(0,255,179,0.2)':'rgba(255,34,68,0.2)';}
+
+  // Period label
+  const lbl=$('cf-periodo-lbl');
+  if(lbl&&S.filtroDesde){const f=d=>{const[y,m,dd]=d.split('-');return dd+'/'+m;};lbl.textContent=f(S.filtroDesde)+' → '+f(S.filtroHasta||S.filtroDesde);}
+
+  // Cashflow bar chart: weekly ingresos vs egresos
+  const ctx=$('chart-cashflow'); if(!ctx) return;
+  if(_ch_cf){_ch_cf.destroy();_ch_cf=null;}
+  const wk={};
+  pedidos.forEach(p=>{
+    if(!p.fecha) return;
+    const dt=new Date(p.fecha+'T00:00:00');
+    const mon=new Date(dt); mon.setDate(dt.getDate()-((dt.getDay()+6)%7));
+    const key=mon.toISOString().split('T')[0];
+    if(!wk[key]) wk[key]={ing:0,egr:0};
+    if(p.estado==='entregado') wk[key].ing+=p.venta||0;
+    wk[key].egr+=(p.proveedor||0)+(p.flete||0)+(p.comision||0);
+  });
+  const wkeys=Object.keys(wk).sort().slice(-10);
+  const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const wlabels=wkeys.map(d=>{const p=d.split('-');return parseInt(p[2])+' '+MES[parseInt(p[1])-1];});
+  const adsPerWeek=adsG&&wkeys.length?adsG/wkeys.length:0;
+  const ingData=wkeys.map(k=>wk[k].ing);
+  const egrData=wkeys.map(k=>wk[k].egr+adsPerWeek);
+  // Running saldo line
+  let acc=0; const saldoLine=ingData.map((v,i)=>{acc+=v-egrData[i];return acc;});
+  _ch_cf=new Chart(ctx,{type:'bar',data:{labels:wlabels,datasets:[
+    {label:'Ingresos',data:ingData,backgroundColor:'rgba(0,255,179,0.55)',borderColor:'#00ffb3',borderWidth:1,borderRadius:4,order:2},
+    {label:'Egresos',data:egrData,backgroundColor:'rgba(255,34,68,0.45)',borderColor:'#ff2244',borderWidth:1,borderRadius:4,order:2},
+    {label:'Saldo Acum.',data:saldoLine,type:'line',borderColor:'#ffaa00',backgroundColor:'transparent',tension:0.4,borderWidth:2,pointRadius:0,order:1},
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${fmtCLP(c.raw)}`}}},
-    scales:{x:{ticks:{color:'#4a5a7a',font:{size:8},maxTicksLimit:8},grid:{display:false}},
-      y:{ticks:{color:'#4a5a7a',font:{size:8},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.03)'}}}}});
+    scales:{x:{ticks:{color:'#4a5a7a',font:{size:7}},grid:{display:false}},
+      y:{ticks:{color:'#4a5a7a',font:{size:7},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.02)'}}}}});
 }
 
 function renderCanalChart(pedidos){
