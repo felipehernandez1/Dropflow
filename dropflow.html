@@ -38,10 +38,11 @@ body{font-family:var(--font-display);font-size:15px;background:var(--bg);
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:linear-gradient(rgba(255,170,0,0.022) 1px,transparent 1px),
   linear-gradient(90deg,rgba(255,170,0,0.022) 1px,transparent 1px);
-  background-size:60px 60px;}
+  background-size:60px 60px;animation:gridPulse 8s ease-in-out infinite;}
+@keyframes gridPulse{0%,100%{opacity:0.7}50%{opacity:1.0}}
 .app-layout{display:flex;height:100vh;overflow:hidden;}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
-.content{overflow-y:auto!important;height:calc(100vh - 52px)!important;flex:none!important;}
+.content{overflow-y:auto!important;height:calc(100vh - 52px - 26px)!important;flex:none!important;}
 .sidebar{width:72px;min-width:72px;background:rgba(2,4,12,0.98);
   border-right:1px solid rgba(255,170,0,0.12);display:flex;flex-direction:column;
   height:100vh;position:sticky;top:0;overflow:hidden;z-index:100;
@@ -88,6 +89,46 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .topbar-spacer{flex:1;}
 .section{display:none;padding:16px 20px;flex-direction:column;gap:0;animation:fadeIn 0.25s ease;position:relative;z-index:1;}
 .section.active{display:flex;}
+
+/* ── LIVE TICKER MARQUEE ──────────────────────────────────────────── */
+.ticker-wrap{height:26px;background:rgba(0,0,0,0.55);border-bottom:1px solid rgba(255,170,0,0.07);
+  overflow:hidden;position:relative;flex-shrink:0;backdrop-filter:blur(8px);}
+.ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;}
+.ticker-wrap::before{left:0;background:linear-gradient(90deg,rgba(1,3,8,0.98),transparent);}
+.ticker-wrap::after{right:0;background:linear-gradient(-90deg,rgba(1,3,8,0.98),transparent);}
+.ticker-track{display:flex;align-items:center;white-space:nowrap;animation:tickerScroll 55s linear infinite;height:100%;}
+.ticker-track:hover{animation-play-state:paused;}
+.ticker-item{display:inline-flex;align-items:center;gap:5px;padding:0 18px;height:100%;}
+.ticker-key{font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:1.2px;text-transform:uppercase;}
+.ticker-val{font-family:var(--font-mono);font-size:9px;font-weight:700;font-variant-numeric:tabular-nums;}
+.ticker-sep{color:rgba(255,170,0,0.18);font-size:10px;padding:0 2px;font-family:var(--font-mono);}
+.ticker-live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:livePulse 1.4s ease-in-out infinite;flex-shrink:0;margin-right:6px;}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+
+/* ── GRADIENT ORBS FLOTANTES ──────────────────────────────────────── */
+.orb-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);}
+.orb1{width:700px;height:450px;background:radial-gradient(circle,rgba(0,255,179,0.042),transparent 70%);
+  top:-80px;left:8%;animation:orbFloat1 16s ease-in-out infinite;}
+.orb2{width:550px;height:550px;background:radial-gradient(circle,rgba(0,136,255,0.038),transparent 70%);
+  bottom:-80px;right:3%;animation:orbFloat2 13s ease-in-out infinite;}
+.orb3{width:450px;height:350px;background:radial-gradient(circle,rgba(191,112,255,0.028),transparent 70%);
+  top:35%;left:38%;animation:orbFloat3 18s ease-in-out infinite;}
+@keyframes orbFloat1{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-28px) scale(1.04)}}
+@keyframes orbFloat2{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(22px) scale(0.97)}}
+@keyframes orbFloat3{0%,100%{transform:translateY(0) translateX(0)}33%{transform:translateY(-18px) translateX(12px)}66%{transform:translateY(14px) translateX(-10px)}}
+
+/* ── NUMBER COUNTER POP ───────────────────────────────────────────── */
+@keyframes numPop{0%{transform:scale(1.18);filter:brightness(1.4)}100%{transform:scale(1);filter:brightness(1)}}
+.num-pop{animation:numPop 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+
+/* ── SHIMMER ON EXEC CARDS ────────────────────────────────────────── */
+.exec-kpi{overflow:hidden;}
+.exec-kpi::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(108deg,transparent 35%,rgba(255,255,255,0.022) 50%,transparent 65%);
+  background-size:250% 100%;animation:shimmerCard 5s ease-in-out infinite;}
+@keyframes shimmerCard{0%{background-position:250% 0}100%{background-position:-250% 0}}
 
 /* CONFIG */
 .config-section{border-radius:var(--radius);margin-bottom:14px;}
@@ -622,6 +663,13 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 </div>
 
 <!-- APP LAYOUT -->
+<!-- Orbs flotantes de fondo -->
+<div class="orb-layer" aria-hidden="true">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
 <div class="app-layout">
 
   <!-- SIDEBAR -->
@@ -740,6 +788,32 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
         </button>
       </div>
     </header>
+
+    <!-- Live Ticker Marquee -->
+    <div class="ticker-wrap" id="ticker-wrap">
+      <div class="ticker-track" id="ticker-track">
+        <!-- duplicated for seamless loop — JS fills both halves -->
+        <span class="ticker-live-dot"></span>
+        <span class="ticker-item"><span class="ticker-key">Ventas</span><span class="ticker-val" id="tk-ventas" style="color:var(--green)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Utilidad</span><span class="ticker-val" id="tk-utilidad" style="color:var(--gold)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Entregados</span><span class="ticker-val" id="tk-entregados" style="color:var(--cyan)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">En ruta</span><span class="ticker-val" id="tk-ruta" style="color:var(--neo-blue)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Gasto Ads</span><span class="ticker-val" id="tk-ads" style="color:var(--red)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Margen</span><span class="ticker-val" id="tk-margen" style="color:var(--purple)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">ROAS</span><span class="ticker-val" id="tk-roas" style="color:var(--gold2)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Pendientes</span><span class="ticker-val" id="tk-pendientes" style="color:var(--text2)">—</span></span><span class="ticker-sep">·</span>
+        <!-- duplicate for seamless loop -->
+        <span class="ticker-live-dot"></span>
+        <span class="ticker-item"><span class="ticker-key">Ventas</span><span class="ticker-val" id="tk-ventas2" style="color:var(--green)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Utilidad</span><span class="ticker-val" id="tk-utilidad2" style="color:var(--gold)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Entregados</span><span class="ticker-val" id="tk-entregados2" style="color:var(--cyan)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">En ruta</span><span class="ticker-val" id="tk-ruta2" style="color:var(--neo-blue)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Gasto Ads</span><span class="ticker-val" id="tk-ads2" style="color:var(--red)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Margen</span><span class="ticker-val" id="tk-margen2" style="color:var(--purple)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">ROAS</span><span class="ticker-val" id="tk-roas2" style="color:var(--gold2)">—</span></span><span class="ticker-sep">·</span>
+        <span class="ticker-item"><span class="ticker-key">Pendientes</span><span class="ticker-val" id="tk-pendientes2" style="color:var(--text2)">—</span></span><span class="ticker-sep">·</span>
+      </div>
+    </div>
 
     <div class="content">
 
@@ -1675,6 +1749,62 @@ function toast(msg, err=false) {
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
+// ══ NUMBER COUNTER ANIMATION ═════════════════════════════════════════════════
+function animateCount(el, toVal, prefix='$', duration=700){
+  if(!el) return;
+  el.classList.remove('num-pop');
+  void el.offsetWidth; // reflow
+  const from=parseFloat(el.dataset.raw||0)||0;
+  el.dataset.raw=toVal;
+  if(from===toVal){ el.textContent=prefix+Math.round(toVal).toLocaleString('es-CL'); return; }
+  const start=performance.now();
+  function step(now){
+    const p=Math.min((now-start)/duration,1);
+    const ease=p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+    const cur=from+(toVal-from)*ease;
+    el.textContent=prefix+Math.round(cur).toLocaleString('es-CL');
+    if(p<1) requestAnimationFrame(step);
+    else { el.textContent=prefix+Math.round(toVal).toLocaleString('es-CL'); el.classList.add('num-pop'); }
+  }
+  requestAnimationFrame(step);
+}
+function animateCountPct(el, toVal, duration=600){
+  if(!el) return;
+  const from=parseFloat(el.dataset.raw||0)||0;
+  el.dataset.raw=toVal;
+  const start=performance.now();
+  function step(now){
+    const p=Math.min((now-start)/duration,1);
+    const ease=1-Math.pow(1-p,3);
+    el.textContent=(from+(toVal-from)*ease).toFixed(1)+'%';
+    if(p<1) requestAnimationFrame(step);
+    else { el.textContent=toVal.toFixed(1)+'%'; el.classList.add('num-pop'); }
+  }
+  requestAnimationFrame(step);
+}
+
+// ══ LIVE TICKER ═══════════════════════════════════════════════════════════════
+function updateTicker(R){
+  if(!R) return;
+  const v={
+    ventas:  fmtCLP(R.ventaTotal),
+    utilidad:fmtCLP(R.utilidadNeta),
+    entregados: R.listas.entregados.length+' ped.',
+    ruta:    R.listas.transito.length+' ped.',
+    ads:     fmtCLP(R.adsGasto),
+    margen:  R.margenNeto.toFixed(1)+'%',
+    roas:    (R.adsGasto>0?(R.ventaTotal/R.adsGasto).toFixed(2):'—')+'x',
+    pendientes: R.listas.pendientes.length+' ped.'
+  };
+  ['','2'].forEach(sfx=>{
+    const set=(id,val)=>{const e=document.getElementById('tk-'+id+sfx);if(e)e.textContent=val;};
+    set('ventas',v.ventas); set('utilidad',v.utilidad);
+    set('entregados',v.entregados); set('ruta',v.ruta);
+    set('ads',v.ads); set('margen',v.margen);
+    set('roas',v.roas); set('pendientes',v.pendientes);
+  });
+}
+
 // ══ ESTADOS ══════════════════════════════════════════════════════════════════
 const EM = {
   entregado:['ENTREGADO'],
@@ -2049,7 +2179,7 @@ function renderDashboard(){
   const ventasTot=pedF.reduce((s,p)=>s+p.venta,0);
 
   // KPIs laterales
-  tx('kpi-ventas-total',fmtCLP(ventasTot));
+  animateCount($('kpi-ventas-total'),ventasTot,'$');
   tx('kpi-pedidos-n',pedF.length.toString());
   const roasVal=R.adsGasto>0&&R.ingresosReales>0?(R.ingresosReales/R.adsGasto):0;
   const roasOk=roasVal>=(S.roasMin||2);
@@ -2059,11 +2189,11 @@ function renderDashboard(){
   if(uN&&S.usuario) uN.textContent=S.usuario.nombre||S.usuario.email?.split('@')[0]||'Admin';
   const av=$('user-avatar');
   if(av&&S.usuario) av.textContent=(S.usuario.nombre||'A')[0].toUpperCase();
-  tx('db-cobrado',fmtCLP(R.ingresosReales));
-  tx('db-costos',fmtCLP(R.costosTotal));
+  animateCount($('db-cobrado'),R.ingresosReales,'$');
+  animateCount($('db-costos'),R.costosTotal,'$');
   const utilEl=$('db-utilidad-real');
-  if(utilEl){utilEl.textContent=fmtCLP(R.utilidadReal);utilEl.style.color=R.utilidadReal>=0?'var(--green)':'var(--red)';utilEl.style.textShadow=R.utilidadReal>=0?'0 0 12px rgba(0,255,179,0.5)':'0 0 12px rgba(255,34,68,0.5)';}
-  tx('db-proy',fmtCLP(R.proyUtilidad));
+  if(utilEl){animateCount(utilEl,R.utilidadReal,'$');utilEl.style.color=R.utilidadReal>=0?'var(--green)':'var(--red)';utilEl.style.textShadow=R.utilidadReal>=0?'0 0 12px rgba(0,255,179,0.5)':'0 0 12px rgba(255,34,68,0.5)';}
+  animateCount($('db-proy'),R.proyUtilidad,'$');
 
   // Left column
   renderDashLeft(R, pedF);
@@ -2076,7 +2206,7 @@ function renderDashboard(){
 
   // Center text: show utilidad real
   const mainVal=$('gauge-ventas');
-  if(mainVal){mainVal.textContent=fmtCLP(R.utilidadReal);mainVal.style.color=R.utilidadReal>=0?'var(--green)':'var(--red)';mainVal.style.textShadow=R.utilidadReal>=0?'0 0 30px rgba(0,255,179,0.9),0 0 60px rgba(0,255,179,0.4)':'0 0 30px rgba(255,34,68,0.9),0 0 60px rgba(255,34,68,0.4)';}
+  if(mainVal){mainVal.style.color=R.utilidadReal>=0?'var(--green)':'var(--red)';mainVal.style.textShadow=R.utilidadReal>=0?'0 0 30px rgba(0,255,179,0.9),0 0 60px rgba(0,255,179,0.4)':'0 0 30px rgba(255,34,68,0.9),0 0 60px rgba(255,34,68,0.4)';}
   const deltaEl=$('gauge-delta');
   const margenPct=R.ingresosReales>0?(R.utilidadReal/R.ingresosReales*100):0;
   if(deltaEl){deltaEl.textContent=(margenPct>=0?'+':'')+margenPct.toFixed(1)+'% margen';deltaEl.className='ring-delta-val '+(margenPct>=0?'pos':'neg');}
@@ -2138,6 +2268,10 @@ function renderDashboard(){
 
   // Executive charts
   setTimeout(renderExecCharts, 60);
+
+  // Ticker & animated counters
+  updateTicker(R);
+  animateCount($('gauge-ventas'),R.utilidadReal,'$');
 }
 
 // ══ EXECUTIVE CHARTS ══════════════════════════════════════════════════════════
