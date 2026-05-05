@@ -90,8 +90,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .topbar-left{display:flex;flex-direction:column;justify-content:center;gap:1px;padding:0 0 0 14px;}
 .page-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:1px;font-family:var(--font-mono);text-transform:uppercase;}
 .topbar-spacer{flex:1;}
-.section{display:none;padding:16px 20px;flex-direction:column;gap:0;animation:fadeIn 0.25s ease;position:relative;z-index:1;}
-.section.active{display:flex;}
+.section{display:none;padding:16px 20px;flex-direction:column;gap:0;position:relative;z-index:1;}
+.section.active{display:flex;animation:sectionReveal 0.4s cubic-bezier(0.16,1,0.3,1) both;}
+@keyframes sectionReveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── SKELETON LOADER ──────────────────────────────────────────────── */
 .skel{display:inline-block;border-radius:4px;background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:skelShimmer 1.6s ease-in-out infinite;}
@@ -257,12 +258,18 @@ tbody td{padding:9px 12px;color:var(--text2);white-space:nowrap;}
 #login-screen{position:fixed;inset:0;z-index:9000;background:var(--bg);display:flex;align-items:center;justify-content:center;}
 
 /* TOAST */
-.df-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10000;
-  padding:12px 24px;border-radius:var(--radius);font-family:var(--font-mono);font-size:14px;
-  font-weight:600;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;backdrop-filter:blur(12px);}
-.df-toast.show{opacity:1;}
-.df-toast.ok{background:rgba(255,157,0,0.12);color:var(--gold);border:1px solid rgba(255,157,0,0.3);}
-.df-toast.err{background:rgba(255,51,85,0.12);color:var(--red);border:1px solid rgba(255,51,85,0.3);}
+/* ── TOAST MOTION ─────────────────────────────────────────────────── */
+.df-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);z-index:10000;
+  padding:11px 20px 13px;border-radius:12px;font-family:var(--font-mono);font-size:13px;
+  font-weight:600;opacity:0;transition:opacity 0.3s ease,transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;white-space:nowrap;backdrop-filter:blur(20px);min-width:200px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.15);}
+.df-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.df-toast.ok{background:rgba(0,255,179,0.09);color:var(--green);border:1px solid rgba(0,255,179,0.25);}
+.df-toast.err{background:rgba(255,34,68,0.1);color:var(--red);border:1px solid rgba(255,34,68,0.3);}
+.df-toast-bar{position:absolute;bottom:0;left:0;height:2px;border-radius:0 0 12px 12px;
+  background:currentColor;opacity:0.5;width:100%;transform-origin:left;animation:toastBar 3.5s linear forwards;}
+@keyframes toastBar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 
 /* BTN REFRESH */
 .btn-refresh{display:flex;align-items:center;gap:5px;padding:6px 12px;
@@ -449,7 +456,26 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 .exec-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,170,0,0.55),transparent);}
 /* Glass inner highlight */
 .exec-card::after{content:'';position:absolute;top:0;left:0;right:0;height:45%;border-radius:var(--radius) var(--radius) 0 0;background:linear-gradient(180deg,rgba(255,255,255,0.022) 0%,transparent 100%);pointer-events:none;}
-.exec-card-title{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:14px;text-shadow:0 0 12px rgba(255,170,0,0.5);}
+.exec-card-title{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:14px;text-shadow:0 0 12px rgba(255,170,0,0.5);display:flex;align-items:center;gap:7px;}
+
+/* ── CHART REVEAL ─────────────────────────────────────────────────── */
+.chart-reveal{animation:chartReveal 0.7s cubic-bezier(0.16,1,0.3,1) both;}
+@keyframes chartReveal{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0% 0 0)}}
+
+/* ── KPI DELTA ARROW ──────────────────────────────────────────────── */
+.delta-up{color:var(--green);font-family:var(--font-mono);font-size:10px;}
+.delta-up::before{content:'↑ ';}
+.delta-down{color:var(--red);font-family:var(--font-mono);font-size:10px;}
+.delta-down::before{content:'↓ ';}
+.delta-neutral{color:var(--text3);font-family:var(--font-mono);font-size:10px;}
+
+/* ── EXEC-KPI-VERT HOVER ──────────────────────────────────────────── */
+.exec-kpi-vert{transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s ease;}
+.exec-kpi-vert:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.5),inset 0 1.5px 0 rgba(255,255,255,0.2);}
+
+/* ── META-KPI HOVER ───────────────────────────────────────────────── */
+.meta-kpi{transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s ease;}
+.meta-kpi:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.4);}
 .exec-card-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .exec-card-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-align:center;margin-top:6px;}
 
@@ -495,8 +521,16 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
 /* ── SVG RING HERO ──────────────────────────────────────────────── */
 .ring-hero-container{position:relative;display:flex;align-items:flex-start;justify-content:center;
-  background:transparent;padding:4px 0 0;}
+  background:transparent;padding:4px 0 0;cursor:none;}
+.ring-hero-container::after{content:'';position:absolute;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(0,255,179,0.6),rgba(0,136,255,0.4),transparent);
+  filter:blur(2px);animation:scanLine 4s ease-in-out infinite;pointer-events:none;z-index:10;}
+@keyframes scanLine{0%{top:10%;opacity:0}10%{opacity:1}90%{opacity:0.6}100%{top:90%;opacity:0}}
 .ring-svg{width:100%;max-width:440px;height:auto;overflow:visible;filter:drop-shadow(0 0 40px rgba(0,255,100,0.05));}
+/* Cursor glow follows mouse inside ring container */
+.ring-cursor-glow{position:absolute;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,255,179,0.12),transparent 70%);
+  pointer-events:none;transform:translate(-50%,-50%);transition:opacity 0.3s;opacity:0;z-index:5;}
 .ring-center-content{position:absolute;text-align:center;width:200px;pointer-events:none;}
 .ring-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;}
 .ring-main-val{font-size:34px;font-weight:900;color:var(--green);letter-spacing:-1px;
@@ -1199,6 +1233,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
             <div class="exec-card" style="padding:12px 14px">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
                 <div class="exec-card-title" style="margin-bottom:0">Meta Ads · Global</div>
+                <span class="badge-pill blue">ads</span>
                 <div id="meta-live-badge" style="display:none;font-family:var(--font-mono);font-size:7px;color:var(--green);background:rgba(0,255,179,0.1);border:1px solid rgba(0,255,179,0.3);padding:2px 7px;border-radius:20px">● LIVE</div>
               </div>
               <div class="meta-sum-grid" id="meta-sum-grid">
@@ -1242,6 +1277,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
             <div class="exec-card" style="padding:12px 14px;flex:1">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
                 <div class="exec-card-title" style="margin-bottom:0">Embudo de Conversión</div>
+                <span class="badge-pill gold">dropi</span>
                 <select class="db-select" id="funnel-camp-select" onchange="renderFunnelCampaign(this.value)">
                   <option value="__all__">Todas las campañas</option>
                 </select>
@@ -1289,6 +1325,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
           <div class="exec-card">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
               <div class="exec-card-title" style="margin-bottom:0">Ventas · Ads · Costos</div>
+              <span class="badge-pill green" id="badge-periodo-chart">—</span>
               <div style="display:flex;gap:4px">
                 <button class="exec-chip active" id="chip-diario" onclick="setVsAdsMode('diario',this)">Diario</button>
                 <button class="exec-chip" id="chip-semanal" onclick="setVsAdsMode('semanal',this)">Semanal</button>
@@ -1321,7 +1358,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
           <!-- Rendimiento de Campañas -->
           <div class="exec-card">
-            <div class="exec-card-title">Rendimiento de Campañas</div>
+            <div class="exec-card-title">Rendimiento de Campañas <span class="badge-pill blue">meta</span></div>
             <div id="dash-campanas-tabla">
               <div class="empty-state" style="font-size:10px;padding:20px">Conecta Meta Ads para ver campañas</div>
             </div>
@@ -1331,6 +1368,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
           <div class="exec-card" style="padding:14px 16px">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
               <div class="exec-card-title" style="margin-bottom:0">Flujo de Caja</div>
+              <span class="badge-pill green">cash</span>
               <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-periodo-lbl">—</div>
             </div>
             <!-- KPIs top row -->
@@ -1841,7 +1879,10 @@ function semaforo(pct) {
 function toast(msg, err=false) {
   let t = document.querySelector('.df-toast');
   if(!t) { t=document.createElement('div'); t.className='df-toast'; document.body.appendChild(t); }
-  t.textContent=msg; t.className='df-toast show '+(err?'err':'ok');
+  // Progress bar
+  const bar=document.createElement('div'); bar.className='df-toast-bar';
+  t.innerHTML=''; t.appendChild(document.createTextNode(msg)); t.appendChild(bar);
+  t.className='df-toast show '+(err?'err':'ok');
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
@@ -2195,7 +2236,10 @@ document.addEventListener('click',e=>{
     _datePickerOpen=false; const m=$('date-picker-menu'); if(m) m.style.display='none';
   }
 });
-function setPeriodoLabel(label){ const e=$('periodo-label'); if(e) e.textContent=label; }
+function setPeriodoLabel(label){
+  const e=$('periodo-label'); if(e) e.textContent=label;
+  const b=$('badge-periodo-chart'); if(b) b.textContent=label;
+}
 function changePeriod(v) {
   const fmt=d=>d.toISOString().split('T')[0];
   // Use last date in data as reference so periods work with historical data
@@ -2323,7 +2367,12 @@ function renderDashboard(){
   if(mainVal){mainVal.style.color=R.utilidadReal>=0?'var(--green)':'var(--red)';mainVal.style.textShadow=R.utilidadReal>=0?'0 0 30px rgba(0,255,179,0.9),0 0 60px rgba(0,255,179,0.4)':'0 0 30px rgba(255,34,68,0.9),0 0 60px rgba(255,34,68,0.4)';}
   const deltaEl=$('gauge-delta');
   const margenPct=R.ingresosReales>0?(R.utilidadReal/R.ingresosReales*100):0;
-  if(deltaEl){deltaEl.textContent=(margenPct>=0?'+':'')+margenPct.toFixed(1)+'% margen';deltaEl.className='ring-delta-val '+(margenPct>=0?'pos':'neg');}
+  if(deltaEl){
+    const arrow=margenPct>=0?'↑':'↓';
+    deltaEl.textContent=arrow+' '+Math.abs(margenPct).toFixed(1)+'% margen';
+    deltaEl.className='ring-delta-val '+(margenPct>=0?'pos':'neg');
+    deltaEl.style.animation='none';void deltaEl.offsetWidth;deltaEl.style.animation='numPop 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+  }
 
   // Mini rows in center
   tx('ring-gastos-val',fmtCLP(R.costosTotal));
@@ -2388,6 +2437,32 @@ function renderDashboard(){
   animateCount($('gauge-ventas'),R.utilidadReal,'$');
 }
 
+// ══ CURSOR GLOW (ring hero) ═══════════════════════════════════════════════════
+(function(){
+  const rc=document.querySelector('.ring-hero-container');
+  if(!rc) return;
+  const glow=document.createElement('div'); glow.className='ring-cursor-glow';
+  rc.appendChild(glow);
+  rc.addEventListener('mouseenter',()=>glow.style.opacity='1');
+  rc.addEventListener('mouseleave',()=>glow.style.opacity='0');
+  rc.addEventListener('mousemove',e=>{
+    const r=rc.getBoundingClientRect();
+    glow.style.left=(e.clientX-r.left)+'px';
+    glow.style.top=(e.clientY-r.top)+'px';
+  });
+})();
+
+// ══ CHART REVEAL HELPER ═══════════════════════════════════════════════════════
+function revealChartContainers(){
+  document.querySelectorAll('.exec-card canvas').forEach(c=>{
+    const wrap=c.parentElement;
+    if(wrap&&!wrap.classList.contains('chart-reveal')){
+      wrap.classList.remove('chart-reveal');void wrap.offsetWidth;
+      wrap.classList.add('chart-reveal');
+    }
+  });
+}
+
 // ══ EXECUTIVE CHARTS ══════════════════════════════════════════════════════════
 let _vsAdsMode='diario';
 
@@ -2410,6 +2485,7 @@ function renderExecCharts(){
   renderCashflowChart(pedidos);
   const selVal=$('funnel-camp-select')?.value||'__all__';
   renderFunnelCampaign(selVal);
+  setTimeout(revealChartContainers, 120);
 }
 
 function renderComparativoChart(pedidos){
