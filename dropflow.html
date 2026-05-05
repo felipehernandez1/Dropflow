@@ -74,8 +74,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .nav-label{opacity:0;transition:opacity 0.2s;white-space:nowrap;}
 .sidebar-bottom{padding:12px 8px;border-top:1px solid var(--border);}
 .sync-indicator{display:flex;align-items:center;gap:8px;padding:6px 8px;}
-.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0;}
-.sync-dot.live{background:var(--gold);box-shadow:0 0 6px var(--gold-glow),0 0 12px var(--gold-glow);}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0;position:relative;}
+.sync-dot.live{background:var(--gold);box-shadow:0 0 6px var(--gold-glow),0 0 12px var(--gold-glow);animation:dotPulse 2s ease-in-out infinite;}
+.sync-dot.live::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1.5px solid var(--gold);opacity:0;animation:dotRipple 2s ease-out infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.8)}}
+@keyframes dotRipple{0%{opacity:0.8;transform:scale(0.8)}100%{opacity:0;transform:scale(2.2)}}
 .sync-text{font-family:var(--font-mono);font-size:9px;color:var(--text3);}
 .topbar{display:flex;align-items:center;gap:10px;height:52px;flex-shrink:0;
   border-bottom:1px solid rgba(255,170,0,0.15);
@@ -89,6 +92,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .topbar-spacer{flex:1;}
 .section{display:none;padding:16px 20px;flex-direction:column;gap:0;animation:fadeIn 0.25s ease;position:relative;z-index:1;}
 .section.active{display:flex;}
+
+/* ── SKELETON LOADER ──────────────────────────────────────────────── */
+.skel{display:inline-block;border-radius:4px;background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:skelShimmer 1.6s ease-in-out infinite;}
+@keyframes skelShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
 /* ── LIVE TICKER MARQUEE ──────────────────────────────────────────── */
 .ticker-wrap{height:26px;background:rgba(0,0,0,0.55);border-bottom:1px solid rgba(255,170,0,0.07);
@@ -340,12 +347,19 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .exec-kpi.red::after{background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,34,68,0.06) 0%,transparent 70%);}
 .exec-kpi.green::before{background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 20px rgba(0,255,179,0.5);}
 .exec-kpi.green::after{background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,255,179,0.06) 0%,transparent 70%);}
-.exec-kpi:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.5);}
+.exec-kpi:hover{transform:translateY(-6px) scale(1.015);box-shadow:0 20px 60px rgba(0,0,0,0.6);cursor:default;}
 .exec-kpi:hover::after{opacity:1;}
-.exec-kpi.cyan:hover{border-color:rgba(0,238,255,0.35);box-shadow:0 12px 40px rgba(0,238,255,0.12),0 0 0 1px rgba(0,238,255,0.1);}
-.exec-kpi.gold:hover{border-color:rgba(255,170,0,0.35);box-shadow:0 12px 40px rgba(255,170,0,0.12),0 0 0 1px rgba(255,170,0,0.1);}
-.exec-kpi.red:hover{border-color:rgba(255,34,68,0.35);box-shadow:0 12px 40px rgba(255,34,68,0.12);}
-.exec-kpi.green:hover{border-color:rgba(0,255,179,0.35);box-shadow:0 12px 40px rgba(0,255,179,0.12);}
+.exec-kpi.cyan:hover{border-color:rgba(0,238,255,0.5);box-shadow:0 20px 60px rgba(0,238,255,0.18),0 0 0 1px rgba(0,238,255,0.15),0 0 80px rgba(0,238,255,0.06);}
+.exec-kpi.gold:hover{border-color:rgba(255,170,0,0.5);box-shadow:0 20px 60px rgba(255,170,0,0.18),0 0 0 1px rgba(255,170,0,0.15),0 0 80px rgba(255,170,0,0.06);}
+.exec-kpi.red:hover{border-color:rgba(255,34,68,0.5);box-shadow:0 20px 60px rgba(255,34,68,0.18),0 0 80px rgba(255,34,68,0.06);}
+.exec-kpi.green:hover{border-color:rgba(0,255,179,0.5);box-shadow:0 20px 60px rgba(0,255,179,0.18),0 0 80px rgba(0,255,179,0.06);}
+/* Stagger entry animation for KPI row */
+.exec-kpi-row .exec-kpi{animation:kpiEntry 0.5s cubic-bezier(0.34,1.56,0.64,1) both;}
+.exec-kpi-row .exec-kpi:nth-child(1){animation-delay:0.05s}
+.exec-kpi-row .exec-kpi:nth-child(2){animation-delay:0.12s}
+.exec-kpi-row .exec-kpi:nth-child(3){animation-delay:0.19s}
+.exec-kpi-row .exec-kpi:nth-child(4){animation-delay:0.26s}
+@keyframes kpiEntry{from{opacity:0;transform:translateY(16px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .exec-kpi-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;}
 .exec-kpi-val{font-size:32px;font-weight:900;line-height:1;margin-bottom:7px;font-variant-numeric:tabular-nums;letter-spacing:-1px;}
 .exec-kpi.cyan .exec-kpi-val{color:var(--cyan);text-shadow:0 0 30px rgba(0,238,255,0.7),0 0 60px rgba(0,238,255,0.25);}
@@ -355,8 +369,11 @@ body.modo-dia{--bg:#f5f0e8;--bg1:#ede8e0;--bg2:#ffffff;--bg3:#f8f5f0;--bg4:#f0ec
 .exec-kpi-delta{font-family:var(--font-mono);font-size:10px;color:var(--text3);}
 
 /* Executive card base */
-.exec-card{background:rgba(4,8,18,0.94);border:1px solid rgba(255,170,0,0.18);border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden;backdrop-filter:blur(20px);box-shadow:0 4px 30px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.03);}
+.exec-card{background:rgba(4,8,18,0.94);border:1px solid rgba(255,170,0,0.18);border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden;backdrop-filter:blur(24px);box-shadow:0 4px 30px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04),inset 0 -1px 0 rgba(0,0,0,0.3);transition:transform 0.3s ease,box-shadow 0.3s ease,border-color 0.3s ease;}
+.exec-card:hover{transform:translateY(-3px);border-color:rgba(255,170,0,0.32);box-shadow:0 16px 50px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.05);}
 .exec-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,170,0,0.55),transparent);}
+/* Glass inner highlight edge */
+.exec-card::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;border-radius:var(--radius) var(--radius) 0 0;background:linear-gradient(180deg,rgba(255,255,255,0.018) 0%,transparent 100%);pointer-events:none;}
 .exec-card-title{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:14px;text-shadow:0 0 12px rgba(255,170,0,0.5);}
 .exec-card-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .exec-card-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-align:center;margin-top:6px;}
@@ -1749,6 +1766,22 @@ function toast(msg, err=false) {
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
+// ══ SKELETON HELPERS ══════════════════════════════════════════════════════════
+const _skelIds=['kpi-ventas-total','kpi-pedidos-n','db-cobrado','db-utilidad-real','db-proy','gauge-ventas','ring-gastos-val','ring-meta-ads-val','ring-pedidos-val','cf-ingresos','cf-egresos','cf-neto'];
+function showSkeletons(){
+  _skelIds.forEach(id=>{
+    const e=$(id); if(!e) return;
+    e.innerHTML='<span class="skel" style="display:inline-block;width:70px;height:0.9em;vertical-align:middle;border-radius:3px"></span>';
+    e.dataset.raw='0';
+  });
+  ['','2'].forEach(sfx=>['ventas','utilidad','entregados','ruta','ads','margen','roas','pendientes'].forEach(k=>{
+    const e=document.getElementById('tk-'+k+sfx); if(e) e.innerHTML='<span class="skel" style="width:44px;height:8px;border-radius:2px"></span>';
+  }));
+}
+function hideSkeletons(){
+  _skelIds.forEach(id=>{const e=$(id);if(e&&e.querySelector('.skel'))e.textContent='—';});
+}
+
 // ══ NUMBER COUNTER ANIMATION ═════════════════════════════════════════════════
 function animateCount(el, toVal, prefix='$', duration=700){
   if(!el) return;
@@ -2029,6 +2062,7 @@ function mostrarApp() {
     const hoy=new Date(), fmt=d=>d.toISOString().split('T')[0];
     S.filtroDesde=fmt(new Date(hoy.getFullYear(),hoy.getMonth(),1));
     S.filtroHasta=fmt(hoy);
+    setTimeout(showSkeletons, 80);
   }
   tx('user-nombre',USUARIO?.nombre||'');
   tx('user-email',USUARIO?.email||'');
@@ -2149,6 +2183,7 @@ async function handleDropiFile(file){
     toast(`✓ ${S.pedidos.length} pedidos cargados`);
     const dot=$('sync-dot'); if(dot) dot.className='sync-dot live';
     tx('sync-label','Datos cargados');
+    hideSkeletons();
     renderDashboard(); renderPedidos();
   } catch(e) {
     showStatus('dropi-status','❌ '+e.message,false);
