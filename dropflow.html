@@ -947,7 +947,13 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
     <div class="content">
 
       <!-- DASHBOARD -->
-      <div class="section active" id="sec-dashboard">
+      <div class="section active" id="sec-dashboard" style="position:relative">
+        <!-- Video background -->
+        <video autoplay muted loop playsinline
+          style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;opacity:0.18;pointer-events:none"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260429_114316_1c7889ad-2885-410e-b493-98119fee0ddb.mp4">
+        </video>
+
         <div id="alertas-container" style="margin-bottom:8px"></div>
 
         <!-- HERO LAYOUT: KPIs izquierda | Ring central | KPIs + Funnel derecha -->
@@ -1937,25 +1943,28 @@ function animateCountPct(el, toVal, duration=600){
 }
 
 // ══ LIVE TICKER ═══════════════════════════════════════════════════════════════
-function updateTicker(R){
-  if(!R) return;
-  const v={
-    ventas:  fmtCLP(R.ventaTotal),
-    utilidad:fmtCLP(R.utilidadNeta),
-    entregados: R.listas.entregados.length+' ped.',
-    ruta:    R.listas.transito.length+' ped.',
-    ads:     fmtCLP(R.adsGasto),
-    margen:  R.margenNeto.toFixed(1)+'%',
-    roas:    (R.adsGasto>0?(R.ventaTotal/R.adsGasto).toFixed(2):'—')+'x',
-    pendientes: R.listas.pendientes.length+' ped.'
-  };
-  ['','2'].forEach(sfx=>{
-    const set=(id,val)=>{const e=document.getElementById('tk-'+id+sfx);if(e)e.textContent=val;};
-    set('ventas',v.ventas); set('utilidad',v.utilidad);
-    set('entregados',v.entregados); set('ruta',v.ruta);
-    set('ads',v.ads); set('margen',v.margen);
-    set('roas',v.roas); set('pendientes',v.pendientes);
-  });
+function updateTicker(R, pedidos){
+  try {
+    if(!R) return;
+    const ventaTotal=(pedidos||[]).reduce((s,p)=>s+(p.venta||0),0);
+    const v={
+      ventas:   fmtCLP(ventaTotal),
+      utilidad: fmtCLP(R.utilidadReal||0),
+      entregados:(R.listas?.entregados?.length||0)+' ped.',
+      ruta:     (R.listas?.transito?.length||0)+' ped.',
+      ads:      fmtCLP(R.adsGasto||0),
+      margen:   ((R.margenReal||0).toFixed(1))+'%',
+      roas:     (R.adsGasto>0&&ventaTotal>0?(ventaTotal/R.adsGasto).toFixed(2):'—')+'x',
+      pendientes:(R.listas?.pendientes?.length||0)+' ped.'
+    };
+    ['','2'].forEach(sfx=>{
+      const set=(id,val)=>{const e=document.getElementById('tk-'+id+sfx);if(e)e.textContent=val;};
+      set('ventas',v.ventas); set('utilidad',v.utilidad);
+      set('entregados',v.entregados); set('ruta',v.ruta);
+      set('ads',v.ads); set('margen',v.margen);
+      set('roas',v.roas); set('pendientes',v.pendientes);
+    });
+  } catch(e){ console.warn('updateTicker:',e.message); }
 }
 
 // ══ ESTADOS ══════════════════════════════════════════════════════════════════
@@ -2217,6 +2226,9 @@ function navegarA(sec) {
     meta:'Meta Ads',comparacion:'Comparación',proyeccion:'Proyección',
     cashflow:'Flujo de Caja',ia:'IA Dropflow',config:'Configuración'};
   tx('page-title',t[sec]||sec);
+  // Video background only on dashboard
+  const vid=document.querySelector('#sec-dashboard video');
+  if(vid) vid.style.display=sec==='dashboard'?'block':'none';
   if(sec==='graficos'&&S.pedidos.length) setTimeout(renderCharts,100);
   if(sec==='proyeccion'&&S.pedidos.length) setTimeout(renderProyeccion,100);
   if(sec==='meta'&&S.meta) setTimeout(renderMeta,100);
@@ -2433,7 +2445,7 @@ function renderDashboard(){
   setTimeout(renderExecCharts, 60);
 
   // Ticker & animated counters
-  updateTicker(R);
+  updateTicker(R, pedF);
   animateCount($('gauge-ventas'),R.utilidadReal,'$');
 }
 
