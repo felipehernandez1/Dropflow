@@ -524,11 +524,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
 /* ── SVG RING HERO ──────────────────────────────────────────────── */
 .ring-hero-container{position:relative;display:flex;align-items:flex-start;justify-content:center;
-  background:transparent;padding:4px 0 0;cursor:none;}
-.ring-hero-container::after{content:'';position:absolute;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,rgba(0,255,179,0.6),rgba(0,136,255,0.4),transparent);
-  filter:blur(2px);animation:scanLine 4s ease-in-out infinite;pointer-events:none;z-index:10;}
-@keyframes scanLine{0%{top:10%;opacity:0}10%{opacity:1}90%{opacity:0.6}100%{top:90%;opacity:0}}
+  background:transparent;padding:4px 0 0;}
 .ring-svg{width:100%;max-width:440px;height:auto;overflow:visible;filter:drop-shadow(0 0 40px rgba(0,255,100,0.05));}
 /* Cursor glow follows mouse inside ring container */
 .ring-cursor-glow{position:absolute;width:120px;height:120px;border-radius:50%;
@@ -771,7 +767,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   text-shadow: 0 0 22px rgba(0,238,255,0.7), 0 0 45px rgba(0,238,255,0.25) !important;
 }
 
-/* ── TODOS los números → gold con glow suave ── */
+/* ── TODOS los números → celeste con glow medio ── */
 #sec-dashboard .exec-kpi-val,
 #sec-dashboard .exec-kpi.cyan .exec-kpi-val,
 #sec-dashboard .exec-kpi.gold .exec-kpi-val,
@@ -787,19 +783,52 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 #sec-dashboard .db-stat-val,
 #sec-dashboard .cf-kpi-val,
 #sec-dashboard .ring-mini-val,
-#sec-dashboard .donut-left-total {
-  color: var(--gold) !important;
-  text-shadow: 0 0 18px rgba(255,170,0,0.55), 0 0 35px rgba(255,170,0,0.20) !important;
+#sec-dashboard .donut-left-total,
+#sec-dashboard .ring-main-val {
+  color: #00ddff !important;
+  text-shadow: 0 0 16px rgba(0,220,255,0.65), 0 0 32px rgba(0,220,255,0.25) !important;
 }
 
-/* ── Ticker bar — texto celeste sobre fondo transparente ── */
-#sec-dashboard ~ * .ticker-key,
-.ticker-key { color: rgba(0,220,255,0.70); text-shadow: 0 0 8px rgba(0,238,255,0.3); }
+/* ── Todos los boxes mismo glass uniforme — sin colores distintos por variante ── */
+#sec-dashboard .exec-kpi.cyan,
+#sec-dashboard .exec-kpi.gold,
+#sec-dashboard .exec-kpi.red,
+#sec-dashboard .exec-kpi.green,
+#sec-dashboard .exec-kpi-vert.cyan,
+#sec-dashboard .exec-kpi-vert.gold,
+#sec-dashboard .exec-kpi-vert.red,
+#sec-dashboard .exec-kpi-vert.green,
+#sec-dashboard .exec-kpi-vert.nblue {
+  background: transparent !important;
+  border: 1px solid rgba(0,220,255,0.28) !important;
+  box-shadow: 0 0 16px rgba(0,220,255,0.07), inset 0 1px 0 rgba(0,220,255,0.16) !important;
+}
+/* Eliminar tintes de color en sub-items del dashboard */
+#sec-dashboard [style*="background:rgba(0,255,179"],
+#sec-dashboard [style*="background:rgba(255,34,68"],
+#sec-dashboard [style*="background:rgba(0,136,255"],
+#sec-dashboard [style*="background:rgba(191,112,255"],
+#sec-dashboard [style*="background:rgba(255,170,0"],
+#sec-dashboard [style*="background:rgba(255,106,0"] {
+  background: transparent !important;
+}
+
+/* ── Ticker bar — texto celeste ── */
+.ticker-key { color: rgba(0,220,255,0.72); text-shadow: 0 0 8px rgba(0,238,255,0.3); }
 .ticker-val  { text-shadow: 0 0 10px currentColor; }
 
-/* ── Bordes de lineas top en ::before del exec-card ── */
+/* ── Línea top exec-card → celeste ── */
 #sec-dashboard .exec-card::before {
-  background: linear-gradient(90deg,transparent,rgba(0,238,255,0.5),transparent) !important;
+  background: linear-gradient(90deg,transparent,rgba(0,238,255,0.45),transparent) !important;
+}
+
+/* ── Títulos solo glow suave — mantienen su color ── */
+#sec-dashboard .exec-card-title {
+  text-shadow: 0 0 14px rgba(255,170,0,0.4) !important;
+}
+#sec-dashboard .exec-kpi::before,
+#sec-dashboard .exec-kpi-vert::before {
+  opacity: 0.5;
 }
 </style>
 </head>
@@ -807,7 +836,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
 <!-- VIDEO BACKGROUND — visible only on dashboard section -->
 <video id="bg-video" autoplay muted loop playsinline
-  style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0.22;pointer-events:none;display:none"
+  style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0.92;pointer-events:none;display:none"
   src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260429_114316_1c7889ad-2885-410e-b493-98119fee0ddb.mp4">
 </video>
 
@@ -2564,20 +2593,6 @@ function renderDashboard(){
   animateCount($('gauge-ventas'),R.utilidadReal,'$');
 }
 
-// ══ CURSOR GLOW (ring hero) ═══════════════════════════════════════════════════
-(function(){
-  const rc=document.querySelector('.ring-hero-container');
-  if(!rc) return;
-  const glow=document.createElement('div'); glow.className='ring-cursor-glow';
-  rc.appendChild(glow);
-  rc.addEventListener('mouseenter',()=>glow.style.opacity='1');
-  rc.addEventListener('mouseleave',()=>glow.style.opacity='0');
-  rc.addEventListener('mousemove',e=>{
-    const r=rc.getBoundingClientRect();
-    glow.style.left=(e.clientX-r.left)+'px';
-    glow.style.top=(e.clientY-r.top)+'px';
-  });
-})();
 
 // ══ CHART REVEAL HELPER ═══════════════════════════════════════════════════════
 function revealChartContainers(){
