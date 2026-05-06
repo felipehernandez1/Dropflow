@@ -1557,20 +1557,32 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
 
           <!-- Margen gauge -->
-          <div class="exec-card exec-gauge-card">
-            <div class="exec-card-title" style="text-align:center">Margen de Ganancia</div>
-            <div class="exec-radial-wrap">
-              <div style="position:relative;width:150px;height:150px;margin:0 auto">
-                <canvas id="chart-margen-gauge" width="150" height="150" style="position:relative;z-index:1"></canvas>
-                <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,170,0,0.20);pointer-events:none;z-index:0"></div>
-                <div class="exec-radial-val" id="gauge-margen-pct" style="color:var(--gold)">0%</div>
+          <div class="exec-card exec-gauge-card" style="padding:14px 16px">
+            <div class="exec-card-title" style="text-align:center;margin-bottom:10px">Margen de Ganancia</div>
+            <!-- Full doughnut -->
+            <div style="position:relative;width:140px;height:140px;margin:0 auto 10px">
+              <canvas id="chart-margen-gauge" width="140" height="140" style="position:relative;z-index:1"></canvas>
+              <div style="position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,170,0,0.15);pointer-events:none;z-index:0"></div>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;gap:1px">
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:1px">MARGEN</div>
+                <div style="font-size:26px;font-weight:900;line-height:1" id="gauge-margen-pct">0%</div>
+                <div style="font-family:var(--font-mono);font-size:7px;color:var(--text3)" id="gauge-margen-label">del total</div>
               </div>
             </div>
-            <div class="exec-card-sub" id="gauge-margen-label">Margen Total</div>
-            <div style="margin-top:12px;border-top:1px solid rgba(255,157,0,0.10);padding-top:10px">
-              <div class="exec-card-label" style="margin-bottom:6px;text-align:center">Gastos Operativos</div>
-              <div style="text-align:center;font-size:18px;font-weight:900;color:var(--red)" id="gauge-gastos">$0</div>
-              <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);text-align:center" id="gauge-gastos-sub">costos totales</div>
+            <!-- Breakdown rows -->
+            <div style="display:flex;flex-direction:column;gap:4px;width:100%">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 6px;border-radius:4px;background:rgba(0,255,179,0.04)">
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:#00ffb3;flex-shrink:0"></div><span style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">Utilidad</span></div>
+                <span style="font-size:11px;font-weight:800;color:#00ffb3" id="gauge-utilidad">$0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 6px;border-radius:4px;background:rgba(255,34,68,0.04)">
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:#ff2244;flex-shrink:0"></div><span style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">Costos</span></div>
+                <span style="font-size:11px;font-weight:800;color:var(--red)" id="gauge-gastos">$0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 6px;border-radius:4px;background:rgba(0,136,255,0.04)">
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:#0088ff;flex-shrink:0"></div><span style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">Ventas</span></div>
+                <span style="font-size:11px;font-weight:800;color:#5ab4ff" id="gauge-ventas">$0</span>
+              </div>
             </div>
           </div>
 
@@ -1588,6 +1600,49 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               </div>
             </div>
             <div class="canal-legend" id="canal-legend"></div>
+          </div>
+        </div>
+
+        <!-- GEO ROW: Mapa Chile | Top Ciudades Line Chart -->
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;margin-bottom:12px">
+
+          <!-- Mapa Chile -->
+          <div class="exec-card" style="padding:12px 14px">
+            <div class="exec-card-title" style="margin-bottom:8px">Mapa Chile</div>
+            <div id="chile-map-wrap" style="position:relative;width:100%">
+              <svg id="chile-map-svg" viewBox="0 0 120 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:360px;overflow:visible">
+                <!-- Chile outline (simplified but recognizable shape) -->
+                <path id="chile-path" d="
+                  M72,8 L80,12 L85,18 L82,26 L78,32 L80,40 L76,50 L72,60
+                  L74,72 L70,84 L68,98 L72,112 L70,126 L68,140 L66,156
+                  L68,170 L64,186 L62,202 L64,218 L60,234 L58,252
+                  L56,270 L54,288 L52,308 L50,328 L48,348 L46,366
+                  L42,384 L38,400 L34,414 L28,426 L22,436 L16,444
+                  L18,452 L24,456 L30,452 L36,446 L40,452 L38,460
+                  L32,466 L28,472 L22,478 L18,486 L20,494 L26,498 L32,494
+                  L36,488 L40,480 L46,472 L52,466 L58,460 L62,452
+                  L66,440 L70,428 L74,414 L78,398 L80,382 L82,366
+                  L82,348 L80,330 L80,312 L82,294 L82,276 L80,260
+                  L78,244 L76,228 L76,212 L74,196 L74,180 L76,164
+                  L76,148 L74,132 L74,116 L76,100 L76,84 L74,68
+                  L72,52 L70,38 L68,28 L68,18 Z
+                " fill="rgba(0,136,255,0.08)" stroke="rgba(0,200,255,0.35)" stroke-width="1.5" stroke-linejoin="round"/>
+                <!-- City dots rendered by JS -->
+                <g id="chile-city-dots"></g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Top Ciudades line chart -->
+          <div class="exec-card" style="padding:12px 14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div class="exec-card-title" style="margin-bottom:0">Top Ciudades</div>
+              <div style="display:flex;gap:12px;font-family:var(--font-mono);font-size:8px">
+                <span style="color:#ffaa00;text-shadow:0 0 6px rgba(255,170,0,0.7)">● Más pedidos</span>
+                <span style="color:#ff2244;text-shadow:0 0 6px rgba(255,34,68,0.6)">● Mayor flete</span>
+              </div>
+            </div>
+            <div style="height:320px"><canvas id="chart-ciudades"></canvas></div>
           </div>
         </div>
 
@@ -1661,11 +1716,11 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
       <!-- PEDIDOS -->
       <div class="section" id="sec-pedidos">
         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:10px">
-          <div class="kpi-card green"><div class="kpi-label">Total pedidos</div><div class="kpi-value" id="pk-total">0</div><div class="kpi-sub" id="pk-total-sub">en el período</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Total pedidos</div><div class="kpi-value" id="pk-total">0</div><div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--gold);text-shadow:0 0 10px rgba(255,170,0,0.4)" id="pk-total-val">$0</div><div class="kpi-sub" id="pk-total-sub" style="font-size:9px">en el período</div></div>
           <div class="kpi-card green"><div class="kpi-label">Entregados</div><div class="kpi-value" id="pk-entregados">0</div><div class="kpi-sub" id="pk-entregados-pct">0% del total</div></div>
           <div class="kpi-card amber"><div class="kpi-label">En camino</div><div class="kpi-value" id="pk-camino">0</div><div class="kpi-sub" id="pk-camino-pct">0% del total</div></div>
-          <div class="kpi-card red"><div class="kpi-label">Devueltos</div><div class="kpi-value" id="pk-devueltos">0</div><div class="kpi-sub" id="pk-devueltos-pct">con costo flete</div></div>
-          <div class="kpi-card amber"><div class="kpi-label">Cancelados</div><div class="kpi-value" id="pk-cancelados">0</div><div class="kpi-sub" id="pk-cancelados-pct">sin costo adicional</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Devueltos</div><div class="kpi-value" id="pk-devueltos">0</div><div style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--red)" id="pk-devueltos-val">-$0</div><div class="kpi-sub" id="pk-devueltos-pct">solo pérdida flete</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Cancelados</div><div class="kpi-value" id="pk-cancelados">0</div><div style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--text3)">$0 neto</div><div class="kpi-sub" id="pk-cancelados-pct">sin costo adicional</div></div>
           <div class="kpi-card green"><div class="kpi-label">Utilidad Total</div><div class="kpi-value" id="pk-util-total" style="font-size:22px">$0</div></div>
         </div>
         <div class="table-filters">
@@ -2836,6 +2891,8 @@ function renderExecCharts(){
   renderCanalChart(pedidos);
   renderMargenGauge();
   renderCashflowChart(pedidos);
+  renderChileMap(pedidos);
+  renderCiudadesChart(pedidos);
   const selVal=$('funnel-camp-select')?.value||'__all__';
   renderFunnelCampaign(selVal);
   setTimeout(revealChartContainers, 120);
@@ -2964,6 +3021,7 @@ function renderCashflowChart(pedidos){
     const key=mon.toISOString().split('T')[0];
     if(!wk[key]) wk[key]={ing:0,egr:0};
     if(p.estado==='entregado') wk[key].ing+=p.venta||0;
+    else if(p.estado==='transito'||p.estado==='pendiente') wk[key].ing+=(p.venta||0)*(S.tasaEntrega/100);
     wk[key].egr+=(p.proveedor||0)+(p.flete||0)+(p.comision||0);
   });
   const wkeys=Object.keys(wk).sort().slice(-10);
@@ -3003,6 +3061,85 @@ function renderCanalChart(pedidos){
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.label}: ${fmtCLP(c.raw)} (${total>0?((c.raw/total)*100).toFixed(1):0}%)`}}}}});
 }
 
+// ── CHILE MAP ────────────────────────────────────────────────────────────
+// City coordinates in the SVG viewBox (0 0 120 520)
+// Approximate positions for main Chilean cities from north to south
+const CHILE_CITIES={
+  'Arica':{x:55,y:28},'Iquique':{x:52,y:48},'Antofagasta':{x:58,y:90},
+  'Calama':{x:65,y:80},'Copiapó':{x:62,y:132},'La Serena':{x:58,y:168},
+  'Coquimbo':{x:57,y:172},'Ovalle':{x:58,y:180},'Valparaíso':{x:64,y:220},
+  'Viña del Mar':{x:63,y:218},'Santiago':{x:68,y:232},'Rancagua':{x:68,y:244},
+  'Talca':{x:66,y:264},'Chillán':{x:65,y:284},'Concepción':{x:62,y:304},
+  'Los Ángeles':{x:62,y:318},'Temuco':{x:60,y:338},'Valdivia':{x:58,y:358},
+  'Osorno':{x:56,y:376},'Puerto Montt':{x:54,y:394},'Castro':{x:50,y:420},
+  'San Antonio':{x:62,y:228},'Puente Alto':{x:70,y:234},'Maipú':{x:67,y:233},
+  'La Florida':{x:69,y:235},'Las Condes':{x:70,y:231},'Quilicura':{x:68,y:228}
+};
+function _normCity(c){if(!c)return'';return c.trim().toLowerCase()
+  .normalize('NFD').replace(/[̀-ͯ]/g,'')
+  .replace(/\s+/g,' ');}
+const _CITY_NORM={};
+Object.keys(CHILE_CITIES).forEach(k=>{_CITY_NORM[_normCity(k)]=k;});
+function _matchCity(raw){
+  if(!raw)return null;
+  const n=_normCity(raw);
+  if(_CITY_NORM[n])return _CITY_NORM[n];
+  for(const k of Object.keys(_CITY_NORM)){if(n.includes(k)||k.includes(n))return _CITY_NORM[k];}
+  return null;
+}
+function renderChileMap(pedidos){
+  const g=$('chile-city-dots'); if(!g) return;
+  const cityCount={}, cityFlete={};
+  pedidos.forEach(p=>{
+    const m=_matchCity(p.ciudad||'');
+    if(!m) return;
+    cityCount[m]=(cityCount[m]||0)+1;
+    cityFlete[m]=(cityFlete[m]||0)+(p.flete||0);
+  });
+  const maxC=Math.max(1,...Object.values(cityCount));
+  const entries=Object.entries(cityCount).sort((a,b)=>b[1]-a[1]);
+  g.innerHTML=entries.map(([name,cnt])=>{
+    const pos=CHILE_CITIES[name]; if(!pos) return '';
+    const r=3+Math.round((cnt/maxC)*10);
+    const op=0.4+0.6*(cnt/maxC);
+    return `<g>
+      <circle cx="${pos.x}" cy="${pos.y}" r="${r+4}" fill="rgba(255,170,0,0.08)"/>
+      <circle cx="${pos.x}" cy="${pos.y}" r="${r}" fill="rgba(255,170,0,${op.toFixed(2)})" stroke="rgba(255,200,0,0.6)" stroke-width="0.8"/>
+      <text x="${pos.x+r+2}" y="${pos.y+3}" font-family="monospace" font-size="5.5" fill="rgba(255,230,160,0.75)">${name} ${cnt}</text>
+    </g>`;
+  }).join('');
+}
+
+// ── CIUDADES LINE CHART ───────────────────────────────────────────────────
+let _ch_ciudades=null;
+function renderCiudadesChart(pedidos){
+  const ctx=$('chart-ciudades'); if(!ctx) return;
+  if(_ch_ciudades){_ch_ciudades.destroy();_ch_ciudades=null;}
+  // Aggregate by city
+  const cityCount={}, cityFlete={};
+  pedidos.forEach(p=>{
+    const m=_matchCity(p.ciudad||'');
+    if(!m) return;
+    cityCount[m]=(cityCount[m]||0)+1;
+    cityFlete[m]=(cityFlete[m]||0)+(p.flete||0);
+  });
+  const N=8;
+  const topByCount=Object.entries(cityCount).sort((a,b)=>b[1]-a[1]).slice(0,N);
+  const topByFlete=Object.entries(cityFlete).sort((a,b)=>b[1]-a[1]).slice(0,N);
+  // Union of cities, sorted by count
+  const cities=[...new Set([...topByCount.map(e=>e[0]),...topByFlete.map(e=>e[0])])].slice(0,N);
+  _ch_ciudades=new Chart(ctx,{type:'bar',data:{labels:cities,datasets:[
+    {label:'Pedidos',data:cities.map(c=>cityCount[c]||0),backgroundColor:'rgba(255,170,0,0.55)',borderColor:'#ffaa00',borderWidth:1,borderRadius:3,yAxisID:'y',order:2},
+    {label:'Flete Total',data:cities.map(c=>cityFlete[c]||0),type:'line',borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.06)',tension:0.4,borderWidth:2,pointRadius:3,pointBackgroundColor:'#ff2244',yAxisID:'y2',order:1,fill:false},
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>c.datasetIndex===0?` ${c.label}: ${c.raw} pedidos`:` Flete: ${fmtCLP(c.raw)}`}}},
+    scales:{
+      x:{ticks:{color:'rgba(255,230,160,0.75)',font:{size:8}},grid:{display:false}},
+      y:{position:'left',ticks:{color:'#ffaa00',font:{size:7},callback:v=>v+'p'},grid:{color:'rgba(255,255,255,0.02)'}},
+      y2:{position:'right',ticks:{color:'#ff2244',font:{size:7},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{display:false}}
+    }}});
+}
+
 function renderMargenGauge(){
   const ctx=$('chart-margen-gauge'); if(!ctx) return;
   if(_ch.margenGauge){_ch.margenGauge.destroy();_ch.margenGauge=null;}
@@ -3010,9 +3147,21 @@ function renderMargenGauge(){
   const pct=Math.max(0,Math.min(100,R.margenReal));
   const color=pct>=20?'#00ffb3':pct>=10?'#ffaa00':'#ff2244';
   const el=$('gauge-margen-pct');
-  if(el){el.textContent=fmtPct(R.margenReal);el.style.color=color;}
-  _ch.margenGauge=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[pct,100-pct],backgroundColor:[color,'rgba(255,255,255,0.04)'],borderWidth:0,hoverOffset:0}]},
-    options:{responsive:false,maintainAspectRatio:false,cutout:'72%',rotation:-90,circumference:180,plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+  if(el){el.textContent=fmtPct(R.margenReal);el.style.color=color;el.style.textShadow=`0 0 20px ${color}90`;}
+  // Compose: utilidad / costos / remaining
+  const util=Math.max(0,R.utilidadReal||0);
+  const cost=Math.max(0,R.costosTotal||0);
+  const venta=Math.max(1,R.ingresosReales||1);
+  const utilPct=Math.min(100,util/venta*100);
+  const costPct=Math.min(100-utilPct,cost/venta*100);
+  const restPct=Math.max(0,100-utilPct-costPct);
+  _ch.margenGauge=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[utilPct,costPct,restPct],
+    backgroundColor:['#00ffb3','#ff2244','rgba(255,255,255,0.04)'],borderWidth:0,hoverOffset:0}]},
+    options:{responsive:false,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+  tx('gauge-gastos',fmtCLP(cost));
+  tx('gauge-utilidad',fmtCLP(util));
+  tx('gauge-ventas',fmtCLP(R.ingresosReales||0));
 }
 
 function renderFunnel(){
@@ -3208,14 +3357,12 @@ function renderFunnelCampaign(idx,_R){
     return;
   }
 
-  // Default: Dropi conversion funnel (no Meta)
-  const steps=[
-    {l:'PEDIDOS TOTALES',v:R.total,pct:100,c:'#ffaa00'},
-    {l:'EN PROCESO',v:R.enTransito+R.pendientes,pct:(R.enTransito+R.pendientes)/tot*100,c:'#00c8ff'},
-    {l:'ENTREGADOS',v:R.entregados,pct:R.entregados/tot*100,c:'#00ffb3'},
-    {l:'BAJAS (dev+cancel)',v:R.devueltos+R.cancelados,pct:(R.devueltos+R.cancelados)/tot*100,c:'#ff2244'},
-  ];
-  el.innerHTML=_funnelMetaHtml(steps);
+  // No Meta Ads connected
+  el.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:10px;text-align:center">
+    <div style="font-size:32px;opacity:0.4">📡</div>
+    <div style="font-family:var(--font-mono);font-size:10px;color:var(--gold);font-weight:700;letter-spacing:1.5px">CONECTA META ADS</div>
+    <div style="font-family:var(--font-mono);font-size:8.5px;color:var(--text3);max-width:200px;line-height:1.6">Este embudo analiza métricas de campaña (CTR · Conv% · ROAS) para identificar el cuello de botella y darte recomendaciones accionables.</div>
+  </div>`;
 }
 
 function _funnelMetaHtml(steps){
@@ -3460,10 +3607,12 @@ function renderPedidos(){
 
 function renderPedidosKPIs(pedidos){
   const R=calcR(pedidos); const tot=R.total;
-  tx('pk-total',tot); tx('pk-total-sub',tot+' pedidos en el período');
+  const ventaTotal=pedidos.reduce((s,p)=>s+(p.venta||0),0);
+  tx('pk-total',tot); tx('pk-total-val',fmtCLP(ventaTotal)); tx('pk-total-sub',tot+' pedidos en el período');
   tx('pk-entregados',R.entregados); tx('pk-entregados-pct',tot>0?fmtPct(R.entregados/tot*100)+' del total':'0%');
   tx('pk-camino',R.enTransito+R.pendientes); tx('pk-camino-pct',tot>0?fmtPct((R.enTransito+R.pendientes)/tot*100)+' del total':'0%');
-  tx('pk-devueltos',R.devueltos); tx('pk-devueltos-pct',tot>0?fmtPct(R.devueltos/tot*100)+' del total':'0%');
+  const costoDevFlete=R.listas.devueltos.reduce((s,p)=>s+(p.flete||0),0);
+  tx('pk-devueltos',R.devueltos); tx('pk-devueltos-val','-'+fmtCLP(costoDevFlete)); tx('pk-devueltos-pct',tot>0?fmtPct(R.devueltos/tot*100)+' del total':'0%');
   tx('pk-cancelados',R.cancelados); tx('pk-cancelados-pct',tot>0?fmtPct(R.cancelados/tot*100)+' del total':'0%');
   tx('pk-util-total', fmtCLP(R.utilidadTotal||0));
 }
