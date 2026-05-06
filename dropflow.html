@@ -817,9 +817,9 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 .ticker-key { color: rgba(0,220,255,0.72); text-shadow: 0 0 8px rgba(0,238,255,0.3); }
 .ticker-val  { text-shadow: 0 0 10px currentColor; }
 
-/* ── Línea top exec-card → celeste ── */
+/* ── Línea top exec-card → gold ── */
 #sec-dashboard .exec-card::before {
-  background: linear-gradient(90deg,transparent,rgba(0,238,255,0.45),transparent) !important;
+  background: linear-gradient(90deg,transparent,rgba(255,170,0,0.55),transparent) !important;
 }
 
 /* ── Títulos solo glow suave — mantienen color gold ── */
@@ -851,14 +851,14 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   text-shadow: 0 0 14px rgba(0,255,179,0.55) !important;
 }
 #sec-dashboard .meta-sum-label {
-  color: rgba(0,220,255,0.82) !important;
-  text-shadow: 0 0 8px rgba(0,238,255,0.35) !important;
+  color: var(--gold) !important;
+  text-shadow: 0 0 12px rgba(255,170,0,0.65), 0 0 24px rgba(255,170,0,0.25) !important;
 }
 
-/* ── exec-mini-label → celeste con glow (letras naranjas → visibles) ── */
+/* ── exec-mini-label → gold glow ── */
 #sec-dashboard .exec-mini-label {
-  color: rgba(0,220,255,0.82) !important;
-  text-shadow: 0 0 10px rgba(0,238,255,0.40) !important;
+  color: var(--gold) !important;
+  text-shadow: 0 0 12px rgba(255,170,0,0.60), 0 0 24px rgba(255,170,0,0.22) !important;
 }
 
 /* ── exec-mini-stat variantes → glass celeste uniforme ── */
@@ -886,21 +886,27 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   color: rgba(0,220,255,0.80) !important;
 }
 
-/* ── Letras naranjas (var(--text3) = #8a5822) → glow para verlas ── */
+/* ── TODOS los nombres/títulos de boxes → gold glow como el aro ── */
 #sec-dashboard .exec-kpi-label,
 #sec-dashboard .exec-kpi-vert-label,
 #sec-dashboard .exec-card-label,
 #sec-dashboard .exec-card-sub,
+#sec-dashboard .exec-card-title,
+#sec-dashboard .exec-welcome-name,
 #sec-dashboard .ring-mini-label,
+#sec-dashboard .ring-label,
 #sec-dashboard .kpi-label,
 #sec-dashboard .kpi-sub,
 #sec-dashboard .donut-left-sub,
 #sec-dashboard .donut-left-item,
 #sec-dashboard .db-stat-label,
 #sec-dashboard .cf-row-label,
-#sec-dashboard .cf-kpi-label {
-  color: rgba(0,220,255,0.85) !important;
-  text-shadow: 0 0 12px rgba(0,238,255,0.45) !important;
+#sec-dashboard .cf-kpi-label,
+#sec-dashboard .funnel-label,
+#sec-dashboard .exec-kpi-delta,
+#sec-dashboard .exec-kpi-vert-delta.neu {
+  color: var(--gold) !important;
+  text-shadow: 0 0 14px rgba(255,170,0,0.65), 0 0 28px rgba(255,170,0,0.25) !important;
 }
 
 /* ── Gauge margen % → celeste ── */
@@ -913,11 +919,12 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   text-shadow: 0 0 14px rgba(255,34,68,0.55) !important;
 }
 
-/* ── badge-pill → glass celeste uniforme en dashboard ── */
+/* ── badge-pill → gold glow para que haga juego con los títulos ── */
 #sec-dashboard .badge-pill {
-  background: transparent !important;
-  border-color: rgba(0,220,255,0.30) !important;
-  color: rgba(0,220,255,0.85) !important;
+  background: rgba(255,170,0,0.06) !important;
+  border-color: rgba(255,170,0,0.35) !important;
+  color: var(--gold) !important;
+  text-shadow: 0 0 8px rgba(255,170,0,0.5) !important;
 }
 
 /* ── Ventas totales inline row → celeste border ── */
