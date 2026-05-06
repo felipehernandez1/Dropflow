@@ -1736,22 +1736,107 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               <div class="total-neto-card"><div class="total-neto-label">Total estimado</div><div class="total-neto-val" style="color:var(--purple)" id="proy-util-total">$0</div></div>
             </div>
             <div style="height:260px"><canvas id="chart-proyeccion"></canvas></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+              <div style="background:rgba(5,10,22,0.5);border:1px solid rgba(0,220,255,0.2);border-radius:var(--radius);padding:14px">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Escenario de Entrega</div>
+                <div style="height:180px"><canvas id="chart-proy-escenario"></canvas></div>
+              </div>
+              <div style="background:rgba(5,10,22,0.5);border:1px solid rgba(0,220,255,0.2);border-radius:var(--radius);padding:14px">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Proyección Financiera</div>
+                <div style="height:180px"><canvas id="chart-proy-financiero"></canvas></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- CASHFLOW -->
       <div class="section" id="sec-cashflow">
-        <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px">Flujo de caja</h2>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px">
+        <h2 style="font-size:16px;font-weight:700;color:var(--gold);text-shadow:0 0 14px rgba(255,170,0,0.5);margin-bottom:16px">Flujo de Caja</h2>
+
+        <!-- KPIs principales -->
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
           <div class="kpi-card green"><div class="kpi-label">Cobrado confirmado</div><div class="kpi-value" id="cf-cobrado" style="font-size:18px">$0</div></div>
-          <div class="kpi-card amber"><div class="kpi-label">Pendientes</div><div class="kpi-value" id="cf-por-cobrar" style="font-size:18px">$0</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Por cobrar (est.)</div><div class="kpi-value" id="cf-por-cobrar" style="font-size:18px">$0</div></div>
           <div class="kpi-card red"><div class="kpi-label">Total salidas</div><div class="kpi-value" id="cf-salidas" style="font-size:18px">$0</div></div>
-          <div class="kpi-card purple"><div class="kpi-label">Pérdida devoluciones</div><div class="kpi-value" id="cf-devoluciones" style="font-size:18px">$0</div></div>
+          <div class="kpi-card purple"><div class="kpi-label">Pérd. devoluciones</div><div class="kpi-value" id="cf-devoluciones" style="font-size:18px">$0</div></div>
           <div class="kpi-card green"><div class="kpi-label">Caja disponible HOY</div><div class="kpi-value" id="cf-disponible" style="font-size:18px">$0</div></div>
         </div>
-        <div style="height:220px;margin-bottom:16px"><canvas id="chart-cashflow"></canvas></div>
-        <div id="cf-recomendacion" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px"></div>
+
+        <!-- Desglose de movimientos -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+          <!-- Ingresos desglose -->
+          <div style="background:rgba(0,255,179,0.04);border:1px solid rgba(0,255,179,0.2);border-radius:var(--radius);padding:14px">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;text-shadow:0 0 10px rgba(0,255,179,0.5)">▲ Ingresos</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:rgba(0,255,179,0.05)">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Pedidos entregados</div>
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-ent-pct-label">0 pedidos · 0%</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:16px;font-weight:800;color:var(--green);text-shadow:0 0 10px rgba(0,255,179,0.4)" id="cf-ing-entregados">$0</div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:rgba(255,170,0,0.05)">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">En tránsito/Pendientes</div>
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-pend-pct-label">0 pedidos · 0%</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:16px;font-weight:800;color:var(--gold);text-shadow:0 0 10px rgba(255,170,0,0.4)" id="cf-ing-pendientes">$0</div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:rgba(255,34,68,0.05)">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Devueltos/Cancelados</div>
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-dev-pct-label">0 pedidos · 0%</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:16px;font-weight:800;color:var(--red);text-shadow:0 0 10px rgba(255,34,68,0.4)" id="cf-ing-devueltos">$0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Egresos desglose -->
+          <div style="background:rgba(255,34,68,0.04);border:1px solid rgba(255,34,68,0.2);border-radius:var(--radius);padding:14px">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;text-shadow:0 0 10px rgba(255,34,68,0.5)">▼ Egresos</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(191,112,255,0.05)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Costo Proveedor</div>
+                <div style="font-size:15px;font-weight:800;color:var(--purple)" id="cf-eg-proveedor">$0</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(255,170,0,0.05)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Costo Flete</div>
+                <div style="font-size:15px;font-weight:800;color:var(--gold)" id="cf-eg-flete">$0</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(0,136,255,0.05)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Comisión Dropi</div>
+                <div style="font-size:15px;font-weight:800;color:var(--neo-blue)" id="cf-eg-comision">$0</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(255,34,68,0.05)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Gasto Meta Ads</div>
+                <div style="font-size:15px;font-weight:800;color:var(--red)" id="cf-eg-ads">$0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráficos: cashflow semanal + donut estados -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px">
+          <div style="background:rgba(5,10,22,0.08);border:1px solid rgba(0,220,255,0.2);border-radius:var(--radius);padding:14px;backdrop-filter:blur(18px)">
+            <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px">Flujo Semanal (Ingresos vs Egresos)</div>
+            <div style="height:180px"><canvas id="chart-cashflow"></canvas></div>
+          </div>
+          <div style="background:rgba(5,10,22,0.08);border:1px solid rgba(0,220,255,0.2);border-radius:var(--radius);padding:14px;backdrop-filter:blur(18px)">
+            <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px">Estado de Pedidos</div>
+            <div style="height:140px;display:flex;align-items:center;justify-content:center"><canvas id="chart-cf-estados"></canvas></div>
+            <div id="cf-estados-legend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;justify-content:center"></div>
+          </div>
+        </div>
+
+        <div id="cf-recomendacion" style="background:rgba(5,10,22,0.08);border:1px solid rgba(0,220,255,0.15);border-radius:var(--radius);padding:14px;font-family:var(--font-mono);font-size:11px;color:#b8dff0;backdrop-filter:blur(18px)"></div>
       </div>
 
       <!-- IA -->
@@ -3153,17 +3238,53 @@ function renderMetaPerf(idx){
 function renderCashflow(){
   const pedidos=filtF(S.pedidos);
   const R=calcR(pedidos);
-  const ventaEnt=R.listas.entregados.reduce((s,p)=>s+(p.venta||0),0);
-  const ventaPend=[...R.listas.transito,...R.listas.pendientes].reduce((s,p)=>s+(p.venta||0),0)*(S.tasaEntrega/100);
+  const total=pedidos.length||1;
+  const entL=R.listas.entregados, pendL=[...R.listas.transito,...R.listas.pendientes];
+  const devL=[...R.listas.devueltos,...R.listas.cancelados];
+  const ventaEnt=entL.reduce((s,p)=>s+(p.venta||0),0);
+  const ventaPend=pendL.reduce((s,p)=>s+(p.venta||0),0)*(S.tasaEntrega/100);
   const egresos=R.costoProveedor+R.costoFlete+R.costoComision+R.adsGasto;
-  const devLoss=R.listas.devueltos.reduce((s,p)=>s+(p.proveedor||0)+(p.flete||0),0);
+  const devLoss=devL.reduce((s,p)=>s+(p.proveedor||0)+(p.flete||0),0);
   const saldo=ventaEnt-egresos;
+  // KPIs principales
   tx('cf-cobrado',fmtCLP(ventaEnt));
   tx('cf-por-cobrar',fmtCLP(ventaPend));
   tx('cf-salidas',fmtCLP(egresos));
   tx('cf-devoluciones',fmtCLP(devLoss));
   const dispEl=$('cf-disponible');
   if(dispEl){dispEl.textContent=fmtCLP(saldo);dispEl.style.color=saldo>=0?'var(--green)':'var(--red)';}
+  // Desglose ingresos
+  tx('cf-ing-entregados',fmtCLP(ventaEnt));
+  tx('cf-ing-pendientes',fmtCLP(ventaPend));
+  tx('cf-ing-devueltos',fmtCLP(devLoss));
+  tx('cf-ent-pct-label',`${entL.length} pedidos · ${((entL.length/total)*100).toFixed(1)}%`);
+  tx('cf-pend-pct-label',`${pendL.length} pedidos · ${((pendL.length/total)*100).toFixed(1)}%`);
+  tx('cf-dev-pct-label',`${devL.length} pedidos · ${((devL.length/total)*100).toFixed(1)}%`);
+  // Desglose egresos
+  tx('cf-eg-proveedor',fmtCLP(R.costoProveedor));
+  tx('cf-eg-flete',fmtCLP(R.costoFlete));
+  tx('cf-eg-comision',fmtCLP(R.costoComision));
+  tx('cf-eg-ads',fmtCLP(R.adsGasto));
+  // Donut estados
+  const cfCtx=$('chart-cf-estados');
+  if(cfCtx){
+    if(window._ch_cf_est){window._ch_cf_est.destroy();window._ch_cf_est=null;}
+    const stCounts=[entL.length,pendL.length,R.listas.devueltos.length,R.listas.cancelados.length];
+    const stLabels=['Entregados','En tránsito/Pend.','Devueltos','Cancelados'];
+    const stColors=['#00ffb3','#0088ff','#ff2244','#ff6a00'];
+    window._ch_cf_est=new Chart(cfCtx,{type:'doughnut',data:{labels:stLabels,
+      datasets:[{data:stCounts,backgroundColor:stColors.map(c=>c+'99'),borderColor:stColors,borderWidth:1.5}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+        plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.label}: ${c.raw} ped.`}}}}});
+    const leg=$('cf-estados-legend');
+    if(leg) leg.innerHTML=stLabels.map((l,i)=>`<span style="display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:8px;color:#b8dff0"><span style="width:8px;height:8px;border-radius:50%;background:${stColors[i]};display:inline-block"></span>${l}: ${stCounts[i]}</span>`).join('');
+  }
+  // Recomendación
+  const rec=$('cf-recomendacion');
+  if(rec){
+    const pct=((saldo/(ventaEnt||1))*100).toFixed(1);
+    rec.innerHTML=`<span style="color:${saldo>=0?'var(--green)':'var(--red)'};font-weight:700">Saldo neto: ${fmtCLP(saldo)} (${pct}% margen de caja)</span><br><span style="color:#b8dff0;font-size:10px">Ingresos confirmados ${fmtCLP(ventaEnt)} · Por cobrar ${fmtCLP(ventaPend)} · Egresos totales ${fmtCLP(egresos)}</span>`;
+  }
   renderCashflowChart(pedidos);
 }
 
@@ -3204,6 +3325,7 @@ function renderPedidosKPIs(pedidos){
   tx('pk-entregados',R.entregados); tx('pk-entregados-pct',tot>0?fmtPct(R.entregados/tot*100)+' del total':'0%');
   tx('pk-camino',R.enTransito+R.pendientes); tx('pk-camino-pct',tot>0?fmtPct((R.enTransito+R.pendientes)/tot*100)+' del total':'0%');
   tx('pk-devueltos',R.devueltos+R.cancelados); tx('pk-devueltos-pct',tot>0?fmtPct((R.devueltos+R.cancelados)/tot*100)+' del total':'0%');
+  tx('pk-util-total', fmtCLP(R.utilidadTotal||0));
 }
 
 function setTableFilter(f){
@@ -3337,6 +3459,36 @@ function renderProyeccion(){
   tx('proy-total-pend',totalPend); tx('proy-entregaran',entregaran);
   tx('proy-no-entregaran',totalPend-entregaran); tx('proy-costo-dev',fmtCLP(costoDev));
   tx('proy-util-real',fmtCLP(R.utilidadReal)); tx('proy-util-proy',fmtCLP(R.proyUtilidad)); tx('proy-util-total',fmtCLP(R.utilidadTotal));
+  // Gráfico escenario de entrega
+  const esCtx=$('chart-proy-escenario');
+  if(esCtx){
+    if(window._ch_proy_es){window._ch_proy_es.destroy();window._ch_proy_es=null;}
+    window._ch_proy_es=new Chart(esCtx,{type:'bar',data:{
+      labels:['Pendientes','Se entregarán','No entregarán'],
+      datasets:[{data:[totalPend,entregaran,totalPend-entregaran],
+        backgroundColor:['rgba(0,136,255,0.5)','rgba(0,255,179,0.5)','rgba(255,34,68,0.5)'],
+        borderColor:['#0088ff','#00ffb3','#ff2244'],borderWidth:1.5,borderRadius:6}]
+    },options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TT}},
+      scales:{x:{ticks:{color:'#b8dff0',font:{size:8}},grid:{display:false}},
+        y:{ticks:{color:'#4a5a7a',font:{size:8}},grid:{color:'rgba(255,255,255,0.03)'}}}}});
+  }
+  // Gráfico proyección financiera
+  const fiCtx=$('chart-proy-financiero');
+  if(fiCtx){
+    if(window._ch_proy_fi){window._ch_proy_fi.destroy();window._ch_proy_fi=null;}
+    window._ch_proy_fi=new Chart(fiCtx,{type:'bar',data:{
+      labels:['Util. Real','Util. Proyectada','Total Estimado'],
+      datasets:[{data:[R.utilidadReal,R.proyUtilidad,R.utilidadTotal],
+        backgroundColor:[R.utilidadReal>=0?'rgba(0,255,179,0.5)':'rgba(255,34,68,0.5)',
+          'rgba(255,170,0,0.5)','rgba(191,112,255,0.5)'],
+        borderColor:[R.utilidadReal>=0?'#00ffb3':'#ff2244','#ffaa00','#bf70ff'],
+        borderWidth:1.5,borderRadius:6}]
+    },options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${fmtCLP(c.raw)}`}}},
+      scales:{x:{ticks:{color:'#b8dff0',font:{size:8}},grid:{display:false}},
+        y:{ticks:{color:'#4a5a7a',font:{size:8},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.03)'}}}}});
+  }
 }
 
 // ══ GRÁFICOS ══════════════════════════════════════════════════════════════════
