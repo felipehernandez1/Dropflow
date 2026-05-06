@@ -40,9 +40,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   linear-gradient(90deg,rgba(255,170,0,0.022) 1px,transparent 1px);
   background-size:60px 60px;animation:gridPulse 8s ease-in-out infinite;}
 @keyframes gridPulse{0%,100%{opacity:0.7}50%{opacity:1.0}}
-.app-layout{display:flex;height:100vh;overflow:hidden;}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
-.content{overflow-y:auto!important;height:calc(100vh - 52px - 26px)!important;flex:none!important;}
+.app-layout{display:flex;height:100vh;overflow:hidden;position:relative;z-index:3;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;position:relative;z-index:3;}
+.content{overflow-y:auto!important;height:calc(100vh - 52px)!important;flex:none!important;}
 .sidebar{width:72px;min-width:72px;background:rgba(2,4,12,0.22);
   border-right:1px solid rgba(255,170,0,0.14);display:flex;flex-direction:column;
   height:100vh;position:sticky;top:0;overflow:hidden;z-index:100;
@@ -515,8 +515,8 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 .exec-mini-stat.red-s{background:rgba(255,34,68,0.06);border:1px solid rgba(255,34,68,0.25);box-shadow:0 0 20px rgba(255,34,68,0.04);}
 .exec-mini-stat.gold-s{background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.25);box-shadow:0 0 20px rgba(255,170,0,0.04);}
 .exec-mini-stat.purple-s{background:rgba(191,112,255,0.06);border:1px solid rgba(191,112,255,0.25);box-shadow:0 0 20px rgba(191,112,255,0.04);}
-.exec-mini-label{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;}
-.exec-mini-val{font-size:14px;font-weight:800;}
+.exec-mini-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;}
+.exec-mini-val{font-size:22px;font-weight:800;}
 .exec-mini-val.green{color:var(--green);text-shadow:0 0 12px rgba(0,255,179,0.5);}
 .exec-mini-val.red{color:var(--red);text-shadow:0 0 12px rgba(255,34,68,0.5);}
 .exec-mini-val.gold{color:var(--gold);text-shadow:0 0 12px rgba(255,170,0,0.5);}
@@ -524,35 +524,32 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
 /* ── SVG RING HERO ──────────────────────────────────────────────── */
 .ring-hero-container{position:relative;display:flex;align-items:flex-start;justify-content:center;
-  background:transparent;padding:4px 0 0;cursor:none;}
-.ring-hero-container::after{content:'';position:absolute;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,rgba(0,255,179,0.6),rgba(0,136,255,0.4),transparent);
-  filter:blur(2px);animation:scanLine 4s ease-in-out infinite;pointer-events:none;z-index:10;}
-@keyframes scanLine{0%{top:10%;opacity:0}10%{opacity:1}90%{opacity:0.6}100%{top:90%;opacity:0}}
+  background:transparent;padding:4px 0 0;}
 .ring-svg{width:100%;max-width:440px;height:auto;overflow:visible;filter:drop-shadow(0 0 40px rgba(0,255,100,0.05));}
 /* Cursor glow follows mouse inside ring container */
 .ring-cursor-glow{position:absolute;width:120px;height:120px;border-radius:50%;
   background:radial-gradient(circle,rgba(0,255,179,0.12),transparent 70%);
   pointer-events:none;transform:translate(-50%,-50%);transition:opacity 0.3s;opacity:0;z-index:5;}
-.ring-center-content{position:absolute;text-align:center;width:200px;pointer-events:none;}
-.ring-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;}
-.ring-main-val{font-size:34px;font-weight:900;color:var(--green);letter-spacing:-1px;
+.ring-center-content{position:absolute;text-align:center;width:250px;pointer-events:none;
+  top:50%;left:50%;transform:translate(-50%,-50%);}
+.ring-label{font-family:var(--font-mono);font-size:11px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;text-shadow:0 0 10px rgba(0,200,255,0.5);}
+.ring-main-val{font-size:60px;font-weight:900;color:var(--green);letter-spacing:-2px;
   text-shadow:0 0 30px rgba(0,255,179,0.9),0 0 60px rgba(0,255,179,0.4),0 0 100px rgba(0,255,179,0.15);
-  line-height:1.05;margin-bottom:3px;}
-.ring-delta-val{font-size:14px;font-weight:700;margin-bottom:1px;}
+  line-height:1;margin-bottom:2px;}
+.ring-delta-val{font-size:17px;font-weight:700;margin-bottom:1px;}
 .ring-delta-val.pos{color:var(--green);text-shadow:0 0 12px rgba(0,255,179,0.7);}
 .ring-delta-val.neg{color:var(--red);text-shadow:0 0 12px rgba(255,34,68,0.7);}
-.ring-delta-sub{font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-bottom:6px;}
+.ring-delta-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px;}
 .ring-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,179,0.25),rgba(0,136,255,0.25),transparent);margin:5px 10px 6px;}
-.ring-mini-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:3px;}
-.ring-mini-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.ring-mini-label{font-family:var(--font-mono);font-size:8px;color:var(--text3);}
-.ring-mini-val{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--num);}
+.ring-mini-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px;}
+.ring-mini-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.ring-mini-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);}
+.ring-mini-val{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--num);}
 .ring-progress-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:4px;}
 .ring-progress-bar{width:90px;height:3px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
 .ring-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),#00ffb3);
   box-shadow:0 0 8px rgba(0,255,179,0.8);transition:width 0.8s cubic-bezier(0.4,0,0.2,1);width:0%;}
-.ring-pct{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--green);
+.ring-pct{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--green);
   text-shadow:0 0 16px rgba(0,255,179,0.8);}
 
 /* keep keyframes for other elements */
@@ -717,35 +714,36 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   background: transparent !important;
 }
 
-/* ── Borders celeste con glow en todos los boxes ── */
+/* ── GOLD EXECUTIVE: borders dorados con glow en todos los boxes ── */
 #sec-dashboard .exec-kpi,
 #sec-dashboard .exec-card,
 #sec-dashboard .exec-kpi-vert {
-  border: 1px solid rgba(0,220,255,0.28) !important;
-  box-shadow: 0 0 16px rgba(0,220,255,0.07), inset 0 1px 0 rgba(0,220,255,0.16), 0 2px 12px rgba(0,0,0,0.08) !important;
+  border: 1px solid rgba(255,180,0,0.30) !important;
+  box-shadow: 0 0 18px rgba(255,170,0,0.08), inset 0 1px 0 rgba(255,200,60,0.14), 0 2px 16px rgba(0,0,0,0.18) !important;
+  background: rgba(6,10,22,0.82) !important;
 }
 #sec-dashboard .exec-kpi:hover,
 #sec-dashboard .exec-card:hover,
 #sec-dashboard .exec-kpi-vert:hover {
-  border-color: rgba(0,238,255,0.55) !important;
-  box-shadow: 0 0 30px rgba(0,238,255,0.14), inset 0 1px 0 rgba(0,238,255,0.22), 0 8px 30px rgba(0,0,0,0.1) !important;
+  border-color: rgba(255,200,0,0.55) !important;
+  box-shadow: 0 0 32px rgba(255,180,0,0.18), inset 0 1px 0 rgba(255,210,80,0.22), 0 8px 30px rgba(0,0,0,0.25) !important;
 }
 #sec-dashboard .kpi-card {
-  border: 1px solid rgba(0,220,255,0.24) !important;
-  box-shadow: 0 0 14px rgba(0,220,255,0.06), inset 0 1px 0 rgba(0,220,255,0.12) !important;
+  border: 1px solid rgba(255,175,0,0.28) !important;
+  box-shadow: 0 0 14px rgba(255,170,0,0.07), inset 0 1px 0 rgba(255,200,60,0.12) !important;
 }
 #sec-dashboard .db-stat-row {
-  border: 1px solid rgba(0,220,255,0.14) !important;
+  border: 1px solid rgba(255,175,0,0.14) !important;
   box-shadow: none !important;
 }
 #sec-dashboard .cf-kpi {
-  border: 1px solid rgba(0,220,255,0.18) !important;
+  border: 1px solid rgba(255,175,0,0.20) !important;
 }
 #sec-dashboard .cf-saldo-bar {
-  border: 1px solid rgba(0,220,255,0.18) !important;
+  border: 1px solid rgba(255,175,0,0.20) !important;
 }
 
-/* ── TODOS los textos/labels → celeste con glow medio ── */
+/* ── GOLD EXECUTIVE: labels warm-white en todos los contextos ── */
 #sec-dashboard .exec-kpi-label,
 #sec-dashboard .exec-kpi-vert-label,
 #sec-dashboard .exec-card-label,
@@ -762,8 +760,8 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 #sec-dashboard .donut-left-item,
 #sec-dashboard .donut-left-sub,
 #sec-dashboard .exec-welcome-label {
-  color: rgba(0,220,255,0.90) !important;
-  text-shadow: 0 0 12px rgba(0,238,255,0.45) !important;
+  color: rgba(255,230,160,0.95) !important;
+  text-shadow: 0 0 14px rgba(255,190,60,0.50), 0 0 2px rgba(255,255,255,0.70) !important;
 }
 /* Nombre bienvenido — celeste brillante */
 #sec-dashboard .exec-welcome-name {
@@ -771,7 +769,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   text-shadow: 0 0 22px rgba(0,238,255,0.7), 0 0 45px rgba(0,238,255,0.25) !important;
 }
 
-/* ── TODOS los números → gold con glow suave ── */
+/* ── TODOS los números → celeste con glow medio ── */
 #sec-dashboard .exec-kpi-val,
 #sec-dashboard .exec-kpi.cyan .exec-kpi-val,
 #sec-dashboard .exec-kpi.gold .exec-kpi-val,
@@ -787,27 +785,169 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 #sec-dashboard .db-stat-val,
 #sec-dashboard .cf-kpi-val,
 #sec-dashboard .ring-mini-val,
-#sec-dashboard .donut-left-total {
-  color: var(--gold) !important;
-  text-shadow: 0 0 18px rgba(255,170,0,0.55), 0 0 35px rgba(255,170,0,0.20) !important;
+#sec-dashboard .donut-left-total,
+#sec-dashboard .ring-main-val {
+  color: #00ddff !important;
+  text-shadow: 0 0 16px rgba(0,220,255,0.65), 0 0 32px rgba(0,220,255,0.25) !important;
 }
 
-/* ── Ticker bar — texto celeste sobre fondo transparente ── */
-#sec-dashboard ~ * .ticker-key,
-.ticker-key { color: rgba(0,220,255,0.70); text-shadow: 0 0 8px rgba(0,238,255,0.3); }
+/* ── Todos los boxes mismo glass uniforme — sin colores distintos por variante ── */
+#sec-dashboard .exec-kpi.cyan,
+#sec-dashboard .exec-kpi.gold,
+#sec-dashboard .exec-kpi.red,
+#sec-dashboard .exec-kpi.green,
+#sec-dashboard .exec-kpi-vert.cyan,
+#sec-dashboard .exec-kpi-vert.gold,
+#sec-dashboard .exec-kpi-vert.red,
+#sec-dashboard .exec-kpi-vert.green,
+#sec-dashboard .exec-kpi-vert.nblue {
+  background: transparent !important;
+  border: 1px solid rgba(0,220,255,0.28) !important;
+  box-shadow: 0 0 16px rgba(0,220,255,0.07), inset 0 1px 0 rgba(0,220,255,0.16) !important;
+}
+/* Eliminar tintes de color en sub-items del dashboard */
+#sec-dashboard [style*="background:rgba(0,255,179"],
+#sec-dashboard [style*="background:rgba(255,34,68"],
+#sec-dashboard [style*="background:rgba(0,136,255"],
+#sec-dashboard [style*="background:rgba(191,112,255"],
+#sec-dashboard [style*="background:rgba(255,170,0"],
+#sec-dashboard [style*="background:rgba(255,106,0"] {
+  background: transparent !important;
+}
+
+/* ── Ticker bar — texto celeste ── */
+.ticker-key { color: rgba(0,220,255,0.72); text-shadow: 0 0 8px rgba(0,238,255,0.3); }
 .ticker-val  { text-shadow: 0 0 10px currentColor; }
 
-/* ── Bordes de lineas top en ::before del exec-card ── */
+/* ── Línea top exec-card → gold ── */
 #sec-dashboard .exec-card::before {
-  background: linear-gradient(90deg,transparent,rgba(0,238,255,0.5),transparent) !important;
+  background: linear-gradient(90deg,transparent,rgba(255,170,0,0.55),transparent) !important;
+}
+
+/* ── GOLD EXECUTIVE: títulos gold con glow fuerte ── */
+#sec-dashboard .exec-card-title,
+#sec-dashboard .card-title,
+#sec-dashboard .chart-card-title {
+  color: #ffd060 !important;
+  text-shadow: 0 0 18px rgba(255,200,0,0.75), 0 0 36px rgba(255,170,0,0.35), 0 0 2px rgba(255,255,255,0.6) !important;
+  letter-spacing: 2px !important;
+}
+#sec-dashboard .exec-kpi::before,
+#sec-dashboard .exec-kpi-vert::before {
+  opacity: 0.5;
+}
+
+/* ── Meta Ads Global: meta-sum-card → glass gold uniforme ── */
+#sec-dashboard .meta-sum-card {
+  background: rgba(6,10,22,0.75) !important;
+  border: 1px solid rgba(255,175,0,0.25) !important;
+  box-shadow: 0 0 12px rgba(255,170,0,0.06) !important;
+}
+/* meta-sum-val default → celeste (Gasto Total y Val.Conv. mantienen sus colores inline) */
+#sec-dashboard .meta-sum-val {
+  color: #00ddff !important;
+  text-shadow: 0 0 14px rgba(0,220,255,0.55), 0 0 28px rgba(0,220,255,0.18) !important;
+}
+#sec-dashboard #kpi-gasto-ads {
+  color: var(--red) !important;
+  text-shadow: 0 0 14px rgba(255,34,68,0.55) !important;
+}
+#sec-dashboard #meta-dash-valconv {
+  color: var(--green) !important;
+  text-shadow: 0 0 14px rgba(0,255,179,0.55) !important;
+}
+#sec-dashboard .meta-sum-label {
+  color: rgba(255,225,150,0.88) !important;
+  text-shadow: 0 0 10px rgba(255,190,60,0.35) !important;
+  text-shadow: 0 0 10px rgba(0,200,255,0.55), 0 0 20px rgba(0,180,220,0.20), 0 0 1px rgba(255,255,255,0.7) !important;
+}
+
+/* ── exec-mini-label → warm gold ── */
+#sec-dashboard .exec-mini-label {
+  color: rgba(255,220,140,0.90) !important;
+  text-shadow: 0 0 10px rgba(255,190,60,0.40), 0 0 1px rgba(255,255,255,0.65) !important;
+}
+
+/* ── exec-mini-stat variantes → glass celeste uniforme ── */
+#sec-dashboard .exec-mini-stat,
+#sec-dashboard .exec-mini-stat.green-s,
+#sec-dashboard .exec-mini-stat.red-s,
+#sec-dashboard .exec-mini-stat.gold-s,
+#sec-dashboard .exec-mini-stat.purple-s {
+  background: transparent !important;
+  border: 1px solid rgba(0,220,255,0.22) !important;
+  box-shadow: none !important;
+}
+
+/* ── Ventas Totales inline box → celeste ── */
+#sec-dashboard #kpi-ventas-total,
+#sec-dashboard #kpi-pedidos-n {
+  color: #00ddff !important;
+  text-shadow: 0 0 16px rgba(0,220,255,0.60), 0 0 30px rgba(0,220,255,0.20) !important;
+}
+
+/* ── db-select → glass celeste ── */
+#sec-dashboard .db-select {
+  background: transparent !important;
+  border-color: rgba(0,220,255,0.28) !important;
+  color: rgba(0,220,255,0.80) !important;
+}
+
+/* ── GOLD EXECUTIVE: labels warm-white con glow dorado suave ── */
+#sec-dashboard .exec-kpi-label,
+#sec-dashboard .exec-kpi-vert-label,
+#sec-dashboard .exec-card-label,
+#sec-dashboard .exec-card-sub,
+#sec-dashboard .exec-welcome-name,
+#sec-dashboard .ring-mini-label,
+#sec-dashboard .ring-label,
+#sec-dashboard .kpi-label,
+#sec-dashboard .kpi-sub,
+#sec-dashboard .donut-left-sub,
+#sec-dashboard .donut-left-item,
+#sec-dashboard .db-stat-label,
+#sec-dashboard .cf-row-label,
+#sec-dashboard .cf-kpi-label,
+#sec-dashboard .funnel-label,
+#sec-dashboard .exec-kpi-delta,
+#sec-dashboard .exec-kpi-vert-delta.neu {
+  color: rgba(255,235,180,0.92) !important;
+  text-shadow: 0 0 12px rgba(255,200,80,0.45), 0 0 2px rgba(255,255,255,0.65) !important;
+}
+
+/* ── Gauge margen % → celeste ── */
+#sec-dashboard .exec-radial-val,
+#sec-dashboard #gauge-margen-pct {
+  color: #00ddff !important;
+  text-shadow: 0 0 22px rgba(0,220,255,0.7), 0 0 44px rgba(0,220,255,0.25) !important;
+}
+#sec-dashboard #gauge-gastos {
+  text-shadow: 0 0 14px rgba(255,34,68,0.55) !important;
+}
+
+/* ── badge-pill → gold executive ── */
+#sec-dashboard .badge-pill {
+  background: rgba(255,170,0,0.10) !important;
+  border-color: rgba(255,180,0,0.40) !important;
+  color: rgba(255,210,100,0.95) !important;
+  text-shadow: 0 0 8px rgba(255,180,0,0.40) !important;
+}
+
+/* ── Ventas totales inline row → celeste border ── */
+#sec-dashboard [style*="background:rgba(0,136,255,0.07)"] {
+  background: transparent !important;
+  border-color: rgba(0,220,255,0.25) !important;
 }
 </style>
 </head>
 <body>
 
-<!-- VIDEO BACKGROUND — visible only on dashboard section -->
+<!-- CANVAS GOLD PARTICLE BACKGROUND -->
+<canvas id="bg-canvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity 1.2s ease"></canvas>
+
+<!-- VIDEO BACKGROUND — fallback, hidden by default -->
 <video id="bg-video" autoplay muted loop playsinline
-  style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0.22;pointer-events:none;display:none"
+  style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0;pointer-events:none;display:none"
   src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260429_114316_1c7889ad-2885-410e-b493-98119fee0ddb.mp4">
 </video>
 
@@ -1032,31 +1172,6 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
       </div>
     </header>
 
-    <!-- Live Ticker Marquee -->
-    <div class="ticker-wrap" id="ticker-wrap">
-      <div class="ticker-track" id="ticker-track">
-        <!-- duplicated for seamless loop — JS fills both halves -->
-        <span class="ticker-live-dot"></span>
-        <span class="ticker-item"><span class="ticker-key">Ventas</span><span class="ticker-val" id="tk-ventas" style="color:var(--green)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Utilidad</span><span class="ticker-val" id="tk-utilidad" style="color:var(--gold)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Entregados</span><span class="ticker-val" id="tk-entregados" style="color:var(--cyan)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">En ruta</span><span class="ticker-val" id="tk-ruta" style="color:var(--neo-blue)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Gasto Ads</span><span class="ticker-val" id="tk-ads" style="color:var(--red)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Margen</span><span class="ticker-val" id="tk-margen" style="color:var(--purple)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">ROAS</span><span class="ticker-val" id="tk-roas" style="color:var(--gold2)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Pendientes</span><span class="ticker-val" id="tk-pendientes" style="color:var(--text2)">—</span></span><span class="ticker-sep">·</span>
-        <!-- duplicate for seamless loop -->
-        <span class="ticker-live-dot"></span>
-        <span class="ticker-item"><span class="ticker-key">Ventas</span><span class="ticker-val" id="tk-ventas2" style="color:var(--green)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Utilidad</span><span class="ticker-val" id="tk-utilidad2" style="color:var(--gold)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Entregados</span><span class="ticker-val" id="tk-entregados2" style="color:var(--cyan)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">En ruta</span><span class="ticker-val" id="tk-ruta2" style="color:var(--neo-blue)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Gasto Ads</span><span class="ticker-val" id="tk-ads2" style="color:var(--red)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Margen</span><span class="ticker-val" id="tk-margen2" style="color:var(--purple)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">ROAS</span><span class="ticker-val" id="tk-roas2" style="color:var(--gold2)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Pendientes</span><span class="ticker-val" id="tk-pendientes2" style="color:var(--text2)">—</span></span><span class="ticker-sep">·</span>
-      </div>
-    </div>
 
     <div class="content">
 
@@ -1075,21 +1190,21 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               <div class="exec-card-label" style="font-size:8px">Bienvenido,</div>
               <div class="exec-welcome-name" id="db-welcome-name" style="font-size:16px;margin-bottom:8px">Admin</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
-                <div style="background:rgba(0,255,179,0.05);border:1px solid rgba(0,255,179,0.2);border-radius:7px;padding:7px 10px">
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Cobrado</div>
-                  <div class="exec-mini-val" style="font-size:13px;color:var(--green)" id="db-cobrado">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:#00ddff;text-shadow:0 0 14px rgba(0,220,255,0.6)" id="db-cobrado">$0</div>
                 </div>
-                <div style="background:rgba(255,34,68,0.05);border:1px solid rgba(255,34,68,0.2);border-radius:7px;padding:7px 10px">
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Costos</div>
-                  <div class="exec-mini-val" style="font-size:13px;color:var(--red)" id="db-costos">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:var(--red);text-shadow:0 0 12px rgba(255,34,68,0.5)" id="db-costos">$0</div>
                 </div>
-                <div style="background:rgba(0,136,255,0.05);border:1px solid rgba(0,136,255,0.2);border-radius:7px;padding:7px 10px">
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Utilidad</div>
-                  <div class="exec-mini-val" style="font-size:13px" id="db-utilidad-real">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:#00ddff;text-shadow:0 0 14px rgba(0,220,255,0.6)" id="db-utilidad-real">$0</div>
                 </div>
-                <div style="background:rgba(191,112,255,0.05);border:1px solid rgba(191,112,255,0.2);border-radius:7px;padding:7px 10px">
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Proyecc.</div>
-                  <div class="exec-mini-val" style="font-size:13px;color:var(--purple)" id="db-proy">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:var(--green);text-shadow:0 0 12px rgba(0,255,179,0.5)" id="db-proy">$0</div>
                 </div>
               </div>
             </div>
@@ -1116,26 +1231,26 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
               <!-- Cost & delivery boxes: 2x2 grid + devueltos -->
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px">
-                <div style="background:rgba(191,112,255,0.05);border:1px solid rgba(191,112,255,0.18);border-radius:7px;padding:7px 10px">
-                  <div class="exec-mini-label" style="color:rgba(191,112,255,0.8)">Costo Proveedor</div>
-                  <div style="font-size:14px;font-weight:800;color:var(--num)" id="box-costo-prov">$0</div>
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label">Costo Proveedor</div>
+                  <div style="font-size:14px;font-weight:800;color:#00ddff;text-shadow:0 0 12px rgba(0,220,255,0.5)" id="box-costo-prov">$0</div>
                 </div>
-                <div style="background:rgba(255,170,0,0.05);border:1px solid rgba(255,170,0,0.18);border-radius:7px;padding:7px 10px">
-                  <div class="exec-mini-label" style="color:rgba(255,170,0,0.8)">Costo Despacho</div>
-                  <div style="font-size:14px;font-weight:800;color:var(--num)" id="box-costo-flete">$0</div>
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label">Costo Despacho</div>
+                  <div style="font-size:14px;font-weight:800;color:#00ddff;text-shadow:0 0 12px rgba(0,220,255,0.5)" id="box-costo-flete">$0</div>
                 </div>
-                <div style="background:rgba(0,255,179,0.05);border:1px solid rgba(0,255,179,0.18);border-radius:7px;padding:7px 10px">
-                  <div class="exec-mini-label" style="color:rgba(0,255,179,0.8)">Entregados</div>
-                  <div style="font-size:14px;font-weight:800;color:var(--green)" id="box-entregados">0</div>
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label">Entregados</div>
+                  <div style="font-size:14px;font-weight:800;color:var(--green);text-shadow:0 0 12px rgba(0,255,179,0.5)" id="box-entregados">0</div>
                 </div>
-                <div style="background:rgba(0,136,255,0.05);border:1px solid rgba(0,136,255,0.18);border-radius:7px;padding:7px 10px">
-                  <div class="exec-mini-label" style="color:rgba(0,136,255,0.8)">Pendientes</div>
-                  <div style="font-size:14px;font-weight:800;color:var(--neo-blue)" id="box-pendientes">0</div>
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label">Pendientes</div>
+                  <div style="font-size:14px;font-weight:800;color:#00ddff;text-shadow:0 0 12px rgba(0,220,255,0.5)" id="box-pendientes">0</div>
                 </div>
               </div>
-              <div style="background:rgba(255,34,68,0.05);border:1px solid rgba(255,34,68,0.18);border-radius:7px;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-                <div class="exec-mini-label" style="color:rgba(255,68,80,0.9)">Devueltos (valor $ perdido)</div>
-                <div style="font-size:15px;font-weight:800;color:var(--red)" id="box-devueltos">$0</div>
+              <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <div class="exec-mini-label">Devueltos (valor $ perdido)</div>
+                <div style="font-size:15px;font-weight:800;color:var(--red);text-shadow:0 0 12px rgba(255,34,68,0.5)" id="box-devueltos">$0</div>
               </div>
 
               <!-- Status breakdown rows -->
@@ -1196,7 +1311,8 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
             </div>
           </div>
 
-          <!-- CENTER: SVG Ring Hero (sin card border) -->
+          <!-- CENTER: Ring Hero + chart debajo -->
+          <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
           <div class="ring-hero-container liquid-glass" style="border-radius:var(--radius)">
             <svg class="ring-svg" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -1341,6 +1457,25 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
             </div>
           </div>
 
+          <!-- Ventas · Ads · Costos — bajo el ring -->
+          <div class="exec-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div class="exec-card-title" style="margin-bottom:0">Ventas · Ads · Costos</div>
+              <span class="badge-pill green" id="badge-periodo-chart">—</span>
+              <div style="display:flex;gap:4px">
+                <button class="exec-chip active" id="chip-diario" onclick="setVsAdsMode('diario',this)">Diario</button>
+                <button class="exec-chip" id="chip-semanal" onclick="setVsAdsMode('semanal',this)">Semanal</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;margin-bottom:8px;font-family:var(--font-mono);font-size:8px">
+              <span style="color:#00ffb3;text-shadow:0 0 8px rgba(0,255,179,0.7)">● Ventas (cobr+pend)</span>
+              <span style="color:#ffaa00;text-shadow:0 0 8px rgba(255,170,0,0.7)">● Meta Ads (prom.)</span>
+              <span style="color:#ff2244;text-shadow:0 0 8px rgba(255,34,68,0.6)">● Gastos Totales</span>
+            </div>
+            <div style="height:140px"><canvas id="chart-ventas-ads"></canvas></div>
+          </div>
+          </div><!-- /center col wrapper -->
+
           <!-- RIGHT: Meta Ads performance + Funnel -->
           <div class="exec-hero-right">
 
@@ -1400,6 +1535,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               <div class="funnel-wrap" id="exec-funnel">
                 <div class="empty-state" style="font-size:10px;padding:20px 10px">Sin datos</div>
               </div>
+              <canvas id="chart-funnel" style="height:120px;margin-top:8px"></canvas>
             </div>
 
             <!-- Performance metrics with dropdown + semaphores -->
@@ -1417,54 +1553,96 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
           </div>
         </div>
 
-        <!-- SECOND ROW: Margen Gauge | Ventas vs Ads | Canal -->
-        <div class="exec-second-grid">
+        <!-- SECOND ROW: Margen Gauge | Canal (gráfico de líneas movido bajo el ring) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
 
           <!-- Margen gauge -->
-          <div class="exec-card exec-gauge-card">
-            <div class="exec-card-title" style="text-align:center">Margen de Ganancia</div>
-            <div class="exec-radial-wrap">
-              <canvas id="chart-margen-gauge" width="150" height="150"></canvas>
-              <div class="exec-radial-val" id="gauge-margen-pct" style="color:var(--gold)">0%</div>
-            </div>
-            <div class="exec-card-sub" id="gauge-margen-label">Margen Total</div>
-            <!-- Gastos mini -->
-            <div style="margin-top:12px;border-top:1px solid rgba(255,157,0,0.08);padding-top:10px">
-              <div class="exec-card-label" style="margin-bottom:6px;text-align:center">Gastos Operativos</div>
-              <div style="text-align:center;font-size:18px;font-weight:900;color:var(--red)" id="gauge-gastos">$0</div>
-              <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);text-align:center" id="gauge-gastos-sub">costos totales</div>
-            </div>
-          </div>
-
-          <!-- Ventas · Ads · Costos -->
-          <div class="exec-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <div class="exec-card-title" style="margin-bottom:0">Ventas · Ads · Costos</div>
-              <span class="badge-pill green" id="badge-periodo-chart">—</span>
-              <div style="display:flex;gap:4px">
-                <button class="exec-chip active" id="chip-diario" onclick="setVsAdsMode('diario',this)">Diario</button>
-                <button class="exec-chip" id="chip-semanal" onclick="setVsAdsMode('semanal',this)">Semanal</button>
+          <div class="exec-card exec-gauge-card" style="padding:14px 16px">
+            <div class="exec-card-title" style="text-align:center;margin-bottom:10px">Margen de Ganancia</div>
+            <!-- Full doughnut -->
+            <div style="position:relative;width:140px;height:140px;margin:0 auto 10px">
+              <canvas id="chart-margen-gauge" width="140" height="140" style="position:relative;z-index:1"></canvas>
+              <div style="position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,170,0,0.15);pointer-events:none;z-index:0"></div>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;gap:1px">
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);letter-spacing:1px">MARGEN</div>
+                <div style="font-size:26px;font-weight:900;line-height:1" id="gauge-margen-pct">0%</div>
+                <div style="font-family:var(--font-mono);font-size:7px;color:var(--text3)" id="gauge-margen-label">del total</div>
               </div>
             </div>
-            <div style="display:flex;gap:12px;margin-bottom:8px;font-family:var(--font-mono);font-size:8px">
-              <span style="color:#00ffb3;text-shadow:0 0 8px rgba(0,255,179,0.7)">● Ventas (cobr+pend)</span>
-              <span style="color:#0088ff;text-shadow:0 0 8px rgba(0,136,255,0.7)">● Meta Ads</span>
-              <span style="color:#ff2244;text-shadow:0 0 8px rgba(255,34,68,0.6)">● Gastos Totales</span>
+            <!-- Breakdown rows -->
+            <div style="display:flex;flex-direction:column;gap:4px;width:100%">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 6px;border-radius:4px;background:rgba(0,255,179,0.04)">
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:#00ffb3;flex-shrink:0"></div><span style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">Utilidad</span></div>
+                <span style="font-size:11px;font-weight:800;color:#00ffb3" id="gauge-utilidad">$0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 6px;border-radius:4px;background:rgba(255,34,68,0.04)">
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:#ff2244;flex-shrink:0"></div><span style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">Costos</span></div>
+                <span style="font-size:11px;font-weight:800;color:var(--red)" id="gauge-gastos">$0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 6px;border-radius:4px;background:rgba(0,136,255,0.04)">
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:#0088ff;flex-shrink:0"></div><span style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">Ventas</span></div>
+                <span style="font-size:11px;font-weight:800;color:#5ab4ff" id="gauge-ventas">$0</span>
+              </div>
             </div>
-            <div style="height:128px"><canvas id="chart-ventas-ads"></canvas></div>
           </div>
 
           <!-- Ventas por Canal -->
           <div class="exec-card" style="display:flex;flex-direction:column">
             <div class="exec-card-title">Ventas por Canal</div>
-            <div style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:120px">
-              <canvas id="chart-canal" style="max-width:120px;max-height:120px"></canvas>
-              <div style="position:absolute;text-align:center;pointer-events:none">
-                <div style="font-size:11px;font-weight:800;color:var(--text)" id="canal-total">$0</div>
-                <div style="font-family:var(--font-mono);font-size:7px;color:var(--text3)">Total</div>
+            <div style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:140px">
+              <div style="position:relative;width:140px;height:140px">
+                <canvas id="chart-canal" style="width:140px;height:140px"></canvas>
+                <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,170,0,0.20);pointer-events:none"></div>
+                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+                  <div style="font-size:13px;font-weight:800;color:var(--text)" id="canal-total">$0</div>
+                  <div style="font-family:var(--font-mono);font-size:7px;color:var(--text3)">Total</div>
+                </div>
               </div>
             </div>
             <div class="canal-legend" id="canal-legend"></div>
+          </div>
+        </div>
+
+        <!-- GEO ROW: Mapa Chile | Top Ciudades Line Chart -->
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;margin-bottom:12px">
+
+          <!-- Mapa Chile -->
+          <div class="exec-card" style="padding:12px 14px">
+            <div class="exec-card-title" style="margin-bottom:8px">Mapa Chile</div>
+            <div id="chile-map-wrap" style="position:relative;width:100%">
+              <svg id="chile-map-svg" viewBox="0 0 120 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:360px;overflow:visible">
+                <!-- Chile outline (simplified but recognizable shape) -->
+                <path id="chile-path" d="
+                  M72,8 L80,12 L85,18 L82,26 L78,32 L80,40 L76,50 L72,60
+                  L74,72 L70,84 L68,98 L72,112 L70,126 L68,140 L66,156
+                  L68,170 L64,186 L62,202 L64,218 L60,234 L58,252
+                  L56,270 L54,288 L52,308 L50,328 L48,348 L46,366
+                  L42,384 L38,400 L34,414 L28,426 L22,436 L16,444
+                  L18,452 L24,456 L30,452 L36,446 L40,452 L38,460
+                  L32,466 L28,472 L22,478 L18,486 L20,494 L26,498 L32,494
+                  L36,488 L40,480 L46,472 L52,466 L58,460 L62,452
+                  L66,440 L70,428 L74,414 L78,398 L80,382 L82,366
+                  L82,348 L80,330 L80,312 L82,294 L82,276 L80,260
+                  L78,244 L76,228 L76,212 L74,196 L74,180 L76,164
+                  L76,148 L74,132 L74,116 L76,100 L76,84 L74,68
+                  L72,52 L70,38 L68,28 L68,18 Z
+                " fill="rgba(0,136,255,0.08)" stroke="rgba(0,200,255,0.35)" stroke-width="1.5" stroke-linejoin="round"/>
+                <!-- City dots rendered by JS -->
+                <g id="chile-city-dots"></g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Top Ciudades line chart -->
+          <div class="exec-card" style="padding:12px 14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div class="exec-card-title" style="margin-bottom:0">Top Ciudades</div>
+              <div style="display:flex;gap:12px;font-family:var(--font-mono);font-size:8px">
+                <span style="color:#ffaa00;text-shadow:0 0 6px rgba(255,170,0,0.7)">● Más pedidos</span>
+                <span style="color:#ff2244;text-shadow:0 0 6px rgba(255,34,68,0.6)">● Mayor flete</span>
+              </div>
+            </div>
+            <div style="height:320px"><canvas id="chart-ciudades"></canvas></div>
           </div>
         </div>
 
@@ -1537,11 +1715,13 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
       <!-- PEDIDOS -->
       <div class="section" id="sec-pedidos">
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px">
-          <div class="kpi-card green"><div class="kpi-label">Total pedidos</div><div class="kpi-value" id="pk-total">0</div><div class="kpi-sub" id="pk-total-sub">en el período</div></div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:10px">
+          <div class="kpi-card green"><div class="kpi-label">Total pedidos</div><div class="kpi-value" id="pk-total">0</div><div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--gold);text-shadow:0 0 10px rgba(255,170,0,0.4)" id="pk-total-val">$0</div><div class="kpi-sub" id="pk-total-sub" style="font-size:9px">en el período</div></div>
           <div class="kpi-card green"><div class="kpi-label">Entregados</div><div class="kpi-value" id="pk-entregados">0</div><div class="kpi-sub" id="pk-entregados-pct">0% del total</div></div>
           <div class="kpi-card amber"><div class="kpi-label">En camino</div><div class="kpi-value" id="pk-camino">0</div><div class="kpi-sub" id="pk-camino-pct">0% del total</div></div>
-          <div class="kpi-card red"><div class="kpi-label">Devueltos / Cancelados</div><div class="kpi-value" id="pk-devueltos">0</div><div class="kpi-sub" id="pk-devueltos-pct">0% del total</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Devueltos</div><div class="kpi-value" id="pk-devueltos">0</div><div style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--red)" id="pk-devueltos-val">-$0</div><div class="kpi-sub" id="pk-devueltos-pct">solo pérdida flete</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Cancelados</div><div class="kpi-value" id="pk-cancelados">0</div><div style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--text3)">$0 neto</div><div class="kpi-sub" id="pk-cancelados-pct">sin costo adicional</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Utilidad Total</div><div class="kpi-value" id="pk-util-total" style="font-size:22px">$0</div></div>
         </div>
         <div class="table-filters">
           <button class="filter-btn active" data-filter="todos" onclick="setTableFilter('todos')">Todos</button>
@@ -1558,7 +1738,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               <th>ID</th><th>Fecha</th><th>Producto</th><th>Estado</th>
               <th style="text-align:right">Venta</th><th style="text-align:right">Proveedor</th>
               <th style="text-align:right">Flete</th><th style="text-align:right">Utilidad</th>
-              <th style="text-align:right">Margen</th><th>Ciudad</th>
+              <th style="text-align:right">Margen</th><th style="text-align:right">CPA</th><th>Ciudad</th>
             </tr></thead>
             <tbody id="orders-table-body"><tr><td colspan="10"><div class="empty-state">Importa un Excel de Dropi para ver tus pedidos</div></td></tr></tbody>
           </table>
@@ -1616,10 +1796,29 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
           <div class="dash-card full">
             <div class="card-header"><span class="card-title">Proyección basada en pedidos reales</span></div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">PEDIDOS PENDIENTES</div><div style="font-size:28px;font-weight:800;color:var(--amber)" id="proy-total-pend">0</div></div>
-              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">SE ENTREGARÁN</div><div style="font-size:28px;font-weight:800;color:var(--green)" id="proy-entregaran">0</div></div>
-              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">NO SE ENTREGARÁN</div><div style="font-size:28px;font-weight:800;color:var(--red)" id="proy-no-entregaran">0</div></div>
-              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">COSTO DEVOLUCIONES</div><div style="font-size:22px;font-weight:800;color:var(--red)" id="proy-costo-dev">$0</div></div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">PEDIDOS PENDIENTES</div>
+                <div style="font-size:28px;font-weight:800;color:var(--amber)" id="proy-total-pend">0</div>
+                <div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--gold);margin-top:4px;text-shadow:0 0 10px rgba(255,170,0,0.4)" id="proy-val-pend">$0</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">valor en tránsito</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">SE ENTREGARÁN</div>
+                <div style="font-size:28px;font-weight:800;color:var(--green)" id="proy-entregaran">0</div>
+                <div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--green);margin-top:4px;text-shadow:0 0 10px rgba(0,255,179,0.4)" id="proy-val-entregaran">$0</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">ingreso proyectado</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">NO SE ENTREGARÁN</div>
+                <div style="font-size:28px;font-weight:800;color:var(--red)" id="proy-no-entregaran">0</div>
+                <div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--red);margin-top:4px;text-shadow:0 0 10px rgba(255,34,68,0.4)" id="proy-val-noentregaran">$0</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">valor no recuperable</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">COSTO DEVOLUCIONES</div>
+                <div style="font-size:22px;font-weight:800;color:var(--red)" id="proy-costo-dev">$0</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-top:4px">flete de retorno</div>
+              </div>
             </div>
             <div class="total-neto-grid" style="margin-bottom:20px">
               <div class="total-neto-card"><div class="total-neto-label">Utilidad real</div><div class="total-neto-val" style="color:var(--green)" id="proy-util-real">$0</div></div>
@@ -1629,22 +1828,117 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               <div class="total-neto-card"><div class="total-neto-label">Total estimado</div><div class="total-neto-val" style="color:var(--purple)" id="proy-util-total">$0</div></div>
             </div>
             <div style="height:260px"><canvas id="chart-proyeccion"></canvas></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+              <div style="background:rgba(5,10,22,0.5);border:1px solid rgba(0,220,255,0.2);border-radius:var(--radius);padding:14px">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Escenario de Entrega</div>
+                <div style="height:180px"><canvas id="chart-proy-escenario"></canvas></div>
+              </div>
+              <div style="background:rgba(5,10,22,0.5);border:1px solid rgba(0,220,255,0.2);border-radius:var(--radius);padding:14px">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Proyección Financiera</div>
+                <div style="height:180px"><canvas id="chart-proy-financiero"></canvas></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- CASHFLOW -->
       <div class="section" id="sec-cashflow">
-        <h2 style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px">Flujo de caja</h2>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px">
-          <div class="kpi-card green"><div class="kpi-label">Cobrado confirmado</div><div class="kpi-value" id="cf-cobrado" style="font-size:18px">$0</div></div>
-          <div class="kpi-card amber"><div class="kpi-label">Pendientes</div><div class="kpi-value" id="cf-por-cobrar" style="font-size:18px">$0</div></div>
+        <h2 style="font-size:16px;font-weight:700;color:var(--gold);text-shadow:0 0 14px rgba(255,170,0,0.5);margin-bottom:16px">Flujo de Caja</h2>
+
+        <!-- KPIs principales -->
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px">
+          <div class="kpi-card green" style="border-color:rgba(0,255,179,0.35)!important">
+            <div class="kpi-label">Total ingresos (est.)</div>
+            <div class="kpi-value" id="cf-total-ingresos" style="font-size:16px">$0</div>
+            <div class="kpi-sub" style="font-size:9px">cobrado + 75% pendiente</div>
+          </div>
+          <div class="kpi-card green"><div class="kpi-label">Cobrado confirmado</div><div class="kpi-value" id="cfx-cobrado" style="font-size:18px">$0</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Por cobrar (est.)</div><div class="kpi-value" id="cf-por-cobrar" style="font-size:18px">$0</div></div>
           <div class="kpi-card red"><div class="kpi-label">Total salidas</div><div class="kpi-value" id="cf-salidas" style="font-size:18px">$0</div></div>
-          <div class="kpi-card purple"><div class="kpi-label">Pérdida devoluciones</div><div class="kpi-value" id="cf-devoluciones" style="font-size:18px">$0</div></div>
+          <div class="kpi-card purple"><div class="kpi-label">Pérd. devoluciones</div><div class="kpi-value" id="cf-devoluciones" style="font-size:18px">$0</div></div>
           <div class="kpi-card green"><div class="kpi-label">Caja disponible HOY</div><div class="kpi-value" id="cf-disponible" style="font-size:18px">$0</div></div>
         </div>
-        <div style="height:220px;margin-bottom:16px"><canvas id="chart-cashflow"></canvas></div>
-        <div id="cf-recomendacion" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px"></div>
+
+        <!-- Desglose de movimientos -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+          <!-- Ingresos desglose -->
+          <div style="background:rgba(0,255,179,0.04);border:1px solid rgba(0,255,179,0.2);border-radius:var(--radius);padding:14px">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;text-shadow:0 0 10px rgba(0,255,179,0.5)">▲ Ingresos</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:rgba(0,255,179,0.05)">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Pedidos entregados</div>
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-ent-pct-label">0 pedidos · 0%</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:16px;font-weight:800;color:var(--green);text-shadow:0 0 10px rgba(0,255,179,0.4)" id="cf-ing-entregados">$0</div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:rgba(255,170,0,0.05)">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">En tránsito/Pendientes</div>
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-pend-pct-label">0 pedidos · 0%</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:16px;font-weight:800;color:var(--gold);text-shadow:0 0 10px rgba(255,170,0,0.4)" id="cf-ing-pendientes">$0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Egresos desglose -->
+          <div style="background:rgba(255,34,68,0.04);border:1px solid rgba(255,34,68,0.2);border-radius:var(--radius);padding:14px">
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;text-shadow:0 0 10px rgba(255,34,68,0.5)">▼ Egresos</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(191,112,255,0.05)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Costo Proveedor</div>
+                <div style="font-size:15px;font-weight:800;color:var(--purple)" id="cf-eg-proveedor">$0</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(255,170,0,0.05)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Costo Flete</div>
+                <div style="font-size:15px;font-weight:800;color:var(--gold)" id="cf-eg-flete">$0</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(0,136,255,0.05)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Comisión Dropi</div>
+                <div style="font-size:15px;font-weight:800;color:var(--neo-blue)" id="cf-eg-comision">$0</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(255,34,68,0.05)">
+                <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Gasto Meta Ads</div>
+                <div style="font-size:15px;font-weight:800;color:var(--red)" id="cf-eg-ads">$0</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:rgba(255,100,0,0.05)">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Devueltos (costo flete)</div>
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-dev-pct-label">0 pedidos</div>
+                </div>
+                <div style="font-size:15px;font-weight:800;color:var(--gold)" id="cf-eg-devueltos">$0</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:6px;background:rgba(100,100,100,0.05)">
+                <div>
+                  <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0">Cancelados (sin costo)</div>
+                  <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)" id="cf-cancel-pct-label">0 pedidos</div>
+                </div>
+                <div style="font-size:15px;font-weight:800;color:var(--text3)" id="cf-eg-cancelados">$0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráficos: cashflow semanal + donut estados -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px">
+          <div style="background:rgba(5,10,22,0.08);border:1px solid rgba(0,220,255,0.2);border-radius:var(--radius);padding:14px;backdrop-filter:blur(18px)">
+            <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px">Flujo Semanal (Ingresos vs Egresos)</div>
+            <div style="height:180px"><canvas id="chart-cashflow"></canvas></div>
+          </div>
+          <div style="background:rgba(5,10,22,0.08);border:1px solid rgba(0,220,255,0.2);border-radius:var(--radius);padding:14px;backdrop-filter:blur(18px)">
+            <div style="font-family:var(--font-mono);font-size:9px;color:#b8dff0;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px">Estado de Pedidos</div>
+            <div style="height:140px;display:flex;align-items:center;justify-content:center"><canvas id="chart-cf-estados"></canvas></div>
+            <div id="cf-estados-legend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;justify-content:center"></div>
+          </div>
+        </div>
+
+        <div id="cf-recomendacion" style="background:rgba(5,10,22,0.08);border:1px solid rgba(0,220,255,0.15);border-radius:var(--radius);padding:14px;font-family:var(--font-mono);font-size:11px;color:#b8dff0;backdrop-filter:blur(18px)"></div>
       </div>
 
       <!-- IA -->
@@ -2294,9 +2588,10 @@ function mostrarApp() {
   $('login-screen').style.display='none';
   document.querySelector('.sidebar').style.display='flex';
   document.querySelector('.main').style.display='flex';
-  // Show video background (dashboard is the default active section)
-  const bgVid=document.querySelector('#bg-video');
-  if(bgVid) bgVid.style.display='block';
+  // Activate gold particle background
+  initBgCanvas();
+  const bgCv=document.querySelector('#bg-canvas');
+  if(bgCv) bgCv.style.opacity='1';
   aplicarModoGuardado();
   // Solo setear filtro de mes si no hay datos cargados
   if(!S.pedidos.length){
@@ -2338,9 +2633,9 @@ function navegarA(sec) {
     meta:'Meta Ads',comparacion:'Comparación',proyeccion:'Proyección',
     cashflow:'Flujo de Caja',ia:'IA Dropflow',config:'Configuración'};
   tx('page-title',t[sec]||sec);
-  // Video background only on dashboard
-  const vid=document.querySelector('#bg-video');
-  if(vid) vid.style.display=sec==='dashboard'?'block':'none';
+  // Canvas gold bg: visible on dashboard, subtle on others
+  const bgCv=document.querySelector('#bg-canvas');
+  if(bgCv) bgCv.style.opacity=sec==='dashboard'?'1':'0.35';
   if(sec==='graficos'&&S.pedidos.length) setTimeout(renderCharts,100);
   if(sec==='proyeccion'&&S.pedidos.length) setTimeout(renderProyeccion,100);
   if(sec==='meta'&&S.meta) setTimeout(renderMeta,100);
@@ -2564,20 +2859,6 @@ function renderDashboard(){
   animateCount($('gauge-ventas'),R.utilidadReal,'$');
 }
 
-// ══ CURSOR GLOW (ring hero) ═══════════════════════════════════════════════════
-(function(){
-  const rc=document.querySelector('.ring-hero-container');
-  if(!rc) return;
-  const glow=document.createElement('div'); glow.className='ring-cursor-glow';
-  rc.appendChild(glow);
-  rc.addEventListener('mouseenter',()=>glow.style.opacity='1');
-  rc.addEventListener('mouseleave',()=>glow.style.opacity='0');
-  rc.addEventListener('mousemove',e=>{
-    const r=rc.getBoundingClientRect();
-    glow.style.left=(e.clientX-r.left)+'px';
-    glow.style.top=(e.clientY-r.top)+'px';
-  });
-})();
 
 // ══ CHART REVEAL HELPER ═══════════════════════════════════════════════════════
 function revealChartContainers(){
@@ -2610,6 +2891,8 @@ function renderExecCharts(){
   renderCanalChart(pedidos);
   renderMargenGauge();
   renderCashflowChart(pedidos);
+  renderChileMap(pedidos);
+  renderCiudadesChart(pedidos);
   const selVal=$('funnel-camp-select')?.value||'__all__';
   renderFunnelCampaign(selVal);
   setTimeout(revealChartContainers, 120);
@@ -2644,13 +2927,14 @@ function renderVentasAdsChart(pedidos){
   const tasa=S.tasaEntrega/100;
 
   // Build daily maps
-  const byDay={}; // {date: {ventaEnt, ventaPend, costos}}
+  const byDay={}; // {date: {ventaEnt, ventaPend, costos, count}}
   pedidos.forEach(p=>{
     const d=p.fecha||''; if(!d) return;
-    if(!byDay[d]) byDay[d]={ventaEnt:0,ventaPend:0,costos:0};
+    if(!byDay[d]) byDay[d]={ventaEnt:0,ventaPend:0,costos:0,count:0};
     if(p.estado==='entregado') byDay[d].ventaEnt+=p.venta||0;
     else if(p.estado==='transito'||p.estado==='pendiente') byDay[d].ventaPend+=p.venta||0;
     byDay[d].costos+=(p.proveedor||0)+(p.flete||0)+(p.comision||0);
+    byDay[d].count++;
   });
 
   let sorted=Object.keys(byDay).sort();
@@ -2661,30 +2945,38 @@ function renderVentasAdsChart(pedidos){
     scales:{x:{ticks:{color:'#4a5a7a',font:{size:8},maxTicksLimit:10},grid:{display:false}},
       y:{ticks:{color:'#4a5a7a',font:{size:8},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.03)'}}}};
 
+  // Distribute Meta Ads spend proportionally to order volume per period (best estimate without daily data)
+  function distAds(keys,countFn){
+    if(!adsTotal) return keys.map(()=>0);
+    const totC=keys.reduce((s,k)=>s+(countFn(k)||0),0)||1;
+    return keys.map(k=>adsTotal*(countFn(k)||0)/totC);
+  }
+
   if(_vsAdsMode==='semanal'){
     const wk={};
     sorted.forEach(d=>{
       const dt=new Date(d+'T00:00:00');
       const mon=new Date(dt);mon.setDate(dt.getDate()-((dt.getDay()+6)%7));
       const key=mon.toISOString().split('T')[0];
-      if(!wk[key]) wk[key]={ve:0,vp:0,co:0};
-      wk[key].ve+=byDay[d].ventaEnt; wk[key].vp+=byDay[d].ventaPend; wk[key].co+=byDay[d].costos;
+      if(!wk[key]) wk[key]={ve:0,vp:0,co:0,count:0};
+      wk[key].ve+=byDay[d].ventaEnt; wk[key].vp+=byDay[d].ventaPend;
+      wk[key].co+=byDay[d].costos; wk[key].count+=(byDay[d].count||0);
     });
     sorted=Object.keys(wk).sort().slice(-12);
     const shortL=sorted.map(d=>{const p=d.split('-');return parseInt(p[2])+' '+MES[parseInt(p[1])-1];});
-    const adsPD=adsTotal&&sorted.length?sorted.map(()=>adsTotal/sorted.length):sorted.map(()=>0);
+    const adsPD=distAds(sorted,k=>wk[k].count);
     _ch.ventasAds=new Chart(ctx,{type:'line',data:{labels:shortL,datasets:[
       {label:'Ventas (cob+pend)',data:sorted.map(d=>wk[d].ve+wk[d].vp*tasa),borderColor:'#00ffb3',backgroundColor:'rgba(0,255,179,0.06)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
-      {label:'Meta Ads',data:adsPD,borderColor:'#0088ff',backgroundColor:'rgba(0,136,255,0.04)',tension:0.4,borderWidth:2,pointRadius:0,fill:false},
+      {label:'Meta Ads (est.)',data:adsPD,borderColor:'#ffaa00',backgroundColor:'rgba(255,170,0,0.04)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[6,4],fill:false},
       {label:'Gastos Totales',data:sorted.map((d,i)=>wk[d].co+adsPD[i]),borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.03)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[5,3],fill:false},
     ]},options:opts}); return;
   }
   sorted=sorted.slice(-25);
   const shortL=sorted.map(d=>{const p=d.split('-');return parseInt(p[2])+' '+MES[parseInt(p[1])-1];});
-  const adsPD=adsTotal&&sorted.length?sorted.map(()=>adsTotal/sorted.length):sorted.map(()=>0);
+  const adsPD=distAds(sorted,d=>byDay[d]?.count||0);
   _ch.ventasAds=new Chart(ctx,{type:'line',data:{labels:shortL,datasets:[
     {label:'Ventas (cob+pend)',data:sorted.map(d=>(byDay[d]?.ventaEnt||0)+(byDay[d]?.ventaPend||0)*tasa),borderColor:'#00ffb3',backgroundColor:'rgba(0,255,179,0.06)',tension:0.4,borderWidth:2.5,pointRadius:0,fill:true},
-    {label:'Meta Ads',data:adsPD,borderColor:'#0088ff',backgroundColor:'rgba(0,136,255,0.04)',tension:0.4,borderWidth:2,pointRadius:0,fill:false},
+    {label:'Meta Ads (est.)',data:adsPD,borderColor:'#ffaa00',backgroundColor:'rgba(255,170,0,0.04)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[6,4],fill:false},
     {label:'Gastos Totales',data:sorted.map((d,i)=>(byDay[d]?.costos||0)+adsPD[i]),borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.03)',tension:0.4,borderWidth:2,pointRadius:0,borderDash:[5,3],fill:false},
   ]},options:opts});
 }
@@ -2705,7 +2997,7 @@ function renderCashflowChart(pedidos){
   tx('cf-ingresos',fmtCLP(ingresos));
   tx('cf-egresos',fmtCLP(egresos));
   const netoEl=$('cf-neto'); if(netoEl){netoEl.textContent=fmtCLP(saldo);netoEl.style.color=saldo>=0?'var(--green)':'var(--red)';}
-  tx('cf-cobrado',fmtCLP(ventaEnt));
+  tx('cfx-cobrado',fmtCLP(ventaEnt));
   tx('cf-proyectado',fmtCLP(ventaPend));
   tx('cf-proveedor',fmtCLP(costoP));
   tx('cf-flete',fmtCLP(costoF));
@@ -2729,6 +3021,7 @@ function renderCashflowChart(pedidos){
     const key=mon.toISOString().split('T')[0];
     if(!wk[key]) wk[key]={ing:0,egr:0};
     if(p.estado==='entregado') wk[key].ing+=p.venta||0;
+    else if(p.estado==='transito'||p.estado==='pendiente') wk[key].ing+=(p.venta||0)*(S.tasaEntrega/100);
     wk[key].egr+=(p.proveedor||0)+(p.flete||0)+(p.comision||0);
   });
   const wkeys=Object.keys(wk).sort().slice(-10);
@@ -2742,7 +3035,7 @@ function renderCashflowChart(pedidos){
   _ch_cf=new Chart(ctx,{type:'bar',data:{labels:wlabels,datasets:[
     {label:'Ingresos',data:ingData,backgroundColor:'rgba(0,255,179,0.55)',borderColor:'#00ffb3',borderWidth:1,borderRadius:4,order:2},
     {label:'Egresos',data:egrData,backgroundColor:'rgba(255,34,68,0.45)',borderColor:'#ff2244',borderWidth:1,borderRadius:4,order:2},
-    {label:'Saldo Acum.',data:saldoLine,type:'line',borderColor:'#ffaa00',backgroundColor:'transparent',tension:0.4,borderWidth:2,pointRadius:0,order:1},
+    {label:'Saldo Acum.',data:saldoLine,type:'line',borderColor:'#ffaa00',backgroundColor:'rgba(255,170,0,0.08)',tension:0.4,borderWidth:3,pointRadius:4,pointBackgroundColor:'#ffaa00',pointBorderColor:'#fff',pointBorderWidth:1.5,order:1,fill:true},
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
     plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${fmtCLP(c.raw)}`}}},
     scales:{x:{ticks:{color:'#4a5a7a',font:{size:7}},grid:{display:false}},
@@ -2768,6 +3061,85 @@ function renderCanalChart(pedidos){
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.label}: ${fmtCLP(c.raw)} (${total>0?((c.raw/total)*100).toFixed(1):0}%)`}}}}});
 }
 
+// ── CHILE MAP ────────────────────────────────────────────────────────────
+// City coordinates in the SVG viewBox (0 0 120 520)
+// Approximate positions for main Chilean cities from north to south
+const CHILE_CITIES={
+  'Arica':{x:55,y:28},'Iquique':{x:52,y:48},'Antofagasta':{x:58,y:90},
+  'Calama':{x:65,y:80},'Copiapó':{x:62,y:132},'La Serena':{x:58,y:168},
+  'Coquimbo':{x:57,y:172},'Ovalle':{x:58,y:180},'Valparaíso':{x:64,y:220},
+  'Viña del Mar':{x:63,y:218},'Santiago':{x:68,y:232},'Rancagua':{x:68,y:244},
+  'Talca':{x:66,y:264},'Chillán':{x:65,y:284},'Concepción':{x:62,y:304},
+  'Los Ángeles':{x:62,y:318},'Temuco':{x:60,y:338},'Valdivia':{x:58,y:358},
+  'Osorno':{x:56,y:376},'Puerto Montt':{x:54,y:394},'Castro':{x:50,y:420},
+  'San Antonio':{x:62,y:228},'Puente Alto':{x:70,y:234},'Maipú':{x:67,y:233},
+  'La Florida':{x:69,y:235},'Las Condes':{x:70,y:231},'Quilicura':{x:68,y:228}
+};
+function _normCity(c){if(!c)return'';return c.trim().toLowerCase()
+  .normalize('NFD').replace(/[̀-ͯ]/g,'')
+  .replace(/\s+/g,' ');}
+const _CITY_NORM={};
+Object.keys(CHILE_CITIES).forEach(k=>{_CITY_NORM[_normCity(k)]=k;});
+function _matchCity(raw){
+  if(!raw)return null;
+  const n=_normCity(raw);
+  if(_CITY_NORM[n])return _CITY_NORM[n];
+  for(const k of Object.keys(_CITY_NORM)){if(n.includes(k)||k.includes(n))return _CITY_NORM[k];}
+  return null;
+}
+function renderChileMap(pedidos){
+  const g=$('chile-city-dots'); if(!g) return;
+  const cityCount={}, cityFlete={};
+  pedidos.forEach(p=>{
+    const m=_matchCity(p.ciudad||'');
+    if(!m) return;
+    cityCount[m]=(cityCount[m]||0)+1;
+    cityFlete[m]=(cityFlete[m]||0)+(p.flete||0);
+  });
+  const maxC=Math.max(1,...Object.values(cityCount));
+  const entries=Object.entries(cityCount).sort((a,b)=>b[1]-a[1]);
+  g.innerHTML=entries.map(([name,cnt])=>{
+    const pos=CHILE_CITIES[name]; if(!pos) return '';
+    const r=3+Math.round((cnt/maxC)*10);
+    const op=0.4+0.6*(cnt/maxC);
+    return `<g>
+      <circle cx="${pos.x}" cy="${pos.y}" r="${r+4}" fill="rgba(255,170,0,0.08)"/>
+      <circle cx="${pos.x}" cy="${pos.y}" r="${r}" fill="rgba(255,170,0,${op.toFixed(2)})" stroke="rgba(255,200,0,0.6)" stroke-width="0.8"/>
+      <text x="${pos.x+r+2}" y="${pos.y+3}" font-family="monospace" font-size="5.5" fill="rgba(255,230,160,0.75)">${name} ${cnt}</text>
+    </g>`;
+  }).join('');
+}
+
+// ── CIUDADES LINE CHART ───────────────────────────────────────────────────
+let _ch_ciudades=null;
+function renderCiudadesChart(pedidos){
+  const ctx=$('chart-ciudades'); if(!ctx) return;
+  if(_ch_ciudades){_ch_ciudades.destroy();_ch_ciudades=null;}
+  // Aggregate by city
+  const cityCount={}, cityFlete={};
+  pedidos.forEach(p=>{
+    const m=_matchCity(p.ciudad||'');
+    if(!m) return;
+    cityCount[m]=(cityCount[m]||0)+1;
+    cityFlete[m]=(cityFlete[m]||0)+(p.flete||0);
+  });
+  const N=8;
+  const topByCount=Object.entries(cityCount).sort((a,b)=>b[1]-a[1]).slice(0,N);
+  const topByFlete=Object.entries(cityFlete).sort((a,b)=>b[1]-a[1]).slice(0,N);
+  // Union of cities, sorted by count
+  const cities=[...new Set([...topByCount.map(e=>e[0]),...topByFlete.map(e=>e[0])])].slice(0,N);
+  _ch_ciudades=new Chart(ctx,{type:'bar',data:{labels:cities,datasets:[
+    {label:'Pedidos',data:cities.map(c=>cityCount[c]||0),backgroundColor:'rgba(255,170,0,0.55)',borderColor:'#ffaa00',borderWidth:1,borderRadius:3,yAxisID:'y',order:2},
+    {label:'Flete Total',data:cities.map(c=>cityFlete[c]||0),type:'line',borderColor:'#ff2244',backgroundColor:'rgba(255,34,68,0.06)',tension:0.4,borderWidth:2,pointRadius:3,pointBackgroundColor:'#ff2244',yAxisID:'y2',order:1,fill:false},
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>c.datasetIndex===0?` ${c.label}: ${c.raw} pedidos`:` Flete: ${fmtCLP(c.raw)}`}}},
+    scales:{
+      x:{ticks:{color:'rgba(255,230,160,0.75)',font:{size:8}},grid:{display:false}},
+      y:{position:'left',ticks:{color:'#ffaa00',font:{size:7},callback:v=>v+'p'},grid:{color:'rgba(255,255,255,0.02)'}},
+      y2:{position:'right',ticks:{color:'#ff2244',font:{size:7},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{display:false}}
+    }}});
+}
+
 function renderMargenGauge(){
   const ctx=$('chart-margen-gauge'); if(!ctx) return;
   if(_ch.margenGauge){_ch.margenGauge.destroy();_ch.margenGauge=null;}
@@ -2775,9 +3147,21 @@ function renderMargenGauge(){
   const pct=Math.max(0,Math.min(100,R.margenReal));
   const color=pct>=20?'#00ffb3':pct>=10?'#ffaa00':'#ff2244';
   const el=$('gauge-margen-pct');
-  if(el){el.textContent=fmtPct(R.margenReal);el.style.color=color;}
-  _ch.margenGauge=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[pct,100-pct],backgroundColor:[color,'rgba(255,255,255,0.04)'],borderWidth:0,hoverOffset:0}]},
-    options:{responsive:false,maintainAspectRatio:false,cutout:'72%',rotation:-90,circumference:180,plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+  if(el){el.textContent=fmtPct(R.margenReal);el.style.color=color;el.style.textShadow=`0 0 20px ${color}90`;}
+  // Compose: utilidad / costos / remaining
+  const util=Math.max(0,R.utilidadReal||0);
+  const cost=Math.max(0,R.costosTotal||0);
+  const venta=Math.max(1,R.ingresosReales||1);
+  const utilPct=Math.min(100,util/venta*100);
+  const costPct=Math.min(100-utilPct,cost/venta*100);
+  const restPct=Math.max(0,100-utilPct-costPct);
+  _ch.margenGauge=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[utilPct,costPct,restPct],
+    backgroundColor:['#00ffb3','#ff2244','rgba(255,255,255,0.04)'],borderWidth:0,hoverOffset:0}]},
+    options:{responsive:false,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+  tx('gauge-gastos',fmtCLP(cost));
+  tx('gauge-utilidad',fmtCLP(util));
+  tx('gauge-ventas',fmtCLP(R.ingresosReales||0));
 }
 
 function renderFunnel(){
@@ -2802,6 +3186,26 @@ function renderFunnel(){
       </div>
     </div>`;
   }).join('');
+  // Funnel chart
+  const fCtx=$('chart-funnel');
+  if(fCtx && S.meta) {
+    if(window._ch_funnel){window._ch_funnel.destroy();window._ch_funnel=null;}
+    const R2=calcR(filtF(S.pedidos));
+    const fSteps=[
+      {l:'Impresiones',v:S.meta.impresiones||0,c:'rgba(0,136,255,0.7)'},
+      {l:'Clics',v:S.meta.clics||0,c:'rgba(0,200,255,0.7)'},
+      {l:'Compras',v:S.meta.compras||0,c:'rgba(0,255,179,0.7)'},
+      {l:'Entregados',v:R2.listas.entregados.length,c:'rgba(255,170,0,0.7)'}
+    ];
+    const maxV=fSteps[0].v||1;
+    window._ch_funnel=new Chart(fCtx,{type:'bar',data:{
+      labels:fSteps.map(s=>s.l),
+      datasets:[{data:fSteps.map(s=>s.v),backgroundColor:fSteps.map(s=>s.c),borderRadius:4,barThickness:20}]
+    },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.raw.toLocaleString('es-CL')}`}}},
+      scales:{x:{max:maxV,ticks:{color:'#4a5a7a',font:{size:8},callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v},grid:{color:'rgba(255,255,255,0.03)'}},
+        y:{ticks:{color:'#b8dff0',font:{size:8}},grid:{display:false}}}}});
+  }
 }
 
 function exportarReporte(){
@@ -2934,72 +3338,148 @@ function renderFunnelCampaign(idx,_R){
     const clickRate=imp>0?(cl/imp)*100:0;
     const convRate=cl>0?(comp/cl)*100:0;
 
+    const roas=m.gastoTotal>0&&R.ingresosReales>0?R.ingresosReales/m.gastoTotal:0;
+    const ctrOk=(S.ctrMin||1.5); const convOk=3; const roasOk=(S.roasMin||2);
+    // Color each funnel step by its health
+    const ctrColor=ctr>=ctrOk?'#00ffb3':ctr>=ctrOk*0.6?'#ffaa00':'#ff2244';
+    const convColor=convRate>=convOk?'#00ffb3':convRate>=1?'#ffaa00':'#ff2244';
+    const roasColor=roas>=roasOk?'#00ffb3':roas>=roasOk*0.6?'#ffaa00':'#ff2244';
+
     const metaSteps=[
-      {l:'IMPRESIONES (Alcance)',v:Math.round(imp),pct:100,c:'#ffaa00'},
-      {l:'CLICS (CTR: '+clickRate.toFixed(2)+'%)',v:Math.round(cl),pct:imp>0?(cl/imp)*100:0,c:'#00c8ff'},
-      {l:'COMPRAS (Conv: '+convRate.toFixed(2)+'%)',v:Math.round(comp),pct:cl>0?(comp/cl)*100:0,c:'#00ffb3'},
+      {l:'IMPRESIONES · ALCANCE',v:Math.round(imp).toLocaleString('es-CL'),pct:100,c:'#ffaa00',sub:''},
+      {l:'CLICS · CTR '+ctr.toFixed(2)+'%',v:Math.round(cl).toLocaleString('es-CL'),pct:Math.min(imp>0?(cl/imp)*10000:0,100),c:ctrColor,sub:ctr<ctrOk?'⚠ Creativos':'✓ Anuncios'},
+      {l:'COMPRAS · CONV '+convRate.toFixed(2)+'%',v:Math.round(comp),pct:Math.min(cl>0?(comp/cl)*1000:0,100),c:convColor,sub:convRate<convOk?'⚠ Landing/Form':'✓ Conversión'},
     ];
 
-    // Diagnostic semaphores
-    const diags=_metaDiagnostics({ctr,cpa,cpm,convRate,comp,roas:m.gastoTotal>0&&R.ingresosReales>0?R.ingresosReales/m.gastoTotal:0});
+    // Primary bottleneck
+    const diags=_metaDiagnostics({ctr,cpa,cpm,convRate,comp,roas});
     el.innerHTML=_funnelMetaHtml(metaSteps)+diags;
     return;
   }
 
-  // Default: Dropi conversion funnel (no Meta)
-  const steps=[
-    {l:'PEDIDOS TOTALES',v:R.total,pct:100,c:'#ffaa00'},
-    {l:'EN PROCESO',v:R.enTransito+R.pendientes,pct:(R.enTransito+R.pendientes)/tot*100,c:'#00c8ff'},
-    {l:'ENTREGADOS',v:R.entregados,pct:R.entregados/tot*100,c:'#00ffb3'},
-    {l:'BAJAS (dev+cancel)',v:R.devueltos+R.cancelados,pct:(R.devueltos+R.cancelados)/tot*100,c:'#ff2244'},
-  ];
-  el.innerHTML=_funnelMetaHtml(steps);
+  // No Meta Ads connected
+  el.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:10px;text-align:center">
+    <div style="font-size:32px;opacity:0.4">📡</div>
+    <div style="font-family:var(--font-mono);font-size:10px;color:var(--gold);font-weight:700;letter-spacing:1.5px">CONECTA META ADS</div>
+    <div style="font-family:var(--font-mono);font-size:8.5px;color:var(--text3);max-width:200px;line-height:1.6">Este embudo analiza métricas de campaña (CTR · Conv% · ROAS) para identificar el cuello de botella y darte recomendaciones accionables.</div>
+  </div>`;
 }
 
 function _funnelMetaHtml(steps){
-  return steps.map((s,i)=>{
-    const wPct=Math.max(28,Math.min(100,s.pct));
+  const N=steps.length; if(!N) return '';
+  // Trapezoid funnel: each step narrows by fixed inset per side
+  const maxInset=40; // max inset at last step
+  const insetStep=N>1?maxInset/(N-1):0;
+  const rowH=58; // px per step
+  const rows=steps.map((s,i)=>{
+    const lt=(i*insetStep).toFixed(1);
+    const lb=Math.min((i+1)*insetStep,48).toFixed(1);
     const prevPct=i>0?Math.max(steps[i-1].pct,0.1):100;
-    const convPct=i>0?(s.pct/prevPct*100).toFixed(1)+'%':null;
-    return `<div class="funnel-step">
-      <div class="funnel-bar" style="width:${wPct}%;background:${s.c}15;border-left:3px solid ${s.c};box-shadow:inset 0 0 14px ${s.c}10">
-        <span class="funnel-label" style="color:${s.c}">${s.l}</span>
+    const convPct=i>0?(s.pct/prevPct*100).toFixed(1)+'%':'';
+    const valStr=typeof s.v==='number'?s.v.toLocaleString('es-CL'):s.v;
+    // Safe text zone: from lt% to (100-lt)%, label inside, number centered
+    return `<div style="position:relative;width:100%;height:${rowH}px">
+      <!-- trapezoid bg -->
+      <div style="position:absolute;inset:0;
+        clip-path:polygon(${lt}% 0%,${100-parseFloat(lt)}% 0%,${100-parseFloat(lb)}% 100%,${lb}% 100%);
+        background:linear-gradient(175deg,${s.c}38,${s.c}18);
+        border-top:2px solid ${s.c}bb">
       </div>
-      <div class="funnel-meta">
-        <div class="funnel-num">${typeof s.v==='number'?s.v.toLocaleString('es-CL'):s.v}</div>
-        ${i>0&&convPct?`<div class="funnel-conv-pct" style="color:${s.c}">${convPct}</div>`:''}
+      <!-- label above, centered horizontally -->
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 ${Math.max(parseFloat(lt)+4,6)}%">
+        <span style="font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:${s.c};text-shadow:0 0 10px ${s.c};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center">${s.l}</span>
+        <span style="font-size:22px;font-weight:900;color:#fff;text-shadow:0 0 14px ${s.c}80,0 1px 6px rgba(0,0,0,0.5);line-height:1">${valStr}</span>
       </div>
+      <!-- conv rate badge on right outside trapezoid -->
+      ${convPct?`<div style="position:absolute;right:0;top:50%;transform:translateY(-50%);text-align:right;padding-right:4px;min-width:38px">
+        <div style="font-family:var(--font-mono);font-size:11px;font-weight:800;color:${s.c};text-shadow:0 0 10px ${s.c}80">${convPct}</div>
+        <div style="font-family:var(--font-mono);font-size:7px;color:rgba(255,220,140,0.7)">conv.</div>
+      </div>`:''}
     </div>`;
   }).join('');
+  return `<div style="display:flex;flex-direction:column;gap:2px;padding:4px 0">${rows}</div>`;
 }
 
 function _metaDiagnostics({ctr,cpa,cpm,convRate,comp,roas}){
   const ctrMin=S.ctrMin||1.5, cpaMax=S.cpaMax||4000, cpmMax=S.cpmMax||4500, roasMin=S.roasMin||2;
-  const alerts=[];
+  const checks=[];
 
-  // Creative diagnosis (CTR)
-  if(ctr<ctrMin*0.5) alerts.push({c:'bad',t:`Creativos: CTR ${ctr.toFixed(2)}% — revisar imágenes/copy`});
-  else if(ctr<ctrMin) alerts.push({c:'warn',t:`Creativos: CTR ${ctr.toFixed(2)}% bajo umbral (${ctrMin}%)`});
-  else alerts.push({c:'ok',t:`Creativos: CTR ${ctr.toFixed(2)}% ✓`});
+  // 1. CREATIVOS — CTR
+  const ctrScore=ctr>=ctrMin?2:ctr>=ctrMin*0.6?1:0;
+  checks.push({
+    zone:'🎨 Creativos/Anuncios', metric:`CTR ${ctr.toFixed(2)}%`,
+    score:ctrScore,
+    ok:`CTR ${ctr.toFixed(2)}% ✓ — los anuncios atraen clics`,
+    warn:`CTR ${ctr.toFixed(2)}% bajo (mín ${ctrMin}%) — revisar copy o imagen`,
+    bad:`CTR ${ctr.toFixed(2)}% crítico — los creativos no generan interés, cambiar urgente`
+  });
 
-  // Landing / form (conversion click→purchase)
-  if(convRate<1) alerts.push({c:'bad',t:`Landing/Form: Conv ${convRate.toFixed(2)}% — problema en página o checkout`});
-  else if(convRate<3) alerts.push({c:'warn',t:`Landing: Conv ${convRate.toFixed(2)}% — optimizar CTA o formulario`});
-  else alerts.push({c:'ok',t:`Landing: Conv ${convRate.toFixed(2)}% ✓`});
+  // 2. LANDING / FORMULARIO — conv click→purchase
+  const convScore=convRate>=3?2:convRate>=1?1:0;
+  checks.push({
+    zone:'🌐 Landing / Formulario', metric:`Conv ${convRate.toFixed(2)}%`,
+    score:convScore,
+    ok:`Conversión ${convRate.toFixed(2)}% ✓ — landing convierte bien`,
+    warn:`Conversión ${convRate.toFixed(2)}% baja — mejorar CTA, velocidad o checkout`,
+    bad:`Conversión ${convRate.toFixed(2)}% crítica — la página no convierte, revisar urgente`
+  });
 
-  // Audience saturation (CPM)
-  if(cpm>cpmMax*1.5) alerts.push({c:'bad',t:`Audiencia: CPM ${fmtCLP(Math.round(cpm))} — saturación o competencia alta`});
-  else if(cpm>cpmMax) alerts.push({c:'warn',t:`Audiencia: CPM ${fmtCLP(Math.round(cpm))} sobre umbral`});
+  // 3. AUDIENCIA — CPM (saturación)
+  const cpmScore=cpm===0?2:cpm<=cpmMax?2:cpm<=cpmMax*1.5?1:0;
+  checks.push({
+    zone:'🎯 Audiencia / Segmentación', metric:cpm>0?`CPM ${fmtCLP(Math.round(cpm))}`:'CPM N/D',
+    score:cpmScore,
+    ok:`CPM ${fmtCLP(Math.round(cpm))} ✓ — audiencia saludable`,
+    warn:`CPM ${fmtCLP(Math.round(cpm))} elevado — posible saturación o competencia`,
+    bad:`CPM ${fmtCLP(Math.round(cpm))} muy alto — audiencia saturada, ampliar o cambiar`
+  });
 
-  // ROAS overall
-  if(roas>0&&roas<roasMin*0.5) alerts.push({c:'bad',t:`ROAS ${roas.toFixed(2)}x — rentabilidad crítica`});
-  else if(roas>0&&roas<roasMin) alerts.push({c:'warn',t:`ROAS ${roas.toFixed(2)}x bajo mínimo (${roasMin}x)`});
-  else if(roas>0) alerts.push({c:'ok',t:`ROAS ${roas.toFixed(2)}x ✓`});
+  // 4. RENTABILIDAD — ROAS
+  const roasScore=roas<=0?-1:roas>=roasMin?2:roas>=roasMin*0.6?1:0;
+  if(roas>0) checks.push({
+    zone:'💰 Rentabilidad / ROAS', metric:`ROAS ${roas.toFixed(2)}x`,
+    score:roasScore,
+    ok:`ROAS ${roas.toFixed(2)}x ✓ — campaña rentable`,
+    warn:`ROAS ${roas.toFixed(2)}x bajo mínimo (${roasMin}x) — ajustar presupuesto o precios`,
+    bad:`ROAS ${roas.toFixed(2)}x crítico — gastando más de lo que genera`
+  });
 
-  if(!alerts.length) return '';
-  return '<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px">'+
-    alerts.map(a=>`<div class="funnel-alert ${a.c}"><div class="funnel-alert-dot"></div><span class="funnel-alert-text">${a.t}</span></div>`).join('')+
-  '</div>';
+  // Find primary bottleneck (lowest score)
+  const bottleneck=checks.filter(c=>c.score>=0).sort((a,b)=>a.score-b.score)[0];
+  const statusColor={0:'#ff2244',1:'#ffaa00',2:'#00ffb3'};
+  const statusIcon={0:'🔴',1:'🟡',2:'🟢'};
+
+  let html='<div style="margin-top:10px;border-top:1px solid rgba(255,175,0,0.15);padding-top:8px">';
+
+  // Primary bottleneck banner
+  if(bottleneck&&bottleneck.score<2){
+    const msg=bottleneck.score===0?bottleneck.bad:bottleneck.warn;
+    const bc=statusColor[bottleneck.score];
+    html+=`<div style="background:${bc}18;border:1px solid ${bc}55;border-radius:8px;padding:8px 10px;margin-bottom:8px">
+      <div style="font-family:var(--font-mono);font-size:8px;color:${bc};letter-spacing:1px;margin-bottom:3px">⚠ CUELLO DE BOTELLA PRINCIPAL</div>
+      <div style="font-size:12px;font-weight:700;color:${bc}">${bottleneck.zone}</div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:rgba(255,235,180,0.85);margin-top:2px">${msg}</div>
+    </div>`;
+  } else if(bottleneck&&bottleneck.score===2){
+    html+=`<div style="background:rgba(0,255,179,0.06);border:1px solid rgba(0,255,179,0.25);border-radius:8px;padding:6px 10px;margin-bottom:8px;font-family:var(--font-mono);font-size:9px;color:#00ffb3">✓ Embudo saludable — todas las métricas dentro de parámetros</div>`;
+  }
+
+  // Detail rows
+  html+='<div style="display:flex;flex-direction:column;gap:3px">';
+  checks.forEach(c=>{
+    if(c.score<0) return;
+    const col=statusColor[c.score];
+    const msg=c.score===2?c.ok:c.score===1?c.warn:c.bad;
+    html+=`<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;background:${col}0e">
+      <span style="font-size:11px">${statusIcon[c.score]}</span>
+      <div style="flex:1;min-width:0">
+        <span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:${col}">${c.zone}</span>
+        <span style="font-family:var(--font-mono);font-size:8px;color:rgba(255,235,180,0.7);margin-left:6px">${c.metric}</span>
+      </div>
+    </div>`;
+  });
+  html+='</div></div>';
+  return html;
 }
 
 function renderMetaPerf(idx){
@@ -3040,17 +3520,57 @@ function renderMetaPerf(idx){
 function renderCashflow(){
   const pedidos=filtF(S.pedidos);
   const R=calcR(pedidos);
-  const ventaEnt=R.listas.entregados.reduce((s,p)=>s+(p.venta||0),0);
-  const ventaPend=[...R.listas.transito,...R.listas.pendientes].reduce((s,p)=>s+(p.venta||0),0)*(S.tasaEntrega/100);
-  const egresos=R.costoProveedor+R.costoFlete+R.costoComision+R.adsGasto;
-  const devLoss=R.listas.devueltos.reduce((s,p)=>s+(p.proveedor||0)+(p.flete||0),0);
+  const total=pedidos.length||1;
+  const entL=R.listas.entregados, pendL=[...R.listas.transito,...R.listas.pendientes];
+  const devL=R.listas.devueltos, cancelL=R.listas.cancelados;
+  const ventaEnt=entL.reduce((s,p)=>s+(p.venta||0),0);
+  const ventaPend=pendL.reduce((s,p)=>s+(p.venta||0),0)*(S.tasaEntrega/100);
+  const adsGasto=R.adsGasto||(S.meta?S.meta.gastoTotal:0);
+  const egresos=R.costoProveedor+R.costoFlete+R.costoComision+adsGasto;
+  const devFleteLoss=devL.reduce((s,p)=>s+(p.flete||0),0);
   const saldo=ventaEnt-egresos;
-  tx('cf-cobrado',fmtCLP(ventaEnt));
+  // KPIs principales
+  tx('cf-total-ingresos',fmtCLP(ventaEnt+ventaPend));
+  tx('cfx-cobrado',fmtCLP(ventaEnt));
   tx('cf-por-cobrar',fmtCLP(ventaPend));
   tx('cf-salidas',fmtCLP(egresos));
-  tx('cf-devoluciones',fmtCLP(devLoss));
+  tx('cf-devoluciones',fmtCLP(devFleteLoss));
   const dispEl=$('cf-disponible');
   if(dispEl){dispEl.textContent=fmtCLP(saldo);dispEl.style.color=saldo>=0?'var(--green)':'var(--red)';}
+  // Desglose ingresos
+  tx('cf-ing-entregados',fmtCLP(ventaEnt));
+  tx('cf-ing-pendientes',fmtCLP(ventaPend));
+  tx('cf-ent-pct-label',`${entL.length} pedidos · ${((entL.length/total)*100).toFixed(1)}%`);
+  tx('cf-pend-pct-label',`${pendL.length} pedidos · ${((pendL.length/total)*100).toFixed(1)}%`);
+  // Desglose egresos
+  tx('cf-eg-proveedor',fmtCLP(R.costoProveedor));
+  tx('cf-eg-flete',fmtCLP(R.costoFlete));
+  tx('cf-eg-comision',fmtCLP(R.costoComision));
+  tx('cf-eg-ads',fmtCLP(adsGasto));
+  tx('cf-eg-devueltos',fmtCLP(devFleteLoss));
+  tx('cf-eg-cancelados','—');
+  tx('cf-dev-pct-label',`${devL.length} pedidos`);
+  tx('cf-cancel-pct-label',`${cancelL.length} pedidos`);
+  // Donut estados
+  const cfCtx=$('chart-cf-estados');
+  if(cfCtx){
+    if(window._ch_cf_est){window._ch_cf_est.destroy();window._ch_cf_est=null;}
+    const stCounts=[entL.length,pendL.length,R.listas.devueltos.length,R.listas.cancelados.length];
+    const stLabels=['Entregados','En tránsito/Pend.','Devueltos','Cancelados'];
+    const stColors=['#00ffb3','#0088ff','#ff2244','#ff6a00'];
+    window._ch_cf_est=new Chart(cfCtx,{type:'doughnut',data:{labels:stLabels,
+      datasets:[{data:stCounts,backgroundColor:stColors.map(c=>c+'99'),borderColor:stColors,borderWidth:1.5}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+        plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.label}: ${c.raw} ped.`}}}}});
+    const leg=$('cf-estados-legend');
+    if(leg) leg.innerHTML=stLabels.map((l,i)=>`<span style="display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:8px;color:#b8dff0"><span style="width:8px;height:8px;border-radius:50%;background:${stColors[i]};display:inline-block"></span>${l}: ${stCounts[i]}</span>`).join('');
+  }
+  // Recomendación
+  const rec=$('cf-recomendacion');
+  if(rec){
+    const pct=((saldo/(ventaEnt||1))*100).toFixed(1);
+    rec.innerHTML=`<span style="color:${saldo>=0?'var(--green)':'var(--red)'};font-weight:700">Saldo neto: ${fmtCLP(saldo)} (${pct}% margen de caja)</span><br><span style="color:#b8dff0;font-size:10px">Ingresos confirmados ${fmtCLP(ventaEnt)} · Por cobrar ${fmtCLP(ventaPend)} · Egresos totales ${fmtCLP(egresos)}</span>`;
+  }
   renderCashflowChart(pedidos);
 }
 
@@ -3063,7 +3583,7 @@ function renderPedidos(){
   const busq=($('filter-producto')?.value||'').toLowerCase().trim();
   if(busq) pedidos=pedidos.filter(p=>p.producto.toLowerCase().includes(busq)||p.tienda.toLowerCase().includes(busq));
   tx('table-footer-info',pedidos.length+' pedidos');
-  if(!pedidos.length){tbody.innerHTML=`<tr><td colspan="10"><div class="empty-state">${S.pedidos.length?'Sin pedidos para este filtro':'Importa un Excel de Dropi'}</div></td></tr>`;return;}
+  if(!pedidos.length){tbody.innerHTML=`<tr><td colspan="11"><div class="empty-state">${S.pedidos.length?'Sin pedidos para este filtro':'Importa un Excel de Dropi'}</div></td></tr>`;return;}
   const adsGasto=S.meta?S.meta.gastoTotal:0;
   const cpaUnit=adsGasto>0&&pedidos.length>0?adsGasto/pedidos.length:0;
   tbody.innerHTML=pedidos.map(p=>{
@@ -3079,6 +3599,7 @@ function renderPedidos(){
       <td style="text-align:right">${fmtCLP(p.flete)}</td>
       <td style="text-align:right;color:${utilConAds>=0?'var(--green)':'var(--red)'}">${fmtCLP(utilConAds)}</td>
       <td style="text-align:right">${semaforo(margenReal)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:11px;color:var(--purple)">${cpaUnit>0?fmtCLP(cpaUnit):'—'}</td>
       <td>${p.ciudad}</td>
     </tr>`;
   }).join('');
@@ -3086,10 +3607,14 @@ function renderPedidos(){
 
 function renderPedidosKPIs(pedidos){
   const R=calcR(pedidos); const tot=R.total;
-  tx('pk-total',tot); tx('pk-total-sub',tot+' pedidos en el período');
+  const ventaTotal=pedidos.reduce((s,p)=>s+(p.venta||0),0);
+  tx('pk-total',tot); tx('pk-total-val',fmtCLP(ventaTotal)); tx('pk-total-sub',tot+' pedidos en el período');
   tx('pk-entregados',R.entregados); tx('pk-entregados-pct',tot>0?fmtPct(R.entregados/tot*100)+' del total':'0%');
   tx('pk-camino',R.enTransito+R.pendientes); tx('pk-camino-pct',tot>0?fmtPct((R.enTransito+R.pendientes)/tot*100)+' del total':'0%');
-  tx('pk-devueltos',R.devueltos+R.cancelados); tx('pk-devueltos-pct',tot>0?fmtPct((R.devueltos+R.cancelados)/tot*100)+' del total':'0%');
+  const costoDevFlete=R.listas.devueltos.reduce((s,p)=>s+(p.flete||0),0);
+  tx('pk-devueltos',R.devueltos); tx('pk-devueltos-val','-'+fmtCLP(costoDevFlete)); tx('pk-devueltos-pct',tot>0?fmtPct(R.devueltos/tot*100)+' del total':'0%');
+  tx('pk-cancelados',R.cancelados); tx('pk-cancelados-pct',tot>0?fmtPct(R.cancelados/tot*100)+' del total':'0%');
+  tx('pk-util-total', fmtCLP(R.utilidadTotal||0));
 }
 
 function setTableFilter(f){
@@ -3218,11 +3743,49 @@ function renderProyeccion(){
   const pedidos=filtF(S.pedidos); const R=calcR(pedidos);
   const camino=R.camino; const totalPend=camino.length;
   const entregaran=Math.round(totalPend*S.tasaEntrega/100);
+  const noEntregaran=totalPend-entregaran;
   const suma=(a,k)=>a.reduce((s,p)=>s+(p[k]||0),0);
-  const costoDev=suma(camino,'flete')*(1-S.tasaEntrega/100);
+  const valPend=suma(camino,'venta');
+  const tasa=S.tasaEntrega/100;
+  const valEntregaran=valPend*tasa;
+  const valNoEntregaran=valPend*(1-tasa);
+  const costoDev=suma(camino,'flete')*(1-tasa);
   tx('proy-total-pend',totalPend); tx('proy-entregaran',entregaran);
-  tx('proy-no-entregaran',totalPend-entregaran); tx('proy-costo-dev',fmtCLP(costoDev));
+  tx('proy-no-entregaran',noEntregaran); tx('proy-costo-dev',fmtCLP(costoDev));
+  tx('proy-val-pend',fmtCLP(valPend));
+  tx('proy-val-entregaran',fmtCLP(valEntregaran));
+  tx('proy-val-noentregaran',fmtCLP(valNoEntregaran));
   tx('proy-util-real',fmtCLP(R.utilidadReal)); tx('proy-util-proy',fmtCLP(R.proyUtilidad)); tx('proy-util-total',fmtCLP(R.utilidadTotal));
+  // Gráfico escenario de entrega
+  const esCtx=$('chart-proy-escenario');
+  if(esCtx){
+    if(window._ch_proy_es){window._ch_proy_es.destroy();window._ch_proy_es=null;}
+    window._ch_proy_es=new Chart(esCtx,{type:'bar',data:{
+      labels:['Pendientes','Se entregarán','No entregarán'],
+      datasets:[{data:[totalPend,entregaran,totalPend-entregaran],
+        backgroundColor:['rgba(0,136,255,0.5)','rgba(0,255,179,0.5)','rgba(255,34,68,0.5)'],
+        borderColor:['#0088ff','#00ffb3','#ff2244'],borderWidth:1.5,borderRadius:6}]
+    },options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TT}},
+      scales:{x:{ticks:{color:'#b8dff0',font:{size:8}},grid:{display:false}},
+        y:{ticks:{color:'#4a5a7a',font:{size:8}},grid:{color:'rgba(255,255,255,0.03)'}}}}});
+  }
+  // Gráfico proyección financiera
+  const fiCtx=$('chart-proy-financiero');
+  if(fiCtx){
+    if(window._ch_proy_fi){window._ch_proy_fi.destroy();window._ch_proy_fi=null;}
+    window._ch_proy_fi=new Chart(fiCtx,{type:'bar',data:{
+      labels:['Util. Real','Util. Proyectada','Total Estimado'],
+      datasets:[{data:[R.utilidadReal,R.proyUtilidad,R.utilidadTotal],
+        backgroundColor:[R.utilidadReal>=0?'rgba(0,255,179,0.5)':'rgba(255,34,68,0.5)',
+          'rgba(255,170,0,0.5)','rgba(191,112,255,0.5)'],
+        borderColor:[R.utilidadReal>=0?'#00ffb3':'#ff2244','#ffaa00','#bf70ff'],
+        borderWidth:1.5,borderRadius:6}]
+    },options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${fmtCLP(c.raw)}`}}},
+      scales:{x:{ticks:{color:'#b8dff0',font:{size:8}},grid:{display:false}},
+        y:{ticks:{color:'#4a5a7a',font:{size:8},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.03)'}}}}});
+  }
 }
 
 // ══ GRÁFICOS ══════════════════════════════════════════════════════════════════
@@ -3633,6 +4196,65 @@ function updateAllRings({pctGreen=0,pctRed=0,pctBlue=0,pctGold=0}){
 }
 
 function updateRingProgress(pct){ updateAllRings({pctGreen:pct}); }
+
+// ══ GOLD PARTICLE BACKGROUND ══════════════════════════════════════════════════
+let _bgAnimId=null;
+function initBgCanvas(){
+  const cv=document.getElementById('bg-canvas'); if(!cv||cv._init) return;
+  cv._init=true;
+  const ctx=cv.getContext('2d');
+  function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+
+  // Particles: gold + subtle cyan mix
+  const N=90;
+  const pts=Array.from({length:N},(_,i)=>({
+    x:Math.random()*cv.width, y:Math.random()*cv.height,
+    vx:(Math.random()-0.5)*0.25, vy:(Math.random()-0.5)*0.25,
+    r:Math.random()*1.8+0.4,
+    gold:Math.random()>0.25, // 75% gold, 25% cyan
+    a:Math.random()*0.5+0.25
+  }));
+
+  // Static grid lines
+  function drawGrid(){
+    ctx.strokeStyle='rgba(255,170,0,0.025)'; ctx.lineWidth=0.5;
+    const gx=80, gy=80;
+    for(let x=0;x<cv.width;x+=gx){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,cv.height);ctx.stroke();}
+    for(let y=0;y<cv.height;y+=gy){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cv.width,y);ctx.stroke();}
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    drawGrid();
+    // Connections
+    for(let i=0;i<N;i++){
+      for(let j=i+1;j<N;j++){
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          const a=0.09*(1-d/130);
+          ctx.beginPath();
+          ctx.strokeStyle=pts[i].gold?`rgba(255,175,0,${a})`:`rgba(0,210,255,${a*0.7})`;
+          ctx.lineWidth=0.6; ctx.moveTo(pts[i].x,pts[i].y); ctx.lineTo(pts[j].x,pts[j].y); ctx.stroke();
+        }
+      }
+    }
+    // Dots
+    pts.forEach(p=>{
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.gold?`rgba(255,185,0,${p.a})`:`rgba(0,220,255,${p.a*0.7})`;
+      ctx.shadowColor=p.gold?'rgba(255,170,0,0.6)':'rgba(0,210,255,0.5)';
+      ctx.shadowBlur=p.r*3; ctx.fill(); ctx.shadowBlur=0;
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>cv.width) p.vx*=-1;
+      if(p.y<0||p.y>cv.height) p.vy*=-1;
+    });
+    _bgAnimId=requestAnimationFrame(frame);
+  }
+  if(_bgAnimId) cancelAnimationFrame(_bgAnimId);
+  frame();
+}
 
 document.addEventListener('DOMContentLoaded',()=>{
   tx('date-badge',new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'}));
