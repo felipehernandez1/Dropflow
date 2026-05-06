@@ -485,7 +485,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 /* Dashboard grids */
 .exec-hero-layout{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:12px;margin-bottom:12px;align-items:stretch;}
 .exec-hero-left,.exec-hero-right{display:flex;flex-direction:column;gap:10px;}
-.exec-kpi-vert{background:rgba(4,8,18,0.94);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden;backdrop-filter:blur(20px);flex:1;}
+.exec-kpi-vert{background:rgba(4,8,18,0.08);border:1px solid rgba(255,255,255,0.09);border-radius:var(--radius);padding:16px 18px;position:relative;overflow:hidden;backdrop-filter:blur(18px);flex:1;}
 .exec-kpi-vert::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .exec-kpi-vert.cyan::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent);box-shadow:0 0 20px rgba(0,238,255,0.5);}
 .exec-kpi-vert.gold::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 20px rgba(255,170,0,0.5);}
@@ -622,7 +622,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
 /* ── CASHFLOW PANEL ──────────────────────────────────────────────────── */
 .cf-kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
-.cf-kpi{background:rgba(5,10,22,0.5);border-radius:8px;padding:8px 10px;text-align:center;
+.cf-kpi{background:transparent;border-radius:8px;padding:8px 10px;text-align:center;
   backdrop-filter:blur(16px);
   box-shadow:inset 0 1.2px 0 rgba(255,255,255,0.16),inset 0 -1px 0 rgba(255,255,255,0.04),inset 1px 0 0 rgba(255,255,255,0.04),inset -1px 0 0 rgba(255,255,255,0.04),0 2px 12px rgba(0,0,0,0.3);
   border:1px solid rgba(255,255,255,0.06);}
@@ -696,6 +696,111 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 .donut-left-legend{flex:1;display:flex;flex-direction:column;gap:4px;}
 .donut-left-item{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:8px;color:var(--text3);}
 .donut-left-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DASHBOARD GLASS MODE — cero fondos negros, celeste borders, gold numeros
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Fondos cero en todos los contenedores del dashboard ── */
+#sec-dashboard .exec-kpi,
+#sec-dashboard .exec-card,
+#sec-dashboard .exec-kpi-vert,
+#sec-dashboard .kpi-card,
+#sec-dashboard .db-stat-row,
+#sec-dashboard .cf-row,
+#sec-dashboard .cf-kpi,
+#sec-dashboard .cf-saldo-bar,
+#sec-dashboard .funnel-alert,
+#sec-dashboard .funnel-alert.ok,
+#sec-dashboard .funnel-alert.warn,
+#sec-dashboard .funnel-alert.bad {
+  background: transparent !important;
+}
+
+/* ── Borders celeste con glow en todos los boxes ── */
+#sec-dashboard .exec-kpi,
+#sec-dashboard .exec-card,
+#sec-dashboard .exec-kpi-vert {
+  border: 1px solid rgba(0,220,255,0.28) !important;
+  box-shadow: 0 0 16px rgba(0,220,255,0.07), inset 0 1px 0 rgba(0,220,255,0.16), 0 2px 12px rgba(0,0,0,0.08) !important;
+}
+#sec-dashboard .exec-kpi:hover,
+#sec-dashboard .exec-card:hover,
+#sec-dashboard .exec-kpi-vert:hover {
+  border-color: rgba(0,238,255,0.55) !important;
+  box-shadow: 0 0 30px rgba(0,238,255,0.14), inset 0 1px 0 rgba(0,238,255,0.22), 0 8px 30px rgba(0,0,0,0.1) !important;
+}
+#sec-dashboard .kpi-card {
+  border: 1px solid rgba(0,220,255,0.24) !important;
+  box-shadow: 0 0 14px rgba(0,220,255,0.06), inset 0 1px 0 rgba(0,220,255,0.12) !important;
+}
+#sec-dashboard .db-stat-row {
+  border: 1px solid rgba(0,220,255,0.14) !important;
+  box-shadow: none !important;
+}
+#sec-dashboard .cf-kpi {
+  border: 1px solid rgba(0,220,255,0.18) !important;
+}
+#sec-dashboard .cf-saldo-bar {
+  border: 1px solid rgba(0,220,255,0.18) !important;
+}
+
+/* ── TODOS los textos/labels → celeste con glow medio ── */
+#sec-dashboard .exec-kpi-label,
+#sec-dashboard .exec-kpi-vert-label,
+#sec-dashboard .exec-card-label,
+#sec-dashboard .exec-card-sub,
+#sec-dashboard .exec-card-title,
+#sec-dashboard .exec-kpi-delta,
+#sec-dashboard .db-stat-label,
+#sec-dashboard .cf-kpi-label,
+#sec-dashboard .cf-row-label,
+#sec-dashboard .ring-mini-label,
+#sec-dashboard .kpi-label,
+#sec-dashboard .kpi-sub,
+#sec-dashboard .funnel-label,
+#sec-dashboard .donut-left-item,
+#sec-dashboard .donut-left-sub,
+#sec-dashboard .exec-welcome-label {
+  color: rgba(0,220,255,0.90) !important;
+  text-shadow: 0 0 12px rgba(0,238,255,0.45) !important;
+}
+/* Nombre bienvenido — celeste brillante */
+#sec-dashboard .exec-welcome-name {
+  color: #00eeff !important;
+  text-shadow: 0 0 22px rgba(0,238,255,0.7), 0 0 45px rgba(0,238,255,0.25) !important;
+}
+
+/* ── TODOS los números → gold con glow suave ── */
+#sec-dashboard .exec-kpi-val,
+#sec-dashboard .exec-kpi.cyan .exec-kpi-val,
+#sec-dashboard .exec-kpi.gold .exec-kpi-val,
+#sec-dashboard .exec-kpi.red .exec-kpi-val,
+#sec-dashboard .exec-kpi.green .exec-kpi-val,
+#sec-dashboard .exec-kpi-vert-val,
+#sec-dashboard .exec-kpi-vert.cyan .exec-kpi-vert-val,
+#sec-dashboard .exec-kpi-vert.gold .exec-kpi-vert-val,
+#sec-dashboard .exec-kpi-vert.red .exec-kpi-vert-val,
+#sec-dashboard .exec-kpi-vert.green .exec-kpi-vert-val,
+#sec-dashboard .exec-kpi-vert.nblue .exec-kpi-vert-val,
+#sec-dashboard .kpi-value,
+#sec-dashboard .db-stat-val,
+#sec-dashboard .cf-kpi-val,
+#sec-dashboard .ring-mini-val,
+#sec-dashboard .donut-left-total {
+  color: var(--gold) !important;
+  text-shadow: 0 0 18px rgba(255,170,0,0.55), 0 0 35px rgba(255,170,0,0.20) !important;
+}
+
+/* ── Ticker bar — texto celeste sobre fondo transparente ── */
+#sec-dashboard ~ * .ticker-key,
+.ticker-key { color: rgba(0,220,255,0.70); text-shadow: 0 0 8px rgba(0,238,255,0.3); }
+.ticker-val  { text-shadow: 0 0 10px currentColor; }
+
+/* ── Bordes de lineas top en ::before del exec-card ── */
+#sec-dashboard .exec-card::before {
+  background: linear-gradient(90deg,transparent,rgba(0,238,255,0.5),transparent) !important;
+}
 </style>
 </head>
 <body>
