@@ -90,7 +90,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .topbar-left{display:flex;flex-direction:column;justify-content:center;gap:1px;padding:0 0 0 14px;}
 .page-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:1px;font-family:var(--font-mono);text-transform:uppercase;}
 .topbar-spacer{flex:1;}
-.section{display:none;padding:16px 20px;flex-direction:column;gap:0;position:relative;z-index:1;}
+.section{display:none;padding:16px 20px;flex-direction:column;gap:0;position:relative;z-index:3;}
 .section.active{display:flex;animation:sectionReveal 0.4s cubic-bezier(0.16,1,0.3,1) both;}
 @keyframes sectionReveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
@@ -100,7 +100,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 /* ── LIVE TICKER MARQUEE ──────────────────────────────────────────── */
 .ticker-wrap{height:26px;background:rgba(0,0,0,0.55);border-bottom:1px solid rgba(255,170,0,0.07);
-  overflow:hidden;position:relative;flex-shrink:0;backdrop-filter:blur(8px);}
+  overflow:hidden;position:relative;flex-shrink:0;backdrop-filter:blur(8px);z-index:10;}
 .ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;}
 .ticker-wrap::before{left:0;background:linear-gradient(90deg,rgba(1,3,8,0.98),transparent);}
 .ticker-wrap::after{right:0;background:linear-gradient(-90deg,rgba(1,3,8,0.98),transparent);}
@@ -697,6 +697,12 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 </head>
 <body>
 
+<!-- VIDEO BACKGROUND — visible only on dashboard section -->
+<video id="bg-video" autoplay muted loop playsinline
+  style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0.22;pointer-events:none;display:none"
+  src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260429_114316_1c7889ad-2885-410e-b493-98119fee0ddb.mp4">
+</video>
+
 <!-- LOGIN -->
 <div id="login-screen">
   <div style="width:100%;max-width:400px;padding:40px">
@@ -828,7 +834,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
       </button>
       <button class="nav-item" data-nav="cashflow" onclick="navegarA('cashflow')">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-        <span class="nav-label">Gastos</span>
+        <span class="nav-label">Flujo de Caja</span>
       </button>
       <button class="nav-item" data-nav="proyeccion" onclick="navegarA('proyeccion')">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
@@ -947,12 +953,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
     <div class="content">
 
       <!-- DASHBOARD -->
-      <div class="section active" id="sec-dashboard" style="position:relative">
-        <!-- Video background -->
-        <video autoplay muted loop playsinline
-          style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;opacity:0.18;pointer-events:none"
-          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260429_114316_1c7889ad-2885-410e-b493-98119fee0ddb.mp4">
-        </video>
+      <div class="section active" id="sec-dashboard" style="position:relative;background:transparent">
 
         <div id="alertas-container" style="margin-bottom:8px"></div>
 
@@ -2185,6 +2186,9 @@ function mostrarApp() {
   $('login-screen').style.display='none';
   document.querySelector('.sidebar').style.display='flex';
   document.querySelector('.main').style.display='flex';
+  // Show video background (dashboard is the default active section)
+  const bgVid=document.querySelector('#bg-video');
+  if(bgVid) bgVid.style.display='block';
   aplicarModoGuardado();
   // Solo setear filtro de mes si no hay datos cargados
   if(!S.pedidos.length){
@@ -2222,18 +2226,20 @@ function navegarA(sec) {
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   const s=$('sec-'+sec); if(s) s.classList.add('active');
   const b=document.querySelector(`[data-nav="${sec}"]`); if(b) b.classList.add('active');
-  const t={dashboard:'Contabilidad en vivo',pedidos:'Pedidos',graficos:'Gráficos',
+  const t={dashboard:'Contabilidad en vivo',pedidos:'Ventas',graficos:'Gráficos',
     meta:'Meta Ads',comparacion:'Comparación',proyeccion:'Proyección',
     cashflow:'Flujo de Caja',ia:'IA Dropflow',config:'Configuración'};
   tx('page-title',t[sec]||sec);
   // Video background only on dashboard
-  const vid=document.querySelector('#sec-dashboard video');
+  const vid=document.querySelector('#bg-video');
   if(vid) vid.style.display=sec==='dashboard'?'block':'none';
   if(sec==='graficos'&&S.pedidos.length) setTimeout(renderCharts,100);
   if(sec==='proyeccion'&&S.pedidos.length) setTimeout(renderProyeccion,100);
   if(sec==='meta'&&S.meta) setTimeout(renderMeta,100);
   if(sec==='comparacion') setTimeout(()=>compararPeriodo('semana'),100);
   if(sec==='dashboard'&&S.pedidos.length) setTimeout(renderDashboard,100);
+  if(sec==='pedidos'&&S.pedidos.length) setTimeout(renderPedidos,100);
+  if(sec==='cashflow'&&S.pedidos.length) setTimeout(renderCashflow,100);
 }
 
 // ══ PERÍODO ═══════════════════════════════════════════════════════════════════
@@ -2286,6 +2292,7 @@ function aplicarPeriodoGlobal(){
   renderDashboard(); renderPedidos();
   if($('sec-graficos')?.classList.contains('active')) renderCharts();
   if($('sec-proyeccion')?.classList.contains('active')) renderProyeccion();
+  if($('sec-cashflow')?.classList.contains('active')) renderCashflow();
   if(S.meta) renderMeta();
 }
 
@@ -2919,6 +2926,24 @@ function renderMetaPerf(idx){
       ${r.s!=='neu'?`<div class="perf-semaf ${r.s}"></div>`:''}
     </div>
   </div>`).join('');
+}
+
+// ══ RENDER CASHFLOW SECTION ═══════════════════════════════════════════════════
+function renderCashflow(){
+  const pedidos=filtF(S.pedidos);
+  const R=calcR(pedidos);
+  const ventaEnt=R.listas.entregados.reduce((s,p)=>s+(p.venta||0),0);
+  const ventaPend=[...R.listas.transito,...R.listas.pendientes].reduce((s,p)=>s+(p.venta||0),0)*(S.tasaEntrega/100);
+  const egresos=R.costoProveedor+R.costoFlete+R.costoComision+R.adsGasto;
+  const devLoss=R.listas.devueltos.reduce((s,p)=>s+(p.proveedor||0)+(p.flete||0),0);
+  const saldo=ventaEnt-egresos;
+  tx('cf-cobrado',fmtCLP(ventaEnt));
+  tx('cf-por-cobrar',fmtCLP(ventaPend));
+  tx('cf-salidas',fmtCLP(egresos));
+  tx('cf-devoluciones',fmtCLP(devLoss));
+  const dispEl=$('cf-disponible');
+  if(dispEl){dispEl.textContent=fmtCLP(saldo);dispEl.style.color=saldo>=0?'var(--green)':'var(--red)';}
+  renderCashflowChart(pedidos);
 }
 
 // ══ RENDER PEDIDOS ════════════════════════════════════════════════════════════
