@@ -530,7 +530,8 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 .ring-cursor-glow{position:absolute;width:120px;height:120px;border-radius:50%;
   background:radial-gradient(circle,rgba(0,255,179,0.12),transparent 70%);
   pointer-events:none;transform:translate(-50%,-50%);transition:opacity 0.3s;opacity:0;z-index:5;}
-.ring-center-content{position:absolute;text-align:center;width:250px;pointer-events:none;}
+.ring-center-content{position:absolute;text-align:center;width:250px;pointer-events:none;
+  top:50%;left:50%;transform:translate(-50%,-50%);}
 .ring-label{font-family:var(--font-mono);font-size:11px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;text-shadow:0 0 10px rgba(0,200,255,0.5);}
 .ring-main-val{font-size:60px;font-weight:900;color:var(--green);letter-spacing:-2px;
   text-shadow:0 0 30px rgba(0,255,179,0.9),0 0 60px rgba(0,255,179,0.4),0 0 100px rgba(0,255,179,0.15);
@@ -1740,10 +1741,29 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
           <div class="dash-card full">
             <div class="card-header"><span class="card-title">Proyección basada en pedidos reales</span></div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">PEDIDOS PENDIENTES</div><div style="font-size:28px;font-weight:800;color:var(--amber)" id="proy-total-pend">0</div></div>
-              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">SE ENTREGARÁN</div><div style="font-size:28px;font-weight:800;color:var(--green)" id="proy-entregaran">0</div></div>
-              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">NO SE ENTREGARÁN</div><div style="font-size:28px;font-weight:800;color:var(--red)" id="proy-no-entregaran">0</div></div>
-              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center"><div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:6px">COSTO DEVOLUCIONES</div><div style="font-size:22px;font-weight:800;color:var(--red)" id="proy-costo-dev">$0</div></div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">PEDIDOS PENDIENTES</div>
+                <div style="font-size:28px;font-weight:800;color:var(--amber)" id="proy-total-pend">0</div>
+                <div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--gold);margin-top:4px;text-shadow:0 0 10px rgba(255,170,0,0.4)" id="proy-val-pend">$0</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">valor en tránsito</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">SE ENTREGARÁN</div>
+                <div style="font-size:28px;font-weight:800;color:var(--green)" id="proy-entregaran">0</div>
+                <div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--green);margin-top:4px;text-shadow:0 0 10px rgba(0,255,179,0.4)" id="proy-val-entregaran">$0</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">ingreso proyectado</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">NO SE ENTREGARÁN</div>
+                <div style="font-size:28px;font-weight:800;color:var(--red)" id="proy-no-entregaran">0</div>
+                <div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--red);margin-top:4px;text-shadow:0 0 10px rgba(255,34,68,0.4)" id="proy-val-noentregaran">$0</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3)">valor no recuperable</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;text-align:center">
+                <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-bottom:4px">COSTO DEVOLUCIONES</div>
+                <div style="font-size:22px;font-weight:800;color:var(--red)" id="proy-costo-dev">$0</div>
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--text3);margin-top:4px">flete de retorno</div>
+              </div>
             </div>
             <div class="total-neto-grid" style="margin-bottom:20px">
               <div class="total-neto-card"><div class="total-neto-label">Utilidad real</div><div class="total-neto-val" style="color:var(--green)" id="proy-util-real">$0</div></div>
@@ -1772,7 +1792,12 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
         <h2 style="font-size:16px;font-weight:700;color:var(--gold);text-shadow:0 0 14px rgba(255,170,0,0.5);margin-bottom:16px">Flujo de Caja</h2>
 
         <!-- KPIs principales -->
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px">
+          <div class="kpi-card green" style="border-color:rgba(0,255,179,0.35)!important">
+            <div class="kpi-label">Total ingresos (est.)</div>
+            <div class="kpi-value" id="cf-total-ingresos" style="font-size:16px">$0</div>
+            <div class="kpi-sub" style="font-size:9px">cobrado + 75% pendiente</div>
+          </div>
           <div class="kpi-card green"><div class="kpi-label">Cobrado confirmado</div><div class="kpi-value" id="cfx-cobrado" style="font-size:18px">$0</div></div>
           <div class="kpi-card amber"><div class="kpi-label">Por cobrar (est.)</div><div class="kpi-value" id="cf-por-cobrar" style="font-size:18px">$0</div></div>
           <div class="kpi-card red"><div class="kpi-label">Total salidas</div><div class="kpi-value" id="cf-salidas" style="font-size:18px">$0</div></div>
@@ -3164,14 +3189,21 @@ function renderFunnelCampaign(idx,_R){
     const clickRate=imp>0?(cl/imp)*100:0;
     const convRate=cl>0?(comp/cl)*100:0;
 
+    const roas=m.gastoTotal>0&&R.ingresosReales>0?R.ingresosReales/m.gastoTotal:0;
+    const ctrOk=(S.ctrMin||1.5); const convOk=3; const roasOk=(S.roasMin||2);
+    // Color each funnel step by its health
+    const ctrColor=ctr>=ctrOk?'#00ffb3':ctr>=ctrOk*0.6?'#ffaa00':'#ff2244';
+    const convColor=convRate>=convOk?'#00ffb3':convRate>=1?'#ffaa00':'#ff2244';
+    const roasColor=roas>=roasOk?'#00ffb3':roas>=roasOk*0.6?'#ffaa00':'#ff2244';
+
     const metaSteps=[
-      {l:'IMPRESIONES (Alcance)',v:Math.round(imp),pct:100,c:'#ffaa00'},
-      {l:'CLICS (CTR: '+clickRate.toFixed(2)+'%)',v:Math.round(cl),pct:imp>0?(cl/imp)*100:0,c:'#00c8ff'},
-      {l:'COMPRAS (Conv: '+convRate.toFixed(2)+'%)',v:Math.round(comp),pct:cl>0?(comp/cl)*100:0,c:'#00ffb3'},
+      {l:'IMPRESIONES · ALCANCE',v:Math.round(imp).toLocaleString('es-CL'),pct:100,c:'#ffaa00',sub:''},
+      {l:'CLICS · CTR '+ctr.toFixed(2)+'%',v:Math.round(cl).toLocaleString('es-CL'),pct:Math.min(imp>0?(cl/imp)*10000:0,100),c:ctrColor,sub:ctr<ctrOk?'⚠ Creativos':'✓ Anuncios'},
+      {l:'COMPRAS · CONV '+convRate.toFixed(2)+'%',v:Math.round(comp),pct:Math.min(cl>0?(comp/cl)*1000:0,100),c:convColor,sub:convRate<convOk?'⚠ Landing/Form':'✓ Conversión'},
     ];
 
-    // Diagnostic semaphores
-    const diags=_metaDiagnostics({ctr,cpa,cpm,convRate,comp,roas:m.gastoTotal>0&&R.ingresosReales>0?R.ingresosReales/m.gastoTotal:0});
+    // Primary bottleneck
+    const diags=_metaDiagnostics({ctr,cpa,cpm,convRate,comp,roas});
     el.innerHTML=_funnelMetaHtml(metaSteps)+diags;
     return;
   }
@@ -3223,31 +3255,84 @@ function _funnelMetaHtml(steps){
 
 function _metaDiagnostics({ctr,cpa,cpm,convRate,comp,roas}){
   const ctrMin=S.ctrMin||1.5, cpaMax=S.cpaMax||4000, cpmMax=S.cpmMax||4500, roasMin=S.roasMin||2;
-  const alerts=[];
+  const checks=[];
 
-  // Creative diagnosis (CTR)
-  if(ctr<ctrMin*0.5) alerts.push({c:'bad',t:`Creativos: CTR ${ctr.toFixed(2)}% — revisar imágenes/copy`});
-  else if(ctr<ctrMin) alerts.push({c:'warn',t:`Creativos: CTR ${ctr.toFixed(2)}% bajo umbral (${ctrMin}%)`});
-  else alerts.push({c:'ok',t:`Creativos: CTR ${ctr.toFixed(2)}% ✓`});
+  // 1. CREATIVOS — CTR
+  const ctrScore=ctr>=ctrMin?2:ctr>=ctrMin*0.6?1:0;
+  checks.push({
+    zone:'🎨 Creativos/Anuncios', metric:`CTR ${ctr.toFixed(2)}%`,
+    score:ctrScore,
+    ok:`CTR ${ctr.toFixed(2)}% ✓ — los anuncios atraen clics`,
+    warn:`CTR ${ctr.toFixed(2)}% bajo (mín ${ctrMin}%) — revisar copy o imagen`,
+    bad:`CTR ${ctr.toFixed(2)}% crítico — los creativos no generan interés, cambiar urgente`
+  });
 
-  // Landing / form (conversion click→purchase)
-  if(convRate<1) alerts.push({c:'bad',t:`Landing/Form: Conv ${convRate.toFixed(2)}% — problema en página o checkout`});
-  else if(convRate<3) alerts.push({c:'warn',t:`Landing: Conv ${convRate.toFixed(2)}% — optimizar CTA o formulario`});
-  else alerts.push({c:'ok',t:`Landing: Conv ${convRate.toFixed(2)}% ✓`});
+  // 2. LANDING / FORMULARIO — conv click→purchase
+  const convScore=convRate>=3?2:convRate>=1?1:0;
+  checks.push({
+    zone:'🌐 Landing / Formulario', metric:`Conv ${convRate.toFixed(2)}%`,
+    score:convScore,
+    ok:`Conversión ${convRate.toFixed(2)}% ✓ — landing convierte bien`,
+    warn:`Conversión ${convRate.toFixed(2)}% baja — mejorar CTA, velocidad o checkout`,
+    bad:`Conversión ${convRate.toFixed(2)}% crítica — la página no convierte, revisar urgente`
+  });
 
-  // Audience saturation (CPM)
-  if(cpm>cpmMax*1.5) alerts.push({c:'bad',t:`Audiencia: CPM ${fmtCLP(Math.round(cpm))} — saturación o competencia alta`});
-  else if(cpm>cpmMax) alerts.push({c:'warn',t:`Audiencia: CPM ${fmtCLP(Math.round(cpm))} sobre umbral`});
+  // 3. AUDIENCIA — CPM (saturación)
+  const cpmScore=cpm===0?2:cpm<=cpmMax?2:cpm<=cpmMax*1.5?1:0;
+  checks.push({
+    zone:'🎯 Audiencia / Segmentación', metric:cpm>0?`CPM ${fmtCLP(Math.round(cpm))}`:'CPM N/D',
+    score:cpmScore,
+    ok:`CPM ${fmtCLP(Math.round(cpm))} ✓ — audiencia saludable`,
+    warn:`CPM ${fmtCLP(Math.round(cpm))} elevado — posible saturación o competencia`,
+    bad:`CPM ${fmtCLP(Math.round(cpm))} muy alto — audiencia saturada, ampliar o cambiar`
+  });
 
-  // ROAS overall
-  if(roas>0&&roas<roasMin*0.5) alerts.push({c:'bad',t:`ROAS ${roas.toFixed(2)}x — rentabilidad crítica`});
-  else if(roas>0&&roas<roasMin) alerts.push({c:'warn',t:`ROAS ${roas.toFixed(2)}x bajo mínimo (${roasMin}x)`});
-  else if(roas>0) alerts.push({c:'ok',t:`ROAS ${roas.toFixed(2)}x ✓`});
+  // 4. RENTABILIDAD — ROAS
+  const roasScore=roas<=0?-1:roas>=roasMin?2:roas>=roasMin*0.6?1:0;
+  if(roas>0) checks.push({
+    zone:'💰 Rentabilidad / ROAS', metric:`ROAS ${roas.toFixed(2)}x`,
+    score:roasScore,
+    ok:`ROAS ${roas.toFixed(2)}x ✓ — campaña rentable`,
+    warn:`ROAS ${roas.toFixed(2)}x bajo mínimo (${roasMin}x) — ajustar presupuesto o precios`,
+    bad:`ROAS ${roas.toFixed(2)}x crítico — gastando más de lo que genera`
+  });
 
-  if(!alerts.length) return '';
-  return '<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px">'+
-    alerts.map(a=>`<div class="funnel-alert ${a.c}"><div class="funnel-alert-dot"></div><span class="funnel-alert-text">${a.t}</span></div>`).join('')+
-  '</div>';
+  // Find primary bottleneck (lowest score)
+  const bottleneck=checks.filter(c=>c.score>=0).sort((a,b)=>a.score-b.score)[0];
+  const statusColor={0:'#ff2244',1:'#ffaa00',2:'#00ffb3'};
+  const statusIcon={0:'🔴',1:'🟡',2:'🟢'};
+
+  let html='<div style="margin-top:10px;border-top:1px solid rgba(255,175,0,0.15);padding-top:8px">';
+
+  // Primary bottleneck banner
+  if(bottleneck&&bottleneck.score<2){
+    const msg=bottleneck.score===0?bottleneck.bad:bottleneck.warn;
+    const bc=statusColor[bottleneck.score];
+    html+=`<div style="background:${bc}18;border:1px solid ${bc}55;border-radius:8px;padding:8px 10px;margin-bottom:8px">
+      <div style="font-family:var(--font-mono);font-size:8px;color:${bc};letter-spacing:1px;margin-bottom:3px">⚠ CUELLO DE BOTELLA PRINCIPAL</div>
+      <div style="font-size:12px;font-weight:700;color:${bc}">${bottleneck.zone}</div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:rgba(255,235,180,0.85);margin-top:2px">${msg}</div>
+    </div>`;
+  } else if(bottleneck&&bottleneck.score===2){
+    html+=`<div style="background:rgba(0,255,179,0.06);border:1px solid rgba(0,255,179,0.25);border-radius:8px;padding:6px 10px;margin-bottom:8px;font-family:var(--font-mono);font-size:9px;color:#00ffb3">✓ Embudo saludable — todas las métricas dentro de parámetros</div>`;
+  }
+
+  // Detail rows
+  html+='<div style="display:flex;flex-direction:column;gap:3px">';
+  checks.forEach(c=>{
+    if(c.score<0) return;
+    const col=statusColor[c.score];
+    const msg=c.score===2?c.ok:c.score===1?c.warn:c.bad;
+    html+=`<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;background:${col}0e">
+      <span style="font-size:11px">${statusIcon[c.score]}</span>
+      <div style="flex:1;min-width:0">
+        <span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:${col}">${c.zone}</span>
+        <span style="font-family:var(--font-mono);font-size:8px;color:rgba(255,235,180,0.7);margin-left:6px">${c.metric}</span>
+      </div>
+    </div>`;
+  });
+  html+='</div></div>';
+  return html;
 }
 
 function renderMetaPerf(idx){
@@ -3298,6 +3383,7 @@ function renderCashflow(){
   const devFleteLoss=devL.reduce((s,p)=>s+(p.flete||0),0);
   const saldo=ventaEnt-egresos;
   // KPIs principales
+  tx('cf-total-ingresos',fmtCLP(ventaEnt+ventaPend));
   tx('cfx-cobrado',fmtCLP(ventaEnt));
   tx('cf-por-cobrar',fmtCLP(ventaPend));
   tx('cf-salidas',fmtCLP(egresos));
@@ -3508,10 +3594,18 @@ function renderProyeccion(){
   const pedidos=filtF(S.pedidos); const R=calcR(pedidos);
   const camino=R.camino; const totalPend=camino.length;
   const entregaran=Math.round(totalPend*S.tasaEntrega/100);
+  const noEntregaran=totalPend-entregaran;
   const suma=(a,k)=>a.reduce((s,p)=>s+(p[k]||0),0);
-  const costoDev=suma(camino,'flete')*(1-S.tasaEntrega/100);
+  const valPend=suma(camino,'venta');
+  const tasa=S.tasaEntrega/100;
+  const valEntregaran=valPend*tasa;
+  const valNoEntregaran=valPend*(1-tasa);
+  const costoDev=suma(camino,'flete')*(1-tasa);
   tx('proy-total-pend',totalPend); tx('proy-entregaran',entregaran);
-  tx('proy-no-entregaran',totalPend-entregaran); tx('proy-costo-dev',fmtCLP(costoDev));
+  tx('proy-no-entregaran',noEntregaran); tx('proy-costo-dev',fmtCLP(costoDev));
+  tx('proy-val-pend',fmtCLP(valPend));
+  tx('proy-val-entregaran',fmtCLP(valEntregaran));
+  tx('proy-val-noentregaran',fmtCLP(valNoEntregaran));
   tx('proy-util-real',fmtCLP(R.utilidadReal)); tx('proy-util-proy',fmtCLP(R.proyUtilidad)); tx('proy-util-total',fmtCLP(R.utilidadTotal));
   // Gráfico escenario de entrega
   const esCtx=$('chart-proy-escenario');
