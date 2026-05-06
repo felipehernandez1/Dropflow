@@ -822,13 +822,108 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   background: linear-gradient(90deg,transparent,rgba(0,238,255,0.45),transparent) !important;
 }
 
-/* ── Títulos solo glow suave — mantienen su color ── */
+/* ── Títulos solo glow suave — mantienen color gold ── */
 #sec-dashboard .exec-card-title {
   text-shadow: 0 0 14px rgba(255,170,0,0.4) !important;
 }
 #sec-dashboard .exec-kpi::before,
 #sec-dashboard .exec-kpi-vert::before {
   opacity: 0.5;
+}
+
+/* ── Meta Ads Global: meta-sum-card → glass celeste uniforme ── */
+#sec-dashboard .meta-sum-card {
+  background: transparent !important;
+  border: 1px solid rgba(0,220,255,0.25) !important;
+  box-shadow: 0 0 10px rgba(0,220,255,0.06) !important;
+}
+/* meta-sum-val default → celeste (Gasto Total y Val.Conv. mantienen sus colores inline) */
+#sec-dashboard .meta-sum-val {
+  color: #00ddff !important;
+  text-shadow: 0 0 14px rgba(0,220,255,0.55), 0 0 28px rgba(0,220,255,0.18) !important;
+}
+#sec-dashboard #kpi-gasto-ads {
+  color: var(--red) !important;
+  text-shadow: 0 0 14px rgba(255,34,68,0.55) !important;
+}
+#sec-dashboard #meta-dash-valconv {
+  color: var(--green) !important;
+  text-shadow: 0 0 14px rgba(0,255,179,0.55) !important;
+}
+#sec-dashboard .meta-sum-label {
+  color: rgba(0,220,255,0.82) !important;
+  text-shadow: 0 0 8px rgba(0,238,255,0.35) !important;
+}
+
+/* ── exec-mini-label → celeste con glow (letras naranjas → visibles) ── */
+#sec-dashboard .exec-mini-label {
+  color: rgba(0,220,255,0.82) !important;
+  text-shadow: 0 0 10px rgba(0,238,255,0.40) !important;
+}
+
+/* ── exec-mini-stat variantes → glass celeste uniforme ── */
+#sec-dashboard .exec-mini-stat,
+#sec-dashboard .exec-mini-stat.green-s,
+#sec-dashboard .exec-mini-stat.red-s,
+#sec-dashboard .exec-mini-stat.gold-s,
+#sec-dashboard .exec-mini-stat.purple-s {
+  background: transparent !important;
+  border: 1px solid rgba(0,220,255,0.22) !important;
+  box-shadow: none !important;
+}
+
+/* ── Ventas Totales inline box → celeste ── */
+#sec-dashboard #kpi-ventas-total,
+#sec-dashboard #kpi-pedidos-n {
+  color: #00ddff !important;
+  text-shadow: 0 0 16px rgba(0,220,255,0.60), 0 0 30px rgba(0,220,255,0.20) !important;
+}
+
+/* ── db-select → glass celeste ── */
+#sec-dashboard .db-select {
+  background: transparent !important;
+  border-color: rgba(0,220,255,0.28) !important;
+  color: rgba(0,220,255,0.80) !important;
+}
+
+/* ── Letras naranjas (var(--text3) = #8a5822) → glow para verlas ── */
+#sec-dashboard .exec-kpi-label,
+#sec-dashboard .exec-kpi-vert-label,
+#sec-dashboard .exec-card-label,
+#sec-dashboard .exec-card-sub,
+#sec-dashboard .ring-mini-label,
+#sec-dashboard .kpi-label,
+#sec-dashboard .kpi-sub,
+#sec-dashboard .donut-left-sub,
+#sec-dashboard .donut-left-item,
+#sec-dashboard .db-stat-label,
+#sec-dashboard .cf-row-label,
+#sec-dashboard .cf-kpi-label {
+  color: rgba(0,220,255,0.85) !important;
+  text-shadow: 0 0 12px rgba(0,238,255,0.45) !important;
+}
+
+/* ── Gauge margen % → celeste ── */
+#sec-dashboard .exec-radial-val,
+#sec-dashboard #gauge-margen-pct {
+  color: #00ddff !important;
+  text-shadow: 0 0 22px rgba(0,220,255,0.7), 0 0 44px rgba(0,220,255,0.25) !important;
+}
+#sec-dashboard #gauge-gastos {
+  text-shadow: 0 0 14px rgba(255,34,68,0.55) !important;
+}
+
+/* ── badge-pill → glass celeste uniforme en dashboard ── */
+#sec-dashboard .badge-pill {
+  background: transparent !important;
+  border-color: rgba(0,220,255,0.30) !important;
+  color: rgba(0,220,255,0.85) !important;
+}
+
+/* ── Ventas totales inline row → celeste border ── */
+#sec-dashboard [style*="background:rgba(0,136,255,0.07)"] {
+  background: transparent !important;
+  border-color: rgba(0,220,255,0.25) !important;
 }
 </style>
 </head>
@@ -1104,21 +1199,21 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               <div class="exec-card-label" style="font-size:8px">Bienvenido,</div>
               <div class="exec-welcome-name" id="db-welcome-name" style="font-size:16px;margin-bottom:8px">Admin</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
-                <div style="background:rgba(0,255,179,0.05);border:1px solid rgba(0,255,179,0.2);border-radius:7px;padding:7px 10px">
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Cobrado</div>
-                  <div class="exec-mini-val" style="font-size:13px;color:var(--green)" id="db-cobrado">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:#00ddff;text-shadow:0 0 14px rgba(0,220,255,0.6)" id="db-cobrado">$0</div>
                 </div>
-                <div style="background:rgba(255,34,68,0.05);border:1px solid rgba(255,34,68,0.2);border-radius:7px;padding:7px 10px">
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Costos</div>
-                  <div class="exec-mini-val" style="font-size:13px;color:var(--red)" id="db-costos">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:var(--red);text-shadow:0 0 12px rgba(255,34,68,0.5)" id="db-costos">$0</div>
                 </div>
-                <div style="background:rgba(0,136,255,0.05);border:1px solid rgba(0,136,255,0.2);border-radius:7px;padding:7px 10px">
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Utilidad</div>
-                  <div class="exec-mini-val" style="font-size:13px" id="db-utilidad-real">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:#00ddff;text-shadow:0 0 14px rgba(0,220,255,0.6)" id="db-utilidad-real">$0</div>
                 </div>
-                <div style="background:rgba(191,112,255,0.05);border:1px solid rgba(191,112,255,0.2);border-radius:7px;padding:7px 10px">
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
                   <div class="exec-mini-label">Proyecc.</div>
-                  <div class="exec-mini-val" style="font-size:13px;color:var(--purple)" id="db-proy">$0</div>
+                  <div class="exec-mini-val" style="font-size:13px;color:var(--green);text-shadow:0 0 12px rgba(0,255,179,0.5)" id="db-proy">$0</div>
                 </div>
               </div>
             </div>
@@ -1145,26 +1240,26 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
               <!-- Cost & delivery boxes: 2x2 grid + devueltos -->
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px">
-                <div style="background:rgba(191,112,255,0.05);border:1px solid rgba(191,112,255,0.18);border-radius:7px;padding:7px 10px">
-                  <div class="exec-mini-label" style="color:rgba(191,112,255,0.8)">Costo Proveedor</div>
-                  <div style="font-size:14px;font-weight:800;color:var(--num)" id="box-costo-prov">$0</div>
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label">Costo Proveedor</div>
+                  <div style="font-size:14px;font-weight:800;color:#00ddff;text-shadow:0 0 12px rgba(0,220,255,0.5)" id="box-costo-prov">$0</div>
                 </div>
-                <div style="background:rgba(255,170,0,0.05);border:1px solid rgba(255,170,0,0.18);border-radius:7px;padding:7px 10px">
-                  <div class="exec-mini-label" style="color:rgba(255,170,0,0.8)">Costo Despacho</div>
-                  <div style="font-size:14px;font-weight:800;color:var(--num)" id="box-costo-flete">$0</div>
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label">Costo Despacho</div>
+                  <div style="font-size:14px;font-weight:800;color:#00ddff;text-shadow:0 0 12px rgba(0,220,255,0.5)" id="box-costo-flete">$0</div>
                 </div>
-                <div style="background:rgba(0,255,179,0.05);border:1px solid rgba(0,255,179,0.18);border-radius:7px;padding:7px 10px">
-                  <div class="exec-mini-label" style="color:rgba(0,255,179,0.8)">Entregados</div>
-                  <div style="font-size:14px;font-weight:800;color:var(--green)" id="box-entregados">0</div>
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label">Entregados</div>
+                  <div style="font-size:14px;font-weight:800;color:var(--green);text-shadow:0 0 12px rgba(0,255,179,0.5)" id="box-entregados">0</div>
                 </div>
-                <div style="background:rgba(0,136,255,0.05);border:1px solid rgba(0,136,255,0.18);border-radius:7px;padding:7px 10px">
-                  <div class="exec-mini-label" style="color:rgba(0,136,255,0.8)">Pendientes</div>
-                  <div style="font-size:14px;font-weight:800;color:var(--neo-blue)" id="box-pendientes">0</div>
+                <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 10px">
+                  <div class="exec-mini-label">Pendientes</div>
+                  <div style="font-size:14px;font-weight:800;color:#00ddff;text-shadow:0 0 12px rgba(0,220,255,0.5)" id="box-pendientes">0</div>
                 </div>
               </div>
-              <div style="background:rgba(255,34,68,0.05);border:1px solid rgba(255,34,68,0.18);border-radius:7px;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-                <div class="exec-mini-label" style="color:rgba(255,68,80,0.9)">Devueltos (valor $ perdido)</div>
-                <div style="font-size:15px;font-weight:800;color:var(--red)" id="box-devueltos">$0</div>
+              <div style="background:transparent;border:1px solid rgba(0,220,255,0.25);border-radius:7px;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <div class="exec-mini-label">Devueltos (valor $ perdido)</div>
+                <div style="font-size:15px;font-weight:800;color:var(--red);text-shadow:0 0 12px rgba(255,34,68,0.5)" id="box-devueltos">$0</div>
               </div>
 
               <!-- Status breakdown rows -->
