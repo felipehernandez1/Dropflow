@@ -42,7 +42,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 @keyframes gridPulse{0%,100%{opacity:0.7}50%{opacity:1.0}}
 .app-layout{display:flex;height:100vh;overflow:hidden;}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
-.content{overflow-y:auto!important;height:calc(100vh - 52px - 26px)!important;flex:none!important;}
+.content{overflow-y:auto!important;height:calc(100vh - 52px)!important;flex:none!important;}
 .sidebar{width:72px;min-width:72px;background:rgba(2,4,12,0.22);
   border-right:1px solid rgba(255,170,0,0.14);display:flex;flex-direction:column;
   height:100vh;position:sticky;top:0;overflow:hidden;z-index:100;
@@ -851,14 +851,14 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   text-shadow: 0 0 14px rgba(0,255,179,0.55) !important;
 }
 #sec-dashboard .meta-sum-label {
-  color: var(--gold) !important;
-  text-shadow: 0 0 12px rgba(255,170,0,0.65), 0 0 24px rgba(255,170,0,0.25) !important;
+  color: #b8dff0 !important;
+  text-shadow: 0 0 10px rgba(0,200,255,0.55), 0 0 20px rgba(0,180,220,0.20), 0 0 1px rgba(255,255,255,0.7) !important;
 }
 
-/* ── exec-mini-label → gold glow ── */
+/* ── exec-mini-label → celeste-gris ── */
 #sec-dashboard .exec-mini-label {
-  color: var(--gold) !important;
-  text-shadow: 0 0 12px rgba(255,170,0,0.60), 0 0 24px rgba(255,170,0,0.22) !important;
+  color: #b8dff0 !important;
+  text-shadow: 0 0 10px rgba(0,200,255,0.55), 0 0 20px rgba(0,180,220,0.20), 0 0 1px rgba(255,255,255,0.7) !important;
 }
 
 /* ── exec-mini-stat variantes → glass celeste uniforme ── */
@@ -905,8 +905,8 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 #sec-dashboard .funnel-label,
 #sec-dashboard .exec-kpi-delta,
 #sec-dashboard .exec-kpi-vert-delta.neu {
-  color: var(--gold) !important;
-  text-shadow: 0 0 14px rgba(255,170,0,0.65), 0 0 28px rgba(255,170,0,0.25) !important;
+  color: #b8dff0 !important;
+  text-shadow: 0 0 10px rgba(0,200,255,0.55), 0 0 20px rgba(0,180,220,0.20), 0 0 1px rgba(255,255,255,0.7) !important;
 }
 
 /* ── Gauge margen % → celeste ── */
@@ -919,12 +919,11 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   text-shadow: 0 0 14px rgba(255,34,68,0.55) !important;
 }
 
-/* ── badge-pill → gold glow para que haga juego con los títulos ── */
+/* ── badge-pill → celeste-gris para que haga juego con los títulos ── */
 #sec-dashboard .badge-pill {
-  background: rgba(255,170,0,0.06) !important;
-  border-color: rgba(255,170,0,0.35) !important;
-  color: var(--gold) !important;
-  text-shadow: 0 0 8px rgba(255,170,0,0.5) !important;
+  background: rgba(0,180,220,0.08) !important;
+  border-color: rgba(0,200,255,0.35) !important;
+  color: #b8dff0 !important;
 }
 
 /* ── Ventas totales inline row → celeste border ── */
@@ -1163,31 +1162,6 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
       </div>
     </header>
 
-    <!-- Live Ticker Marquee -->
-    <div class="ticker-wrap" id="ticker-wrap">
-      <div class="ticker-track" id="ticker-track">
-        <!-- duplicated for seamless loop — JS fills both halves -->
-        <span class="ticker-live-dot"></span>
-        <span class="ticker-item"><span class="ticker-key">Ventas</span><span class="ticker-val" id="tk-ventas" style="color:var(--green)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Utilidad</span><span class="ticker-val" id="tk-utilidad" style="color:var(--gold)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Entregados</span><span class="ticker-val" id="tk-entregados" style="color:var(--cyan)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">En ruta</span><span class="ticker-val" id="tk-ruta" style="color:var(--neo-blue)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Gasto Ads</span><span class="ticker-val" id="tk-ads" style="color:var(--red)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Margen</span><span class="ticker-val" id="tk-margen" style="color:var(--purple)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">ROAS</span><span class="ticker-val" id="tk-roas" style="color:var(--gold2)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Pendientes</span><span class="ticker-val" id="tk-pendientes" style="color:var(--text2)">—</span></span><span class="ticker-sep">·</span>
-        <!-- duplicate for seamless loop -->
-        <span class="ticker-live-dot"></span>
-        <span class="ticker-item"><span class="ticker-key">Ventas</span><span class="ticker-val" id="tk-ventas2" style="color:var(--green)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Utilidad</span><span class="ticker-val" id="tk-utilidad2" style="color:var(--gold)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Entregados</span><span class="ticker-val" id="tk-entregados2" style="color:var(--cyan)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">En ruta</span><span class="ticker-val" id="tk-ruta2" style="color:var(--neo-blue)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Gasto Ads</span><span class="ticker-val" id="tk-ads2" style="color:var(--red)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Margen</span><span class="ticker-val" id="tk-margen2" style="color:var(--purple)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">ROAS</span><span class="ticker-val" id="tk-roas2" style="color:var(--gold2)">—</span></span><span class="ticker-sep">·</span>
-        <span class="ticker-item"><span class="ticker-key">Pendientes</span><span class="ticker-val" id="tk-pendientes2" style="color:var(--text2)">—</span></span><span class="ticker-sep">·</span>
-      </div>
-    </div>
 
     <div class="content">
 
@@ -1531,6 +1505,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               <div class="funnel-wrap" id="exec-funnel">
                 <div class="empty-state" style="font-size:10px;padding:20px 10px">Sin datos</div>
               </div>
+              <canvas id="chart-funnel" style="height:120px;margin-top:8px"></canvas>
             </div>
 
             <!-- Performance metrics with dropdown + semaphores -->
@@ -1668,11 +1643,12 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
 
       <!-- PEDIDOS -->
       <div class="section" id="sec-pedidos">
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px">
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px">
           <div class="kpi-card green"><div class="kpi-label">Total pedidos</div><div class="kpi-value" id="pk-total">0</div><div class="kpi-sub" id="pk-total-sub">en el período</div></div>
           <div class="kpi-card green"><div class="kpi-label">Entregados</div><div class="kpi-value" id="pk-entregados">0</div><div class="kpi-sub" id="pk-entregados-pct">0% del total</div></div>
           <div class="kpi-card amber"><div class="kpi-label">En camino</div><div class="kpi-value" id="pk-camino">0</div><div class="kpi-sub" id="pk-camino-pct">0% del total</div></div>
           <div class="kpi-card red"><div class="kpi-label">Devueltos / Cancelados</div><div class="kpi-value" id="pk-devueltos">0</div><div class="kpi-sub" id="pk-devueltos-pct">0% del total</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Utilidad Total</div><div class="kpi-value" id="pk-util-total" style="font-size:22px">$0</div></div>
         </div>
         <div class="table-filters">
           <button class="filter-btn active" data-filter="todos" onclick="setTableFilter('todos')">Todos</button>
@@ -1689,7 +1665,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
               <th>ID</th><th>Fecha</th><th>Producto</th><th>Estado</th>
               <th style="text-align:right">Venta</th><th style="text-align:right">Proveedor</th>
               <th style="text-align:right">Flete</th><th style="text-align:right">Utilidad</th>
-              <th style="text-align:right">Margen</th><th>Ciudad</th>
+              <th style="text-align:right">Margen</th><th style="text-align:right">CPA</th><th>Ciudad</th>
             </tr></thead>
             <tbody id="orders-table-body"><tr><td colspan="10"><div class="empty-state">Importa un Excel de Dropi para ver tus pedidos</div></td></tr></tbody>
           </table>
@@ -2919,6 +2895,26 @@ function renderFunnel(){
       </div>
     </div>`;
   }).join('');
+  // Funnel chart
+  const fCtx=$('chart-funnel');
+  if(fCtx && S.meta) {
+    if(window._ch_funnel){window._ch_funnel.destroy();window._ch_funnel=null;}
+    const R2=calcR(filtF(S.pedidos));
+    const fSteps=[
+      {l:'Impresiones',v:S.meta.impresiones||0,c:'rgba(0,136,255,0.7)'},
+      {l:'Clics',v:S.meta.clics||0,c:'rgba(0,200,255,0.7)'},
+      {l:'Compras',v:S.meta.compras||0,c:'rgba(0,255,179,0.7)'},
+      {l:'Entregados',v:R2.listas.entregados.length,c:'rgba(255,170,0,0.7)'}
+    ];
+    const maxV=fSteps[0].v||1;
+    window._ch_funnel=new Chart(fCtx,{type:'bar',data:{
+      labels:fSteps.map(s=>s.l),
+      datasets:[{data:fSteps.map(s=>s.v),backgroundColor:fSteps.map(s=>s.c),borderRadius:4,barThickness:20}]
+    },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.raw.toLocaleString('es-CL')}`}}},
+      scales:{x:{max:maxV,ticks:{color:'#4a5a7a',font:{size:8},callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v},grid:{color:'rgba(255,255,255,0.03)'}},
+        y:{ticks:{color:'#b8dff0',font:{size:8}},grid:{display:false}}}}});
+  }
 }
 
 function exportarReporte(){
@@ -3180,7 +3176,7 @@ function renderPedidos(){
   const busq=($('filter-producto')?.value||'').toLowerCase().trim();
   if(busq) pedidos=pedidos.filter(p=>p.producto.toLowerCase().includes(busq)||p.tienda.toLowerCase().includes(busq));
   tx('table-footer-info',pedidos.length+' pedidos');
-  if(!pedidos.length){tbody.innerHTML=`<tr><td colspan="10"><div class="empty-state">${S.pedidos.length?'Sin pedidos para este filtro':'Importa un Excel de Dropi'}</div></td></tr>`;return;}
+  if(!pedidos.length){tbody.innerHTML=`<tr><td colspan="11"><div class="empty-state">${S.pedidos.length?'Sin pedidos para este filtro':'Importa un Excel de Dropi'}</div></td></tr>`;return;}
   const adsGasto=S.meta?S.meta.gastoTotal:0;
   const cpaUnit=adsGasto>0&&pedidos.length>0?adsGasto/pedidos.length:0;
   tbody.innerHTML=pedidos.map(p=>{
@@ -3196,6 +3192,7 @@ function renderPedidos(){
       <td style="text-align:right">${fmtCLP(p.flete)}</td>
       <td style="text-align:right;color:${utilConAds>=0?'var(--green)':'var(--red)'}">${fmtCLP(utilConAds)}</td>
       <td style="text-align:right">${semaforo(margenReal)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:11px;color:var(--purple)">${cpaUnit>0?fmtCLP(cpaUnit):'—'}</td>
       <td>${p.ciudad}</td>
     </tr>`;
   }).join('');
