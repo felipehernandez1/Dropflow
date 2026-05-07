@@ -1610,23 +1610,30 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
           <div class="exec-card" style="padding:12px 14px">
             <div class="exec-card-title" style="margin-bottom:8px">Mapa Chile</div>
             <div id="chile-map-wrap" style="position:relative;width:100%">
-              <svg id="chile-map-svg" viewBox="0 0 120 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:360px;overflow:visible">
-                <!-- Chile outline (simplified but recognizable shape) -->
+              <svg id="chile-map-svg" viewBox="0 0 100 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:360px;overflow:visible">
+                <!--
+                  Chile outline. Coordinate system:
+                    y = (lat_S - 17.5) * 13.3   (17.5°S→y=0, 55°S→y=499)
+                    x = (76 - lon_W) * 7         (76°W→x=0, 68°W→x=56)
+                  West coast = left edge, Andes/Argentina = right edge.
+                  Key points verified against geographic data.
+                -->
                 <path id="chile-path" d="
-                  M72,8 L80,12 L85,18 L82,26 L78,32 L80,40 L76,50 L72,60
-                  L74,72 L70,84 L68,98 L72,112 L70,126 L68,140 L66,156
-                  L68,170 L64,186 L62,202 L64,218 L60,234 L58,252
-                  L56,270 L54,288 L52,308 L50,328 L48,348 L46,366
-                  L42,384 L38,400 L34,414 L28,426 L22,436 L16,444
-                  L18,452 L24,456 L30,452 L36,446 L40,452 L38,460
-                  L32,466 L28,472 L22,478 L18,486 L20,494 L26,498 L32,494
-                  L36,488 L40,480 L46,472 L52,466 L58,460 L62,452
-                  L66,440 L70,428 L74,414 L78,398 L80,382 L82,366
-                  L82,348 L80,330 L80,312 L82,294 L82,276 L80,260
-                  L78,244 L76,228 L76,212 L74,196 L74,180 L76,164
-                  L76,148 L74,132 L74,116 L76,100 L76,84 L74,68
-                  L72,52 L70,38 L68,28 L68,18 Z
-                " fill="rgba(0,136,255,0.08)" stroke="rgba(0,200,255,0.35)" stroke-width="1.5" stroke-linejoin="round"/>
+                  M42,13 L40,15 L38,36 L36,75 L32,82
+                  L30,128 L26,165 L22,206
+                  L18,242 L15,262 L14,295
+                  L16,325 L18,348
+                  L14,368 L10,392
+                  L12,418 L16,448
+                  L22,472 L30,490 L38,503 L48,508
+                  L60,505 L68,490
+                  L65,460 L62,428 L62,398
+                  L64,368 L65,335 L66,305
+                  L68,272 L72,238 L70,208
+                  L68,172 L66,132
+                  L64,88 L60,48
+                  L56,20 L52,12 Z
+                " fill="rgba(0,136,255,0.10)" stroke="rgba(0,200,255,0.40)" stroke-width="1.2" stroke-linejoin="round"/>
                 <!-- City dots rendered by JS -->
                 <g id="chile-city-dots"></g>
               </svg>
@@ -3019,27 +3026,35 @@ function renderCashflowChart(pedidos){
     const dt=new Date(p.fecha+'T00:00:00');
     const mon=new Date(dt); mon.setDate(dt.getDate()-((dt.getDay()+6)%7));
     const key=mon.toISOString().split('T')[0];
-    if(!wk[key]) wk[key]={ing:0,egr:0};
-    if(p.estado==='entregado') wk[key].ing+=p.venta||0;
-    else if(p.estado==='transito'||p.estado==='pendiente') wk[key].ing+=(p.venta||0)*(S.tasaEntrega/100);
+    if(!wk[key]) wk[key]={real:0,proy:0,egr:0};
+    // Separate confirmed cash from projected — never mix them in the same visual bar
+    if(p.estado==='entregado') wk[key].real+=p.venta||0;
+    else if(p.estado==='transito'||p.estado==='pendiente') wk[key].proy+=(p.venta||0)*(S.tasaEntrega/100);
     wk[key].egr+=(p.proveedor||0)+(p.flete||0)+(p.comision||0);
   });
   const wkeys=Object.keys(wk).sort().slice(-10);
   const MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   const wlabels=wkeys.map(d=>{const p=d.split('-');return parseInt(p[2])+' '+MES[parseInt(p[1])-1];});
   const adsPerWeek=adsG&&wkeys.length?adsG/wkeys.length:0;
-  const ingData=wkeys.map(k=>wk[k].ing);
+  const realData=wkeys.map(k=>wk[k].real);
+  const proyData=wkeys.map(k=>wk[k].proy);
   const egrData=wkeys.map(k=>wk[k].egr+adsPerWeek);
-  // Running saldo line
-  let acc=0; const saldoLine=ingData.map((v,i)=>{acc+=v-egrData[i];return acc;});
+  // Saldo uses both real + projected income
+  let acc=0;
+  const saldoLine=wkeys.map((k,i)=>{acc+=(wk[k].real+wk[k].proy)-egrData[i];return acc;});
   _ch_cf=new Chart(ctx,{type:'bar',data:{labels:wlabels,datasets:[
-    {label:'Ingresos',data:ingData,backgroundColor:'rgba(0,255,179,0.55)',borderColor:'#00ffb3',borderWidth:1,borderRadius:4,order:2},
-    {label:'Egresos',data:egrData,backgroundColor:'rgba(255,34,68,0.45)',borderColor:'#ff2244',borderWidth:1,borderRadius:4,order:2},
+    {label:'Cobrado',data:realData,backgroundColor:'rgba(0,255,179,0.60)',borderColor:'#00ffb3',borderWidth:1,borderRadius:4,stack:'ing',order:3},
+    {label:'Proyectado',data:proyData,backgroundColor:'rgba(0,255,179,0.20)',borderColor:'rgba(0,255,179,0.50)',borderWidth:1,borderDash:[3,3],borderRadius:4,stack:'ing',order:3},
+    {label:'Egresos',data:egrData,backgroundColor:'rgba(255,34,68,0.45)',borderColor:'#ff2244',borderWidth:1,borderRadius:4,order:3},
     {label:'Saldo Acum.',data:saldoLine,type:'line',borderColor:'#ffaa00',backgroundColor:'rgba(255,170,0,0.08)',tension:0.4,borderWidth:3,pointRadius:4,pointBackgroundColor:'#ffaa00',pointBorderColor:'#fff',pointBorderWidth:1.5,order:1,fill:true},
   ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${fmtCLP(c.raw)}`}}},
+    plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>{
+      if(c.dataset.label==='Cobrado') return ` Cobrado: ${fmtCLP(c.raw)}`;
+      if(c.dataset.label==='Proyectado') return ` Proyectado (${S.tasaEntrega}%): ${fmtCLP(c.raw)}`;
+      return ` ${c.dataset.label}: ${fmtCLP(c.raw)}`;
+    }}}},
     scales:{x:{ticks:{color:'#4a5a7a',font:{size:7}},grid:{display:false}},
-      y:{ticks:{color:'#4a5a7a',font:{size:7},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.02)'}}}}});
+      y:{stacked:false,ticks:{color:'#4a5a7a',font:{size:7},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.02)'}}}}});
 }
 
 function renderCanalChart(pedidos){
@@ -3062,71 +3077,106 @@ function renderCanalChart(pedidos){
 }
 
 // ── CHILE MAP ────────────────────────────────────────────────────────────
-// City coordinates in the SVG viewBox (0 0 120 520)
-// Approximate positions for main Chilean cities from north to south
+// Coordinates derived from: y=(lat_S-17.5)*13.3, x=(76-lon_W)*7
+// Path viewBox: 0 0 100 520
 const CHILE_CITIES={
-  'Arica':{x:55,y:28},'Iquique':{x:52,y:48},'Antofagasta':{x:58,y:90},
-  'Calama':{x:65,y:80},'Copiapó':{x:62,y:132},'La Serena':{x:58,y:168},
-  'Coquimbo':{x:57,y:172},'Ovalle':{x:58,y:180},'Valparaíso':{x:64,y:220},
-  'Viña del Mar':{x:63,y:218},'Santiago':{x:68,y:232},'Rancagua':{x:68,y:244},
-  'Talca':{x:66,y:264},'Chillán':{x:65,y:284},'Concepción':{x:62,y:304},
-  'Los Ángeles':{x:62,y:318},'Temuco':{x:60,y:338},'Valdivia':{x:58,y:358},
-  'Osorno':{x:56,y:376},'Puerto Montt':{x:54,y:394},'Castro':{x:50,y:420},
-  'San Antonio':{x:62,y:228},'Puente Alto':{x:70,y:234},'Maipú':{x:67,y:233},
-  'La Florida':{x:69,y:235},'Las Condes':{x:70,y:231},'Quilicura':{x:68,y:228}
+  // Norte Grande
+  'Arica'    :{x:40,y:13}, // 18.5°S 70.3°W
+  'Iquique'  :{x:41,y:36}, // 20.2°S 70.1°W
+  'Calama'   :{x:50,y:67}, // 22.5°S 68.9°W (interior)
+  'Antofagasta':{x:39,y:82}, // 23.7°S 70.4°W
+  // Norte Chico
+  'Copiapó'  :{x:40,y:132}, // 27.4°S 70.3°W
+  'La Serena':{x:33,y:165}, // 29.9°S 71.3°W
+  'Coquimbo' :{x:33,y:167}, // 30.0°S 71.3°W
+  'Ovalle'   :{x:34,y:175}, // 30.6°S 71.2°W
+  // Zona Central
+  'Valparaíso':{x:31,y:206}, // 33.0°S 71.6°W
+  'Viña del Mar':{x:32,y:204}, // 33.0°S 71.5°W
+  'San Antonio':{x:31,y:215}, // 33.6°S 71.6°W
+  'Santiago' :{x:37,y:213}, // 33.5°S 70.7°W (inland)
+  'Rancagua' :{x:37,y:222}, // 34.2°S 70.7°W
+  'Talca'    :{x:30,y:238}, // 35.4°S 71.7°W
+  'Chillán'  :{x:27,y:254}, // 36.6°S 72.1°W
+  // Sur
+  'Concepción':{x:20,y:259}, // 37.0°S 73.1°W
+  'Los Ángeles':{x:25,y:266}, // 37.5°S 72.4°W
+  'Temuco'   :{x:23,y:282}, // 38.7°S 72.6°W
+  'Valdivia' :{x:20,y:297}, // 39.8°S 73.2°W
+  'Osorno'   :{x:20,y:307}, // 40.6°S 73.1°W
+  'Puerto Montt':{x:22,y:319}, // 41.5°S 72.9°W
+  'Castro'   :{x:16,y:332}, // 42.5°S 73.8°W
+  // Santiago RM suburbs — clustered near Santiago
+  'Puente Alto':{x:38,y:215},
+  'Maipú'    :{x:34,y:212},
+  'La Florida':{x:38,y:213},
+  'Las Condes':{x:40,y:210},
+  'Quilicura':{x:35,y:209},
 };
-function _normCity(c){if(!c)return'';return c.trim().toLowerCase()
-  .normalize('NFD').replace(/[̀-ͯ]/g,'')
-  .replace(/\s+/g,' ');}
+function _normCity(c){
+  if(!c)return'';
+  return c.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ');
+}
 const _CITY_NORM={};
 Object.keys(CHILE_CITIES).forEach(k=>{_CITY_NORM[_normCity(k)]=k;});
+// Sorted by descending length so longer names match before shorter subsets ("viña del mar" before "mar")
+const _CITY_KEYS=Object.keys(_CITY_NORM).sort((a,b)=>b.length-a.length);
 function _matchCity(raw){
   if(!raw)return null;
   const n=_normCity(raw);
+  // 1. Exact
   if(_CITY_NORM[n])return _CITY_NORM[n];
-  for(const k of Object.keys(_CITY_NORM)){if(n.includes(k)||k.includes(n))return _CITY_NORM[k];}
+  // 2. Known city appears as a whole word within the query string
+  for(const k of _CITY_KEYS){
+    const re=new RegExp('(?:^|\\s)'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?:\\s|$)');
+    if(re.test(n))return _CITY_NORM[k];
+  }
   return null;
 }
-function renderChileMap(pedidos){
-  const g=$('chile-city-dots'); if(!g) return;
+
+// ── SHARED CITY AGGREGATION (called once; shared by map + chart) ──────────
+function aggregateCities(pedidos){
   const cityCount={}, cityFlete={};
   pedidos.forEach(p=>{
     const m=_matchCity(p.ciudad||'');
-    if(!m) return;
+    if(!m)return;
     cityCount[m]=(cityCount[m]||0)+1;
     cityFlete[m]=(cityFlete[m]||0)+(p.flete||0);
   });
+  return {cityCount,cityFlete};
+}
+
+function renderChileMap(pedidos){
+  const g=$('chile-city-dots'); if(!g) return;
+  const {cityCount}=aggregateCities(pedidos);
+  if(!Object.keys(cityCount).length){
+    g.innerHTML=`<text x="50" y="260" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,200,100,0.35)">Sin datos de ciudad</text>`;
+    return;
+  }
   const maxC=Math.max(1,...Object.values(cityCount));
   const entries=Object.entries(cityCount).sort((a,b)=>b[1]-a[1]);
   g.innerHTML=entries.map(([name,cnt])=>{
     const pos=CHILE_CITIES[name]; if(!pos) return '';
-    const r=3+Math.round((cnt/maxC)*10);
-    const op=0.4+0.6*(cnt/maxC);
+    const r=3+Math.round((cnt/maxC)*9);
+    const op=(0.4+0.6*(cnt/maxC)).toFixed(2);
     return `<g>
-      <circle cx="${pos.x}" cy="${pos.y}" r="${r+4}" fill="rgba(255,170,0,0.08)"/>
-      <circle cx="${pos.x}" cy="${pos.y}" r="${r}" fill="rgba(255,170,0,${op.toFixed(2)})" stroke="rgba(255,200,0,0.6)" stroke-width="0.8"/>
+      <circle cx="${pos.x}" cy="${pos.y}" r="${r+3}" fill="rgba(255,170,0,0.07)"/>
+      <circle cx="${pos.x}" cy="${pos.y}" r="${r}" fill="rgba(255,170,0,${op})" stroke="rgba(255,200,0,0.55)" stroke-width="0.7"/>
       <text x="${pos.x+r+2}" y="${pos.y+3}" font-family="monospace" font-size="5.5" fill="rgba(255,230,160,0.75)">${name} ${cnt}</text>
     </g>`;
   }).join('');
 }
 
-// ── CIUDADES LINE CHART ───────────────────────────────────────────────────
+// ── CIUDADES CHART ────────────────────────────────────────────────────────
 let _ch_ciudades=null;
 function renderCiudadesChart(pedidos){
   const ctx=$('chart-ciudades'); if(!ctx) return;
   if(_ch_ciudades){_ch_ciudades.destroy();_ch_ciudades=null;}
-  // Aggregate by city
-  const cityCount={}, cityFlete={};
-  pedidos.forEach(p=>{
-    const m=_matchCity(p.ciudad||'');
-    if(!m) return;
-    cityCount[m]=(cityCount[m]||0)+1;
-    cityFlete[m]=(cityFlete[m]||0)+(p.flete||0);
-  });
+  const {cityCount,cityFlete}=aggregateCities(pedidos);
+  if(!Object.keys(cityCount).length) return;
   const N=8;
   const topByCount=Object.entries(cityCount).sort((a,b)=>b[1]-a[1]).slice(0,N);
   const topByFlete=Object.entries(cityFlete).sort((a,b)=>b[1]-a[1]).slice(0,N);
-  // Union of cities, sorted by count
   const cities=[...new Set([...topByCount.map(e=>e[0]),...topByFlete.map(e=>e[0])])].slice(0,N);
   _ch_ciudades=new Chart(ctx,{type:'bar',data:{labels:cities,datasets:[
     {label:'Pedidos',data:cities.map(c=>cityCount[c]||0),backgroundColor:'rgba(255,170,0,0.55)',borderColor:'#ffaa00',borderWidth:1,borderRadius:3,yAxisID:'y',order:2},
@@ -3148,15 +3198,19 @@ function renderMargenGauge(){
   const color=pct>=20?'#00ffb3':pct>=10?'#ffaa00':'#ff2244';
   const el=$('gauge-margen-pct');
   if(el){el.textContent=fmtPct(R.margenReal);el.style.color=color;el.style.textShadow=`0 0 20px ${color}90`;}
-  // Compose: utilidad / costos / remaining
+  // Compose: proportion of utilidad vs costos out of their combined total
+  // Using util+cost as denominator keeps the donut internally consistent
+  // even when costs exceed revenue (loss scenario)
   const util=Math.max(0,R.utilidadReal||0);
   const cost=Math.max(0,R.costosTotal||0);
-  const venta=Math.max(1,R.ingresosReales||1);
-  const utilPct=Math.min(100,util/venta*100);
-  const costPct=Math.min(100-utilPct,cost/venta*100);
-  const restPct=Math.max(0,100-utilPct-costPct);
-  _ch.margenGauge=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[utilPct,costPct,restPct],
-    backgroundColor:['#00ffb3','#ff2244','rgba(255,255,255,0.04)'],borderWidth:0,hoverOffset:0}]},
+  const combined=Math.max(1,util+cost);
+  const utilPct=util/combined*100;
+  const costPct=cost/combined*100;
+  // Label tells user what scenario we're in
+  const lbl=$('gauge-margen-label');
+  if(lbl) lbl.textContent=R.margenReal>=20?'margen óptimo':R.margenReal>0?'margen bajo':'en pérdida';
+  _ch.margenGauge=new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[utilPct,costPct],
+    backgroundColor:[color,'#ff2244'],borderWidth:0,hoverOffset:0}]},
     options:{responsive:false,maintainAspectRatio:false,cutout:'68%',
       plugins:{legend:{display:false},tooltip:{enabled:false}}}});
   tx('gauge-gastos',fmtCLP(cost));
@@ -3612,7 +3666,7 @@ function renderPedidosKPIs(pedidos){
   tx('pk-entregados',R.entregados); tx('pk-entregados-pct',tot>0?fmtPct(R.entregados/tot*100)+' del total':'0%');
   tx('pk-camino',R.enTransito+R.pendientes); tx('pk-camino-pct',tot>0?fmtPct((R.enTransito+R.pendientes)/tot*100)+' del total':'0%');
   const costoDevFlete=R.listas.devueltos.reduce((s,p)=>s+(p.flete||0),0);
-  tx('pk-devueltos',R.devueltos); tx('pk-devueltos-val','-'+fmtCLP(costoDevFlete)); tx('pk-devueltos-pct',tot>0?fmtPct(R.devueltos/tot*100)+' del total':'0%');
+  tx('pk-devueltos',R.devueltos); tx('pk-devueltos-val',costoDevFlete>0?'-'+fmtCLP(costoDevFlete):'$0'); tx('pk-devueltos-pct',tot>0?fmtPct(R.devueltos/tot*100)+' del total':'0%');
   tx('pk-cancelados',R.cancelados); tx('pk-cancelados-pct',tot>0?fmtPct(R.cancelados/tot*100)+' del total':'0%');
   tx('pk-util-total', fmtCLP(R.utilidadTotal||0));
 }
