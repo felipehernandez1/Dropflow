@@ -757,15 +757,8 @@ p, span, div { font-size:inherit; }
    Sets auth in localStorage → original auth flow
    runs normally, finds TOKEN, calls mostrarApp().
 ───────────────────────────────────────────────── */
-var DEMO_MODE = true;
+var DEMO_MODE = false;
 var DEMO_TOKEN = 'demo-preview';
-
-/* Pre-set localStorage AQUÍ — antes de que let TOKEN se inicialice en línea ~2410
-   Así localStorage.getItem('df_token') ya tiene valor cuando TOKEN se declara */
-if(DEMO_MODE){
-  localStorage.setItem('df_token', DEMO_TOKEN);
-  localStorage.setItem('df_usuario', JSON.stringify({nombre:'Felipe', email:'demo@dropflow.cl', plan:'pro'}));
-}
 
 /* Seeded LCG — same data every reload */
 var _seed = 42;
@@ -6309,47 +6302,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   tx('date-badge',new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'}));
   setupDnD();
 
-  // Ocultar app hasta login
-  document.querySelector('.sidebar').style.display='none';
-  document.querySelector('.main').style.display='none';
-
-  // En modo demo O si hay token guardado, entrar directo
-  const debeEntrar = (typeof DEMO_MODE!=='undefined'&&DEMO_MODE) || (TOKEN && USUARIO);
-  if(debeEntrar){
-    cargarDatosServidor().then(()=>{
-      mostrarApp();
-      if($('param-tasa'))$('param-tasa').value=S.tasaEntrega;
-      if($('param-umbral'))$('param-umbral').value=S.umbralMargen;
-      // Renders — wrapped so un error de render no cierra la sesión
-      try {
-        if(S.pedidos.length){
-          renderDashboard();
-          renderPedidos();
-          mostrarRangoArchivo(S.pedidos);
-          const dot=$('sync-dot');if(dot)dot.className='sync-dot live';
-          tx('sync-label',S.pedidos.length+' pedidos cargados');
-        } else {
-          renderPedidos();
-          tx('sync-label','Sin datos');
-        }
-        if(S.meta) renderMeta();
-      } catch(renderErr){ console.warn('render error (no crítico):', renderErr); }
-      setTimeout(()=>{
-        if($('param-tasa'))$('param-tasa').value=S.tasaEntrega;
-        if($('param-umbral'))$('param-umbral').value=S.umbralMargen;
-        if($('param-cpa-max'))$('param-cpa-max').value=S.cpaMax;
-        if($('param-cpc-max'))$('param-cpc-max').value=S.cpcMax;
-        if($('param-cpm-max'))$('param-cpm-max').value=S.cpmMax;
-        if($('param-ctr-min'))$('param-ctr-min').value=S.ctrMin;
-        if($('param-roas-min'))$('param-roas-min').value=S.roasMin;
-      },200);
-      setTimeout(mostrarMensajeBienvenida, 1500);
-    }).catch(e=>{
-      console.error('cargarDatosServidor falló:', e);
-      // Solo cerrar sesión si NO estamos en demo
-      if(!(typeof DEMO_MODE!=='undefined'&&DEMO_MODE)) cerrarSesion();
-    });
-  }
+  // Entrar directo — sin login, sin backend
+  mostrarApp();
+  renderPedidos();
+  tx('sync-label','Sin datos — importa tu Excel');
+  setTimeout(mostrarMensajeBienvenida, 1500);
 });
 
 // ═══ IA DROPFLOW ═══
