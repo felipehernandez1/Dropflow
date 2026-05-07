@@ -985,7 +985,7 @@ localStorage.setItem('df_usuario', JSON.stringify({
 </script>
 
 <!-- PANTALLA LOGIN -->
-<div id="login-screen" style="position:fixed;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(0,230,153,0.08) 0%,var(--bg0) 60%),radial-gradient(ellipse at 20% 80%,rgba(139,92,246,0.06) 0%,transparent 50%);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:0">
+<div id="login-screen" style="display:none;position:fixed;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(0,230,153,0.08) 0%,var(--bg0) 60%),radial-gradient(ellipse at 20% 80%,rgba(139,92,246,0.06) 0%,transparent 50%);align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:0">
   <div style="width:100%;max-width:400px;padding:40px">
     <!-- Logo -->
     <div style="text-align:center;margin-bottom:40px">
@@ -1084,7 +1084,7 @@ localStorage.setItem('df_usuario', JSON.stringify({
 </div>
 
 <div style="display:flex;height:100vh;overflow:hidden">
-<aside class="sidebar">
+<aside class="sidebar" style="display:flex">
   <div class="logo-area">
     <div class="logo-icon-box">D</div>
     <div class="logo-text">DROPFLOW</div>
@@ -1123,7 +1123,7 @@ localStorage.setItem('df_usuario', JSON.stringify({
   </div>
 </aside>
 
-<div class="main" style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0">
+<div class="main" style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;visibility:visible">
   <header class="topbar">
     <div class="topbar-left">
       <h1 class="page-title" id="page-title">Contabilidad en vivo</h1>
