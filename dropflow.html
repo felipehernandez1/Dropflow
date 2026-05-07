@@ -802,6 +802,7 @@ body.modo-dia .liquid-glass::before{background:linear-gradient(180deg,rgba(255,2
   background: linear-gradient(90deg,transparent,rgba(0,238,255,0.5),transparent) !important;
 }
 </style>
+<style>#login-screen{display:none!important;}</style>
 </head>
 <body>
 
@@ -2231,22 +2232,7 @@ async function guardarDatosServidor() {
 
 // ══ AUTH FLOWS ════════════════════════════════════════════════════════════════
 async function hacerLogin() {
-  const email=($('login-email')?.value||'').trim();
-  const pass=$('login-pass')?.value||'';
-  const btn=$('login-btn');
-  if(!email||!pass) { mostrarLoginError('Completa todos los campos'); return; }
-  btn.textContent='Ingresando...'; btn.disabled=true;
-  try {
-    const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
-    const data=await r.json();
-    if(!r.ok) { mostrarLoginError(data.error||'Error al ingresar'); return; }
-    TOKEN=data.token; USUARIO=data.usuario; S.usuario=data.usuario;
-    localStorage.setItem('df_token',TOKEN);
-    localStorage.setItem('df_usuario',JSON.stringify(USUARIO));
-    await cargarDatosServidor();
-    mostrarApp();
-  } catch(e) { mostrarLoginError('Error de conexión. Intenta de nuevo.'); }
-  finally { btn.textContent='Ingresar'; btn.disabled=false; }
+  mostrarApp();
 }
 
 function mostrarLoginError(msg) {
@@ -3638,15 +3624,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   tx('date-badge',new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'}));
   buildRingDecorations();
   setupDnD();
-  document.querySelector('.sidebar').style.display='none';
-  document.querySelector('.main').style.display='none';
-  if(TOKEN&&USUARIO){
-    cargarDatosServidor().then(()=>{
-      mostrarApp();
-      if(S.pedidos.length){renderDashboard();renderPedidos();const dot=$('sync-dot');if(dot)dot.className='sync-dot live';tx('sync-label',S.pedidos.length+' pedidos cargados');}
-      if(S.meta) renderMeta();
-    }).catch(()=>cerrarSesion());
-  }
+  mostrarApp();
+  renderPedidos();
+  tx('sync-label','Sin datos — importa tu Excel');
 });
 </script>
 </body>
