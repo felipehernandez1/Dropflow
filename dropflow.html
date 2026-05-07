@@ -6509,8 +6509,20 @@ function preguntarIA(pregunta){
 ───────────────────────────────────────────────────── */
 if (typeof DEMO_MODE !== 'undefined' && DEMO_MODE) {
 
-  /* apiFetch guard — any call with demo token returns a
-     mock 200 response so integrations fail silently */
+  /* Auto-authenticate: set TOKEN + USUARIO before DOMContentLoaded fires
+     so the main init finds them and calls mostrarApp() directly */
+  TOKEN   = DEMO_TOKEN;
+  USUARIO = { nombre: 'Felipe', email: 'demo@dropflow.cl', plan: 'pro' };
+  localStorage.setItem('df_token',   DEMO_TOKEN);
+  localStorage.setItem('df_usuario', JSON.stringify(USUARIO));
+
+  /* Override hacerLogin so the login button also works in demo mode */
+  hacerLogin = async function(){
+    TOKEN   = DEMO_TOKEN;
+    USUARIO = { nombre: 'Felipe', email: 'demo@dropflow.cl', plan: 'pro' };
+    await cargarDatosServidor();
+    mostrarApp();
+  };
   var _origApiFetch = apiFetch;
   apiFetch = function(url, opts){
     if (TOKEN === DEMO_TOKEN) {
