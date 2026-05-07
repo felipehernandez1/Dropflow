@@ -760,6 +760,13 @@ p, span, div { font-size:inherit; }
 var DEMO_MODE = true;
 var DEMO_TOKEN = 'demo-preview';
 
+/* Pre-set localStorage AQUÍ — antes de que let TOKEN se inicialice en línea ~2410
+   Así localStorage.getItem('df_token') ya tiene valor cuando TOKEN se declara */
+if(DEMO_MODE){
+  localStorage.setItem('df_token', DEMO_TOKEN);
+  localStorage.setItem('df_usuario', JSON.stringify({nombre:'Felipe', email:'demo@dropflow.cl', plan:'pro'}));
+}
+
 /* Seeded LCG — same data every reload */
 var _seed = 42;
 function rng(){ _seed=(_seed*1664525+1013904223)&0xffffffff; return(_seed>>>0)/0xffffffff; }
