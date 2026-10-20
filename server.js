@@ -33,12 +33,12 @@ const CFG = {
   stripeSecret: process.env.STRIPE_SECRET    || '',
   anthropicKey: process.env.ANTHROPIC_API_KEY || '',
   adminEmail:   process.env.ADMIN_EMAIL      || 'admin@dropflow.cl',
-  adminPass:    process.env.ADMIN_PASS       || 'Hola1202',
+  adminPass:    process.env.ADMIN_PASS       || '',
 };
 
 // ── Planes ──────────────────────────────────────────────────────────
 const PLANS = {
-  free:        { price:0,     days:null, name:'Free',       features:{ maxOrders: 15,  ai:false, metaAds:false, export:false } },
+  free:        { price:0,     days:null, name:'Free',       features:{ maxOrders: 15,  ai:false, metaAds:true,  export:false } },
   pro_weekly:  { price:5990,  days:14,    name:'Pro Weekly', currency:'CLP', features:{ maxOrders:-1, ai:true, metaAds:true, export:true } },
   pro_monthly: { price:9990,  days:30,   name:'Pro Monthly',currency:'CLP', features:{ maxOrders:-1, ai:true, metaAds:true, export:true } },
   pro_usd:     { price:5,     days:14,   name:'Pro Monthly',currency:'USD', features:{ maxOrders:-1, ai:true, metaAds:true, export:true } },
@@ -241,7 +241,9 @@ app.post('/api/data', requireAuth, async (req, res) => {
     update.orders = max === -1 ? req.body.orders : req.body.orders.slice(0, max);
   }
   if (req.body.meta !== undefined) {
-    if (!(await canUsePro(req.user.email))) return res.status(403).json({ error:'Meta Ads requiere plan Pro', code:'UPGRADE_REQUIRED' });
+    // El CSV de Meta Ads está incluido en el plan gratis; solo se valida si viene con datos.
+    const feats = (sub.active && PLANS[sub.plan]?.features) || PLANS.free.features;
+    if (req.body.meta && !feats.metaAds) return res.status(403).json({ error:'Meta Ads requiere plan Pro', code:'UPGRADE_REQUIRED' });
     update.meta = req.body.meta;
   }
   if (req.body.config !== undefined) update.config = req.body.config;
@@ -255,19 +257,20 @@ app.post('/api/data', requireAuth, async (req, res) => {
 // ════════════════════════════════════════════════════════════════════
 
 app.post('/api/pay/mp/create', requireAuth, async (req, res) => {
-  const token = CFG.mpToken || 'APP_USR-5575668542953877-061919-7f87114d66b2727e7597d09a44745596-3276535336';
+  const token = CFG.mpToken;
+  if (!token) return res.status(503).json({ error: 'Pagos no configurados (falta MP_ACCESS_TOKEN).' });
   const { planKey } = req.body;
   const plan = PLANS[planKey];
   if (!plan || !plan.price) return res.status(400).json({ error: 'Plan no válido: ' + planKey });
-  console.log('MP /create — plan:', planKey, '| token:', token.slice(0,20) + '...');
+  console.log('MP /create — plan:', planKey);
   try {
     const preference = {
       items: [{ id:planKey, title:'Dropflow '+plan.name, description:'Contabilidad profesional para dropshipping', quantity:1, currency_id:plan.currency||'CLP', unit_price:plan.price }],
       payer: { email: req.user.email },
       back_urls: {
-        success: CFG.appUrl + '?pay=ok&plan=' + planKey,
-        failure: CFG.appUrl + '?pay=fail',
-        pending: CFG.appUrl + '?pay=pending',
+        success: CFG.appUrl + '/app?pay=ok&plan=' + planKey,
+        failure: CFG.appUrl + '/app?pay=fail',
+        pending: CFG.appUrl + '/app?pay=pending',
       },
       auto_return: 'approved',
       notification_url: CFG.appUrl + '/api/pay/mp/webhook',
@@ -292,7 +295,8 @@ app.post('/api/pay/mp/webhook', async (req, res) => {
   try {
     const body = Buffer.isBuffer(req.body) ? JSON.parse(req.body.toString()) : req.body;
     if (body.type !== 'payment') return;
-    const token = CFG.mpToken || 'APP_USR-5575668542953877-061919-7f87114d66b2727e7597d09a44745596-3276535336';
+    const token = CFG.mpToken;
+    if (!token) return console.error('MP webhook: falta MP_ACCESS_TOKEN');
     const payResp = await axios.get('https://api.mercadopago.com/v1/payments/' + body.data?.id, {
       headers: { Authorization: 'Bearer ' + token }
     });
@@ -310,7 +314,8 @@ app.post('/api/pay/mp/verify', requireAuth, async (req, res) => {
   const { payment_id, planKey } = req.body;
   if (!payment_id) return res.status(400).json({ ok:false, error:'Sin payment_id' });
   try {
-    const token = CFG.mpToken || 'APP_USR-5575668542953877-061919-7f87114d66b2727e7597d09a44745596-3276535336';
+    const token = CFG.mpToken;
+    if (!token) return res.status(503).json({ ok:false, error:'Pagos no configurados (falta MP_ACCESS_TOKEN).' });
     const r = await axios.get('https://api.mercadopago.com/v1/payments/' + payment_id, {
       headers: { Authorization: 'Bearer ' + token }
     });
@@ -481,7 +486,9 @@ app.get('/health', async (req, res) => {
   res.json({ ok:true, version:'3.1-mongo', mp:!!CFG.mpToken, ai:!!CFG.anthropicKey });
 });
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'dropflow.html')));
+// Página de inicio pública (demo sin registro) y app en /app
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'landing.html')));
+app.get('/app', (req, res) => res.sendFile(path.join(__dirname, 'dropflow.html')));
 app.use(express.static(__dirname));
 
 // ════════════════════════════════════════════════════════════════════
@@ -491,19 +498,23 @@ app.use(express.static(__dirname));
 async function init() {
   await connectDB();
 
-  // Crear/actualizar admin
-  const adminHash = await bcrypt.hash(CFG.adminPass, 12);
-  await Users().updateOne(
-    { email: CFG.adminEmail },
-    { $set: { name:'Admin', email:CFG.adminEmail, role:'admin', password:adminHash, updatedAt:new Date() }, $setOnInsert:{ createdAt:new Date() } },
-    { upsert: true }
-  );
-  await Subs().updateOne(
-    { email: CFG.adminEmail },
-    { $set: { plan:'admin', active:true, expiresAt:null } },
-    { upsert: true }
-  );
-  console.log('✓ Admin:', CFG.adminEmail);
+  // Crear/actualizar admin (solo si ADMIN_PASS está configurada en el entorno)
+  if (CFG.adminPass) {
+    const adminHash = await bcrypt.hash(CFG.adminPass, 12);
+    await Users().updateOne(
+      { email: CFG.adminEmail },
+      { $set: { name:'Admin', email:CFG.adminEmail, role:'admin', password:adminHash, updatedAt:new Date() }, $setOnInsert:{ createdAt:new Date() } },
+      { upsert: true }
+    );
+    await Subs().updateOne(
+      { email: CFG.adminEmail },
+      { $set: { plan:'admin', active:true, expiresAt:null } },
+      { upsert: true }
+    );
+    console.log('✓ Admin:', CFG.adminEmail);
+  } else {
+    console.warn('⚠ ADMIN_PASS no configurada: no se crea/actualiza el usuario admin');
+  }
 
   app.listen(CFG.port, () => {
     console.log('\n🚀 Dropflow v3.1 MongoDB — puerto', CFG.port);
