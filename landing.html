@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dropflow · Utilidad real para tiendas online en Chile</title>
+<meta name="description" content="Sube tus pedidos de Shopify o Dropi y tu gasto en Meta Ads. Mira tu utilidad real después de IVA, comisiones y anuncios. Gratis, sin tarjeta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+/* Layout: landing estilo profit-app (dolor → dashboard → integraciones → demo con tus datos → etapas → funciones → calculadora → comparación → precios → FAQ). Marca Dropflow: tema oscuro único por decisión de marca. */
+:root{
+  --bg:#070B14; --panel:#0E1424; --panel2:#121A2E; --line:#1E2740; --txt:#EAF0FF; --mute:#8E9AB8; --dim:#5D6888;
+  --g:#2EE6A6; --c:#22C7FF; --v:#7C5CFF; --r:#FF5C7A; --y:#FFC857;
+  --f-disp:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  --rad:18px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--f-disp);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:inherit}
+h1,h2,h3,h4{margin:0;text-wrap:balance;letter-spacing:-.02em;line-height:1.06}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-weight:700;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--g)}
+.muted{color:var(--mute)}
+.grad{background:linear-gradient(90deg,var(--g),var(--c) 55%,var(--v));-webkit-background-clip:text;background-clip:text;color:transparent}
+:focus-visible{outline:2px solid var(--c);outline-offset:3px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.neg{color:var(--r)} .pos{color:var(--g)}
+
+.aur{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.aur i{position:absolute;border-radius:50%;filter:blur(110px);opacity:.36}
+.aur .a1{width:620px;height:460px;left:-180px;top:260px;background:var(--g)}
+.aur .a2{width:620px;height:520px;right:-220px;top:-140px;background:var(--v)}
+.aur .a3{width:420px;height:320px;left:42%;top:540px;background:var(--c);opacity:.2}
+.gridbg{position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.4) 70%,transparent 100%)}
+
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(7,11,20,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:22px;letter-spacing:-.4px;text-decoration:none}
+.logo svg{width:32px;height:32px;flex:0 0 32px}
+.nav-links{display:flex;gap:26px;font-size:15px;color:var(--mute)}
+.nav-links a{text-decoration:none}.nav-links a:hover{color:var(--txt)}
+.nav-cta{display:flex;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--f-disp);font-weight:700;font-size:16px;border-radius:14px;padding:13px 20px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s;white-space:nowrap}
+.btn-pri{background:linear-gradient(90deg,var(--g),var(--c));color:#04120C;box-shadow:0 12px 36px rgba(46,230,166,.28)}
+.btn-pri:hover{transform:translateY(-1px);box-shadow:0 16px 44px rgba(46,230,166,.38)}
+.btn-ghost{background:transparent;color:var(--txt);border-color:var(--line)}
+.btn-ghost:hover{background:var(--panel)}
+.btn-sm{padding:9px 14px;font-size:14px;border-radius:11px}
+@media (max-width:900px){.nav-links{display:none}}
+@media (max-width:420px){.nav-cta .btn-ghost{display:none}}
+
+.hero{position:relative;overflow:hidden}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.02fr;gap:44px;align-items:center;padding-block:68px 56px}
+.hero h1{font-size:clamp(40px,5.8vw,72px);font-weight:800;letter-spacing:-.035em}
+.hero .lead{font-size:clamp(18px,2vw,21px);color:var(--mute);margin-top:22px;max-width:33em}
+.hero .lead b{color:var(--txt);font-weight:600}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.micro{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:14px;color:var(--mute)}
+.micro span::before{content:"✓";color:var(--g);font-weight:700;margin-right:7px}
+@media (max-width:940px){.hero .wrap{grid-template-columns:1fr;padding-block:44px 36px}}
+
+.dash{background:rgba(14,20,36,.92);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden;min-width:0}
+.dash-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:12px;color:var(--mute);letter-spacing:.05em}
+.dots{display:flex;gap:6px}.dots i{width:9px;height:9px;border-radius:50%;background:#26304A;display:block}
+.live{display:inline-flex;gap:6px;align-items:center;color:var(--g)}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--g);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,230,166,.55)}70%{box-shadow:0 0 0 10px rgba(46,230,166,0)}100%{box-shadow:0 0 0 0 rgba(46,230,166,0)}}
+.dash-body{padding:18px;display:grid;gap:14px}
+.dk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dk>div{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.dk .l{font-size:11.5px;color:var(--mute)}
+.dk .v{font-family:var(--f-mono);font-weight:700;font-size:clamp(15px,1.7vw,20px);margin-top:2px;white-space:nowrap}
+.chart{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 12px 6px}
+.chart .l{font-size:11.5px;color:var(--mute);display:flex;justify-content:space-between}
+.chart svg{width:100%;height:120px;display:block;margin-top:6px}
+.mini-pl{display:grid;gap:6px;font-size:13.5px}
+.mini-pl div{display:flex;justify-content:space-between;gap:10px}
+.dnote{font-family:var(--f-mono);font-size:11px;color:var(--dim);padding:0 18px 14px}
+
+.logos{border-block:1px solid var(--line);background:rgba(14,20,36,.5)}
+.logos .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 28px;padding-block:20px}
+.logos .lbl{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.logos .it{font-weight:700;font-size:18px;color:#B9C3DD;letter-spacing:-.2px}
+
+section{position:relative}
+.sec{padding-block:84px}
+.sec-h{max-width:780px;margin-bottom:34px}
+.sec-h h2{font-size:clamp(32px,4.4vw,52px);font-weight:800;margin-top:12px}
+.sec-h p{color:var(--mute);margin-top:14px;font-size:18px;max-width:40em}
+.band{background:linear-gradient(180deg,rgba(14,20,36,.6),rgba(7,11,20,0));border-top:1px solid var(--line)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:22px;min-width:0}
+
+.demo{display:grid;grid-template-columns:370px 1fr;gap:22px;align-items:start}
+@media (max-width:1000px){.demo{grid-template-columns:1fr}}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg button{font-family:var(--f-disp);font-weight:600;font-size:14px;color:var(--mute);background:transparent;border:0;border-radius:9px;padding:9px 6px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--panel2);color:var(--txt);box-shadow:inset 0 0 0 1px var(--line)}
+.drop{display:block;border:1.5px dashed #2C3858;border-radius:16px;padding:16px;cursor:pointer;transition:border-color .15s,background .15s;position:relative;margin-top:12px}
+.drop:hover,.drop.over{border-color:var(--g);background:rgba(46,230,166,.05)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.drop .t{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.drop .s{font-size:13.5px;color:var(--mute);margin-top:4px}
+.badge{font-family:var(--f-mono);font-size:11px;padding:3px 8px;border-radius:8px;background:var(--panel2);color:var(--mute);border:1px solid var(--line)}
+.drop.ok{border-style:solid;border-color:rgba(46,230,166,.6)}
+.drop.ok .badge{color:var(--g);border-color:rgba(46,230,166,.4)}
+.field{display:grid;gap:6px;margin-top:14px}
+.field label,.chk{font-size:13.5px;color:var(--mute)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inp{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:10px 12px;font-family:var(--f-mono);font-size:15px}
+.inp:focus{border-color:var(--c);outline:none}
+.chk{display:flex;gap:10px;align-items:flex-start;margin-top:14px;cursor:pointer}
+.chk input{accent-color:var(--g);width:18px;height:18px;margin-top:1px;flex:0 0 18px}
+.privacy{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:13.5px;color:var(--mute);background:rgba(34,199,255,.06);border:1px solid rgba(34,199,255,.22);padding:12px;border-radius:12px}
+.status{font-size:14px;margin-top:12px;min-height:20px}
+.status.err{color:var(--r)} .status.ok{color:var(--g)}
+.res-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.res-h h3{font-size:22px;font-weight:700}
+.tag{font-family:var(--f-mono);font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:999px;letter-spacing:.04em}
+.tag-ex{background:rgba(255,200,87,.12);color:var(--y);border:1px solid rgba(255,200,87,.35)}
+.tag-you{background:rgba(46,230,166,.12);color:var(--g);border:1px solid rgba(46,230,166,.35)}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:0}
+.kpi .l{font-size:12.5px;color:var(--mute)}
+.kpi .v{font-family:var(--f-mono);font-weight:700;font-size:clamp(19px,2.3vw,26px);letter-spacing:-.5px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .d{font-size:12.5px;color:var(--dim);margin-top:3px}
+.kpi.hk{background:linear-gradient(160deg,rgba(46,230,166,.12),rgba(124,92,255,.08));border-color:rgba(46,230,166,.35)}
+.sub-h{font-size:13px;font-family:var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:22px 0 10px}
+.pl{display:grid;gap:7px}
+.pl .r{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:12px;align-items:center;font-size:14.5px}
+.pl .bar{height:10px;border-radius:999px;background:var(--panel2);overflow:hidden}
+.pl .bar span{display:block;height:100%;border-radius:999px}
+.pl .r .mono{min-width:110px;text-align:right}
+.pl .tot{border-top:1px solid var(--line);padding-top:9px;margin-top:3px;font-weight:700}
+@media (max-width:520px){.pl .r{grid-template-columns:1fr auto}.pl .bar{display:none}}
+.cod-extra{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+@media (max-width:640px){.cod-extra{grid-template-columns:1fr}}
+.actions{display:grid;gap:10px}
+.act{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-size:15px}
+.act .dot{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-family:var(--f-mono);font-weight:700;font-size:13px}
+.act.bad .dot{background:rgba(255,92,122,.15);color:var(--r)}
+.act.warn .dot{background:rgba(255,200,87,.14);color:var(--y)}
+.act.good .dot{background:rgba(46,230,166,.14);color:var(--g)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:640px}
+th{text-align:left;font-weight:500;color:var(--mute);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px 14px;background:var(--panel2);white-space:nowrap}
+td{padding:11px 14px;border-top:1px solid var(--line);white-space:nowrap}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.cost-in{width:110px;background:var(--bg);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:6px 8px;font-family:var(--f-mono);font-size:14px;text-align:right}
+.est{font-family:var(--f-mono);font-size:10.5px;color:var(--y);margin-left:6px}
+.verd{font-family:var(--f-mono);font-size:12px;font-weight:700;padding:4px 9px;border-radius:8px}
+.v-esc{background:rgba(46,230,166,.14);color:var(--g)} .v-aju{background:rgba(255,200,87,.14);color:var(--y)} .v-apa{background:rgba(255,92,122,.15);color:var(--r)} .v-dat{background:var(--panel);color:var(--mute)}
+tr.locked td{filter:blur(5px);user-select:none}
+.gate{margin-top:16px;background:linear-gradient(160deg,rgba(124,92,255,.14),rgba(34,199,255,.06));border:1px solid rgba(124,92,255,.4);border-radius:18px;padding:22px}
+.gate h4{font-size:21px}
+.gate p{color:var(--mute);margin-top:6px;font-size:15px}
+.gate form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-top:14px}
+@media (max-width:720px){.gate form{grid-template-columns:1fr}}
+.fine{font-size:12.5px;color:var(--dim);margin-top:10px}
+
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:860px){.cards3{grid-template-columns:1fr}}
+.stage .who{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--c)}
+.stage h3{font-size:22px;margin-top:10px}
+.stage p{color:var(--mute);margin-top:8px;font-size:15.5px}
+.stage ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:7px;font-size:14.5px}
+.stage li::before{content:"→";color:var(--g);margin-right:8px;font-family:var(--f-mono)}
+.feat h3{font-size:19px}
+.feat p{color:var(--mute);margin-top:8px;font-size:15px}
+.feat .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(46,230,166,.1);border:1px solid rgba(46,230,166,.3);color:var(--g);font-family:var(--f-mono);font-weight:700;margin-bottom:14px}
+
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media (max-width:900px){.calc{grid-template-columns:1fr}}
+.sl{display:grid;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+.sl:first-child{border-top:0;padding-top:0}
+.sl .top{display:flex;justify-content:space-between;gap:10px;font-size:15px}
+.sl .top output{font-family:var(--f-mono);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--g)}
+.out-big{font-family:var(--f-mono);font-weight:700;font-size:clamp(36px,5vw,56px);letter-spacing:-1.5px}
+.verdict-pill{display:inline-block;margin-top:10px;font-weight:700;font-size:15px;padding:8px 14px;border-radius:999px}
+.rline{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px dashed var(--line);font-size:15px}
+.rline .mono{font-weight:700}
+
+.cmp td:first-child{white-space:normal;min-width:230px}
+.cmp th:last-child,.cmp td:last-child{background:rgba(46,230,166,.06)}
+.yes{color:var(--g);font-weight:700}.no{color:var(--r)}.part{color:var(--y)}
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.plans{grid-template-columns:1fr}}
+.plan h3{font-size:22px}
+.plan .for{color:var(--mute);font-size:14.5px;margin-top:4px}
+.plan .price{font-family:var(--f-mono);font-weight:700;font-size:34px;margin-top:12px;letter-spacing:-1px}
+.plan .price small{font-size:14px;color:var(--mute);font-weight:500;letter-spacing:0}
+.plan ul{list-style:none;padding:0;margin:18px 0 22px;display:grid;gap:9px;font-size:15px;color:var(--mute)}
+.plan li::before{content:"✓";color:var(--g);font-weight:700;margin-right:9px}
+.plan.feat2{border-color:rgba(46,230,166,.5);background:linear-gradient(180deg,rgba(46,230,166,.08),var(--panel))}
+.pill-pop{display:inline-block;font-family:var(--f-mono);font-size:11px;font-weight:700;color:#04120C;background:var(--g);padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:3px}
+.faq details{border-top:1px solid var(--line);padding:18px 0}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;font-weight:600;font-size:18px;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--g)}
+.faq details[open] summary::after{content:"−"}
+.faq p{color:var(--mute);margin-top:10px;max-width:46em}
+.final{text-align:center;padding-block:90px}
+.final h2{font-size:clamp(34px,5vw,60px);font-weight:800}
+.final p{color:var(--mute);margin:16px auto 0;max-width:34em}
+footer{border-top:1px solid var(--line);padding-block:28px;color:var(--dim);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+
+<nav class="nav" aria-label="Principal">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Dropflow inicio">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2EE6A6"/><stop offset=".5" stop-color="#22C7FF"/><stop offset="1" stop-color="#7C5CFF"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#lg)"/><path d="M24 11c5 7 9 11.5 9 16.5a9 9 0 0 1-18 0C15 22.5 19 18 24 11z" fill="#070B14"/><path d="M19 29c2.5 2 7.5 2 10 0" stroke="#2EE6A6" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
+      dropflow
+    </a>
+    <div class="nav-links"><a href="#prueba">Pruébalo</a><a href="#funciones">Funciones</a><a href="#calculadora">Calculadora</a><a href="#precios">Precios</a><a href="#faq">Preguntas</a></div>
+    <div class="nav-cta"><a class="btn btn-ghost btn-sm" href="/app" id="nav-login">Ingresar</a><a class="btn btn-pri btn-sm" href="#prueba">Empieza gratis</a></div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="aur"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div><div class="gridbg"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Utilidad real para tiendas online en Chile</div>
+      <h1 style="margin-top:18px">Tus ventas no son<br><span class="grad">tu ganancia.</span></h1>
+      <p class="lead">Dropflow junta tus ventas, tu gasto en <b>Meta Ads</b>, el costo de cada producto, las <b>comisiones de pago</b> y el <b>IVA</b>, y te muestra cuánto ganaste de verdad. Por día, por producto y en pesos chilenos.</p>
+      <div class="hero-cta">
+        <a class="btn btn-pri" href="#prueba">Prueba con tus datos →</a>
+        <button class="btn btn-ghost" type="button" id="hero-sample">Ver un ejemplo</button>
+      </div>
+      <div class="micro"><span>Listo en 2 minutos</span><span>Sin tarjeta</span><span>Cancela cuando quieras</span></div>
+    </div>
+    <div class="dash" aria-label="Vista del panel de Dropflow con datos de ejemplo">
+      <div class="dash-top"><div class="dots"><i></i><i></i><i></i></div><span>Últimos 14 días</span><span class="live">en vivo</span></div>
+      <div class="dash-body">
+        <div class="dk">
+          <div><div class="l">Utilidad real</div><div class="v pos" data-count="543420">$0</div></div>
+          <div><div class="l">Margen real</div><div class="v">13,4%</div></div>
+          <div><div class="l">ROAS real</div><div class="v">4,2x</div></div>
+        </div>
+        <div class="chart"><div class="l"><span>Utilidad por día</span><span class="mono">miles de CLP</span></div><svg id="hero-chart" viewBox="0 0 420 120" preserveAspectRatio="none" role="img" aria-label="Utilidad diaria de ejemplo: 12 días con ganancia y 2 con pérdida"></svg></div>
+        <div class="mini-pl">
+          <div><span class="muted">Ventas</span><span class="mono">$4.820.000</span></div>
+          <div><span class="muted">− IVA, productos y envíos</span><span class="mono">−$2.679.580</span></div>
+          <div><span class="muted">− Meta Ads, comisiones y reembolsos</span><span class="mono">−$1.352.000</span></div>
+          <div><span class="muted">− Apps, IA, sueldos</span><span class="mono">−$245.000</span></div>
+        </div>
+      </div>
+      <div class="dnote">* Datos de ejemplo</div>
+    </div>
+  </div>
+</header>
+
+<div class="logos"><div class="wrap"><span class="lbl">Funciona con</span><span class="it">Shopify</span><span class="it">Dropi</span><span class="it">Meta Ads</span><span class="it">Mercado Pago</span><span class="it">Webpay</span><span class="it">Flow</span><span class="it">Excel y CSV</span></div></div>
+
+<section class="sec band" id="prueba">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="eyebrow">Pruébalo ahora · sin registro</div>
+      <h2>Tu estado de resultados en un minuto</h2>
+      <p>Sube tus pedidos y tu gasto en Meta Ads. Todo se calcula en tu navegador. Crea tu cuenta solo si quieres guardarlo y ver el detalle completo.</p>
+    </div>
+    <div class="demo">
+      <div class="panel">
+        <div class="seg" role="group" aria-label="Origen de tus pedidos">
+          <button type="button" id="m-shop" aria-pressed="true">Pedidos de Shopify</button>
+          <button type="button" id="m-dropi" aria-pressed="false">Excel de Dropi</button>
+        </div>
+        <label class="drop" id="drop-ord" for="f-ord">
+          <input type="file" id="f-ord" accept=".csv,.xlsx,.xls">
+          <div class="t"><span id="t-ord">1 · CSV de pedidos de Shopify</span> <span class="badge" id="b-ord">.csv</span></div>
+          <div class="s" id="s-ord">Shopify → Pedidos → Exportar</div>
+        </label>
+        <label class="drop" id="drop-meta" for="f-meta">
+          <input type="file" id="f-meta" accept=".csv,.xlsx">
+          <div class="t">2 · CSV de Meta Ads <span class="badge" id="b-meta">opcional</span></div>
+          <div class="s" id="s-meta">Administrador de anuncios → Informes → Exportar</div>
+        </label>
+        <div class="field"><label for="i-spend">¿Sin CSV? Gasto en Meta Ads del período (CLP)</label><input class="inp" id="i-spend" inputmode="numeric" placeholder="ej. 850000"></div>
+        <div class="row2">
+          <div class="field"><label for="i-fee">Comisión de pago (%)</label><input class="inp" id="i-fee" inputmode="decimal" value="3"></div>
+          <div class="field" id="ship-wrap"><label for="i-ship">Envío por pedido (CLP)</label><input class="inp" id="i-ship" inputmode="numeric" value="4500"></div>
+        </div>
+        <div class="field"><label for="i-opex">Costos fijos del período: apps, IA, sueldos (CLP)</label><input class="inp" id="i-opex" inputmode="numeric" placeholder="ej. 180000"></div>
+        <label class="chk"><input type="checkbox" id="i-iva" checked><span>Mis precios incluyen IVA (19%): descontarlo de las ventas</span></label>
+        <label class="chk"><input type="checkbox" id="i-cod"><span>Tengo pedidos contra entrega: solo cuentan los entregados</span></label>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+        <button class="btn btn-ghost btn-sm" type="button" id="btn-sample" style="margin-top:6px;width:100%">Cargar datos de ejemplo</button>
+        <div class="privacy"><span aria-hidden="true">🔒</span><span>Tus archivos se leen en tu navegador y no se suben a ningún servidor mientras pruebas.</span></div>
+      </div>
+
+      <div class="panel" id="results">
+        <div class="res-h"><h3 id="res-title">Resultado</h3><span class="tag tag-ex" id="res-tag">Datos de ejemplo</span></div>
+        <div class="kpis">
+          <div class="kpi hk"><div class="l">Utilidad real</div><div class="v" id="k-util">—</div><div class="d" id="k-util-d">después de todo</div></div>
+          <div class="kpi"><div class="l">Margen real</div><div class="v" id="k-mar">—</div><div class="d">sobre ventas netas</div></div>
+          <div class="kpi"><div class="l">Ventas</div><div class="v" id="k-ven">—</div><div class="d" id="k-ven-d">—</div></div>
+          <div class="kpi"><div class="l">ROAS real</div><div class="v" id="k-roas">—</div><div class="d" id="k-roas-d">—</div></div>
+          <div class="kpi"><div class="l">CPA por venta</div><div class="v" id="k-cpa">—</div><div class="d" id="k-cpa-d">—</div></div>
+          <div class="kpi"><div class="l">Ventas de equilibrio</div><div class="v" id="k-eq">—</div><div class="d" id="k-eq-d">para cubrir costos fijos</div></div>
+        </div>
+        <div class="cod-extra" id="cod-extra" hidden>
+          <div class="kpi"><div class="l">Tasa de entrega</div><div class="v" id="k-tasa">—</div><div class="d">entregados ÷ (entregados + devueltos)</div></div>
+          <div class="kpi"><div class="l">En tránsito al 75%</div><div class="v" id="k-p75">—</div><div class="d">utilidad proyectada</div></div>
+          <div class="kpi"><div class="l">En tránsito al 100%</div><div class="v" id="k-p100">—</div><div class="d">escenario ideal</div></div>
+        </div>
+
+        <div class="sub-h">Estado de resultados</div>
+        <div class="pl" id="pl"></div>
+
+        <div class="sub-h">Qué haría con estos números</div>
+        <div class="actions" id="actions"></div>
+
+        <div class="sub-h">Por producto <span id="cogs-hint" style="text-transform:none;letter-spacing:0;font-family:var(--f-disp);color:var(--y)"></span></div>
+        <div class="tbl-wrap">
+          <table id="tbl"><thead><tr><th>Producto</th><th class="n">Ventas</th><th class="n">Costo unitario</th><th class="n">Utilidad real</th><th class="n">Margen</th><th>Veredicto</th></tr></thead><tbody></tbody></table>
+        </div>
+
+        <div class="gate" id="cuenta">
+          <h4 id="gate-title">Guarda este análisis y mira todos tus productos</h4>
+          <p>Crea tu cuenta gratis: tus pedidos quedan guardados y entras directo a tu panel.</p>
+          <form id="reg" novalidate>
+            <input class="inp" id="r-email" type="email" autocomplete="email" placeholder="tu@email.com" aria-label="Email" required>
+            <input class="inp" id="r-pass" type="password" autocomplete="new-password" placeholder="Contraseña (6+ caracteres)" aria-label="Contraseña" required minlength="6">
+            <button class="btn btn-pri" type="submit" id="r-btn">Crear cuenta gratis</button>
+          </form>
+          <div class="fine">Sin tarjeta. Cancela cuando quieras. El plan gratis guarda 10 pedidos de ejemplo; con Pro ves todos. ¿Ya tienes cuenta? <a href="/app" id="go-login">Ingresa aquí</a>.</div>
+          <div class="status" id="r-status" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="etapas">
+  <div class="wrap">
+    <div class="sec-h"><div class="eyebrow">Para cada etapa</div><h2>Desde tu primer producto hasta tu tercera tienda</h2></div>
+    <div class="cards3">
+      <div class="panel stage"><div class="who">Validando</div><h3>Estás probando productos</h3><p>Sabe en una semana si un producto deja plata o solo mueve caja.</p><ul><li>Margen real por producto</li><li>CPA máximo antes de escalar</li><li>Calculadora gratis</li></ul></div>
+      <div class="panel stage"><div class="who">Escalando</div><h3>Ya vendes todos los días</h3><p>Sube presupuesto solo donde hay utilidad, no donde hay ventas.</p><ul><li>Utilidad por día</li><li>ROAS real vs el de Meta</li><li>Veredicto: escalar, ajustar o apagar</li></ul></div>
+      <div class="panel stage"><div class="who">Equipo o varias tiendas</div><h3>Tienes socios o un equipo</h3><p>Un cierre de mes que todos entienden, sin planillas que se rompen.</p><ul><li>Varias tiendas</li><li>Costos fijos y sueldos</li><li>Reportes para tu socio o contador</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec band" id="funciones">
+  <div class="wrap">
+    <div class="sec-h"><div class="eyebrow">Funciones</div><h2>Todo lo que se come tu ganancia, en un solo lugar</h2></div>
+    <div class="cards3">
+      <div class="panel feat"><div class="ic">$</div><h3>Estado de resultados al día</h3><p>Ventas menos IVA, productos, envíos, Meta Ads, comisiones, reembolsos y costos fijos. Sin fórmulas.</p></div>
+      <div class="panel feat"><div class="ic">%</div><h3>Margen por producto</h3><p>Ve qué producto te da plata y cuál te la quita, con su costo y su parte del gasto en anuncios.</p></div>
+      <div class="panel feat"><div class="ic">x</div><h3>ROAS y CPA reales</h3><p>Meta cuenta compras con IVA y sin reembolsos. Nosotros lo comparamos con lo que de verdad te queda.</p></div>
+      <div class="panel feat"><div class="ic">=</div><h3>Punto de equilibrio</h3><p>Cuántas ventas necesitas para pagar tus costos fijos y desde cuál empiezas a ganar.</p></div>
+      <div class="panel feat"><div class="ic">!</div><h3>Plan de acción</h3><p>Te decimos qué producto pausar, cuál escalar y dónde estás perdiendo margen.</p></div>
+      <div class="panel feat"><div class="ic">↺</div><h3>Contra entrega si la usas</h3><p>Activa el modo contra entrega y medimos entregados, devueltos y lo que viene en tránsito.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="calculadora">
+  <div class="wrap">
+    <div class="sec-h"><div class="eyebrow">Calculadora gratis</div><h2>¿Cuánto te deja cada venta?</h2><p>Ingresa precio, costo y CPA de un producto y mira tu utilidad real por venta, con IVA y comisión incluidos.</p></div>
+    <div class="calc">
+      <div class="panel" id="calc-in">
+        <div class="sl"><div class="top"><label for="c-precio">Precio de venta (con IVA)</label><output id="o-precio"></output></div><input type="range" id="c-precio" min="4990" max="99990" step="1000" value="29990"></div>
+        <div class="sl"><div class="top"><label for="c-costo">Costo del producto</label><output id="o-costo"></output></div><input type="range" id="c-costo" min="1000" max="60000" step="500" value="9000"></div>
+        <div class="sl"><div class="top"><label for="c-flete">Envío que pagas tú</label><output id="o-flete"></output></div><input type="range" id="c-flete" min="0" max="12000" step="100" value="4500"></div>
+        <div class="sl"><div class="top"><label for="c-fee">Comisión de pago</label><output id="o-fee"></output></div><input type="range" id="c-fee" min="0" max="6" step="0.1" value="3"></div>
+        <div class="sl"><div class="top"><label for="c-cpa">CPA en Meta Ads</label><output id="o-cpa"></output></div><input type="range" id="c-cpa" min="500" max="30000" step="250" value="7000"></div>
+      </div>
+      <div class="panel" aria-live="polite">
+        <div class="muted" style="font-size:15px">Utilidad real por venta</div>
+        <div class="out-big" id="c-out">—</div>
+        <div class="verdict-pill" id="c-verd">—</div>
+        <div style="margin-top:18px">
+          <div class="rline"><span>IVA que no es tuyo</span><span class="mono" id="c-iva">—</span></div>
+          <div class="rline"><span>Comisión de pago</span><span class="mono" id="c-fee2">—</span></div>
+          <div class="rline"><span>CPA máximo para no perder</span><span class="mono" id="c-max">—</span></div>
+          <div class="rline"><span>ROAS de equilibrio</span><span class="mono" id="c-roase">—</span></div>
+          <div class="rline"><span>Margen real</span><span class="mono" id="c-mar">—</span></div>
+        </div>
+        <a class="btn btn-pri" href="#prueba" style="margin-top:20px;width:100%">Hazlo con todas tus ventas →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec band" id="comparar">
+  <div class="wrap">
+    <div class="sec-h"><div class="eyebrow">Comparar</div><h2>Hecho para vender en Chile</h2><p>Las apps de profit de afuera cobran en dólares y no saben de IVA chileno, Webpay ni Dropi.</p></div>
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <thead><tr><th></th><th>Planilla Excel</th><th>Panel de Shopify</th><th>Apps de profit de afuera</th><th>Dropflow</th></tr></thead>
+        <tbody>
+          <tr><td>Resta tu gasto en Meta Ads</td><td class="part">A mano</td><td class="no">No</td><td class="yes">Sí</td><td class="yes">Sí</td></tr>
+          <tr><td>Costo de producto y envío por pedido</td><td class="part">A mano</td><td class="part">Parcial</td><td class="yes">Sí</td><td class="yes">Sí</td></tr>
+          <tr><td>Descuenta el IVA chileno</td><td class="part">A mano</td><td class="no">No</td><td class="part">Configurable</td><td class="yes">Sí</td></tr>
+          <tr><td>Comisiones de Webpay, Mercado Pago y Flow</td><td class="part">A mano</td><td class="no">No</td><td class="part">Parcial</td><td class="yes">Sí</td></tr>
+          <tr><td>Pedidos de Dropi y contra entrega</td><td class="part">A mano</td><td class="no">No</td><td class="no">No</td><td class="yes">Sí</td></tr>
+          <tr><td>Veredicto por producto</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes">Sí</td></tr>
+          <tr><td>Precio</td><td>Tu tiempo</td><td>Incluido</td><td>En USD</td><td>Gratis para empezar, en CLP</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="precios">
+  <div class="wrap">
+    <div class="sec-h"><div class="eyebrow">Precios</div><h2>Empieza gratis. Paga cuando te sirva.</h2><p>Pagos con Mercado Pago o Stripe, en CLP o USD. Cancela cuando quieras.</p></div>
+    <div class="plans">
+      <div class="panel plan"><h3>Gratis</h3><div class="for">Para probar con tus datos</div><div class="price">$0</div><ul><li>Pedidos + CSV de Meta Ads</li><li>Utilidad y margen real</li><li>IVA y comisión de pago</li><li>10 pedidos guardados de ejemplo</li></ul><a class="btn btn-ghost" href="#prueba" style="width:100%">Probar ahora</a></div>
+      <div class="panel plan feat2"><h3>Pro <span class="pill-pop">Más elegido</span></h3><div class="for">Para tiendas que venden todos los días</div><div class="price">$5.990 <small>CLP / 2 semanas</small></div><ul><li>Pedidos ilimitados</li><li>Meta Ads en vivo</li><li>IA Dropflow para analizar tus números</li><li>Comparación de períodos</li></ul><a class="btn btn-pri" href="#cuenta" style="width:100%">Crear cuenta</a></div>
+      <div class="panel plan"><h3>Business</h3><div class="for">Para equipos o varias tiendas</div><div class="price">$19.990 <small>CLP / mes</small></div><ul><li>Todo lo de Pro</li><li>Usuarios ilimitados</li><li>Exportar a Excel</li><li>Soporte por WhatsApp</li></ul><a class="btn btn-ghost" href="#cuenta" style="width:100%">Crear cuenta</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec band" id="faq">
+  <div class="wrap faq">
+    <div class="sec-h"><div class="eyebrow">Preguntas</div><h2>Lo que nos preguntan</h2></div>
+    <details><summary>¿Mis archivos se suben a algún servidor?</summary><p>No mientras pruebas. Los archivos se leen en tu navegador. Solo si creas tu cuenta guardamos tus pedidos para que no tengas que subirlos de nuevo.</p></details>
+    <details><summary>¿Qué archivo de pedidos sirve?</summary><p>El CSV de pedidos que exportas desde Shopify (Pedidos → Exportar) o el Excel de pedidos de Dropi. Si usas Shopify, ingresas el costo de cada producto una sola vez.</p></details>
+    <details><summary>¿Cómo descargo el CSV de Meta Ads?</summary><p>En el Administrador de anuncios elige el período, abre Informes y exporta en CSV. Si tus campañas llevan el nombre del producto, repartimos el gasto por producto solo.</p></details>
+    <details><summary>¿Por qué mi ROAS real es más bajo que el de Meta?</summary><p>Meta divide tus ventas con IVA por el gasto y no resta reembolsos. Dropflow usa lo que de verdad entra a tu bolsillo.</p></details>
+    <details><summary>¿Cómo calculan el IVA?</summary><p>Si tus precios incluyen IVA, separamos el 19% de cada venta. Es una estimación para decidir mejor; tu declaración la hace tu contador.</p></details>
+    <details><summary>¿Y si todavía vendo contra entrega?</summary><p>Activa el modo contra entrega y medimos solo lo entregado, tu tasa de entrega y lo que viene en tránsito.</p></details>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Deja de mirar ventas.<br><span class="grad">Mira tu utilidad real.</span></h2>
+    <p>Sube tus pedidos y en menos de un minuto sabes qué producto escalar y cuál apagar.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
+      <a class="btn btn-pri" href="#prueba">Empieza gratis →</a>
+      <a class="btn btn-ghost" href="#calculadora">Usar la calculadora</a>
+    </div>
+    <div class="micro" style="justify-content:center"><span>Listo en 2 minutos</span><span>Sin tarjeta</span><span>Cancela cuando quieras</span></div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>© 2026 Dropflow · Hecho en Chile</span><span>@dropflow.cl</span></div></footer>
+
+<script>
+(function(){
+'use strict';
+const API = ''; // mismo dominio: /api/auth/register y /api/data
+const $ = s => document.querySelector(s);
+const clp = n => (n<0?'−':'') + '$' + Math.round(Math.abs(n)).toLocaleString('es-CL');
+const pct = (n,d=1) => isFinite(n) ? (n<0?'−':'') + Math.abs(n).toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d}) + '%' : '—';
+const xx = n => isFinite(n)&&n>0 ? n.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+'x' : '—';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const IVA = 0.19;
+
+function num(v){
+  if (typeof v === 'number') return v;
+  let s = String(v==null?'':v).trim().replace(/[^\d.,-]/g,'');
+  if (!s) return 0;
+  const hasDot=s.includes('.'), hasCom=s.includes(',');
+  if (hasDot&&hasCom){ if (s.lastIndexOf(',')>s.lastIndexOf('.')) s=s.replace(/\./g,'').replace(',','.'); else s=s.replace(/,/g,''); }
+  else if (hasDot){ if (/^-?\d{1,3}(\.\d{3})+$/.test(s)) s=s.replace(/\./g,''); }
+  else if (hasCom){ if (/^-?\d{1,3}(,\d{3})+$/.test(s)) s=s.replace(/,/g,''); else s=s.replace(',','.'); }
+  const n=parseFloat(s); return isFinite(n)?n:0;
+}
+function parseDate(raw){
+  if (raw==null||raw==='') return null;
+  if (typeof raw==='number'){ const d=new Date((raw-25569)*86400*1000); return isNaN(d)?null:d.toISOString().slice(0,10); }
+  const s=String(raw).trim();
+  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/); if (iso) return iso[1]+'-'+iso[2]+'-'+iso[3];
+  const dm=s.split(' ')[0].match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{2,4})$/);
+  if (dm){ const y=dm[3].length===2?'20'+dm[3]:dm[3]; return y+'-'+dm[2].padStart(2,'0')+'-'+dm[1].padStart(2,'0'); }
+  return null;
+}
+const today=()=>new Date().toISOString().slice(0,10);
+const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();
+function findCol(headers, keys, exclude){
+  const H = headers.map(norm);
+  for (const k of keys){ const i=H.findIndex(h=>h===norm(k)); if (i>=0) return i; }
+  for (const k of keys){ const i=H.findIndex(h=>h.includes(norm(k)) && !(exclude||[]).some(x=>h.includes(norm(x)))); if (i>=0) return i; }
+  return -1;
+}
+function parseCSV(text){
+  text=text.replace(/^﻿/,'');
+  const first=text.split(/\r?\n/)[0];
+  const delim=(first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length?';':',';
+  const rows=[]; let row=[],cur='',q=false;
+  for (let i=0;i<text.length;i++){
+    const ch=text[i];
+    if (q){ if (ch==='"'){ if (text[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=ch; }
+    else if (ch==='"') q=true;
+    else if (ch===delim){ row.push(cur); cur=''; }
+    else if (ch==='\n'||ch==='\r'){ if (ch==='\r'&&text[i+1]==='\n') i++; row.push(cur); rows.push(row); row=[]; cur=''; }
+    else cur+=ch;
+  }
+  if (cur!==''||row.length){ row.push(cur); rows.push(row); }
+  return rows.filter(r=>r.some(x=>String(x).trim()!==''));
+}
+
+/* pedidos de Shopify (pago anticipado) */
+function parseShopify(rows){
+  const h=rows[0].map(String);
+  const c={
+    name:findCol(h,['NAME','PEDIDO','NOMBRE']), fin:findCol(h,['FINANCIAL STATUS','ESTADO FINANCIERO','ESTADO DEL PAGO']),
+    total:findCol(h,['TOTAL'],['SUBTOTAL','LINEITEM']), taxes:findCol(h,['TAXES','IMPUESTOS']),
+    refund:findCol(h,['REFUNDED AMOUNT','IMPORTE REEMBOLSADO','REEMBOLSADO']), cancel:findCol(h,['CANCELLED AT','CANCELADO EL','CANCELADO']),
+    qty:findCol(h,['LINEITEM QUANTITY','CANTIDAD DEL ARTICULO','CANTIDAD']), item:findCol(h,['LINEITEM NAME','NOMBRE DEL ARTICULO','PRODUCTO']),
+    price:findCol(h,['LINEITEM PRICE','PRECIO DEL ARTICULO']),
+    date:findCol(h,['CREATED AT','CREADO EL','PAID AT','PAGADO EL','FECHA'])
+  };
+  if (c.name<0||c.item<0||c.price<0) throw new Error('No reconozco este CSV. Usa el de Shopify → Pedidos → Exportar, o cambia a “Excel de Dropi”.');
+  const orders=new Map();
+  for (const r of rows.slice(1)){
+    const id=String(r[c.name]||'').trim(); if (!id) continue;
+    if (!orders.has(id)) orders.set(id,{id,fin:'',total:0,taxes:0,refund:0,cancelled:false,fecha:null,lines:[]});
+    const o=orders.get(id);
+    if (c.fin>=0 && r[c.fin]) o.fin=norm(r[c.fin]);
+    if (c.total>=0 && String(r[c.total]).trim()!=='') o.total=num(r[c.total]);
+    if (c.taxes>=0 && String(r[c.taxes]).trim()!=='') o.taxes=num(r[c.taxes]);
+    if (c.refund>=0 && String(r[c.refund]).trim()!=='') o.refund=num(r[c.refund]);
+    if (c.cancel>=0 && String(r[c.cancel]).trim()!=='') o.cancelled=true;
+    if (c.date>=0 && !o.fecha) o.fecha=parseDate(r[c.date]);
+    o.lines.push({producto:String(r[c.item]||'Sin nombre').replace(/\s+-\s+Default Title$/i,'').trim(), qty:Math.max(1,num(r[c.qty])||1), price:num(r[c.price])});
+  }
+  const out=[];
+  for (const o of orders.values()){
+    const paid = !o.cancelled && !/PENDING|PENDIENTE|VOIDED|ANULADO|EXPIRED|AUTHORIZED/.test(o.fin);
+    const lineSum=o.lines.reduce((a,l)=>a+l.qty*l.price,0)||1;
+    for (const l of o.lines){
+      const share=l.qty*l.price/lineSum;
+      out.push({orderId:o.id, fecha:o.fecha||today(), producto:l.producto, qty:l.qty, unitPrice:l.price, estado: paid?'paid':'cancelled',
+        venta:o.total*share, refund:o.refund*share, taxFile:o.taxes*share, costoProd:null, envio:null, costoDev:0});
+    }
+  }
+  if (!out.some(x=>x.estado==='paid')) throw new Error('No encontré pedidos pagados en el archivo.');
+  return out;
+}
+
+/* Excel de Dropi */
+function mapStatus(raw){
+  const v=norm(raw);
+  if (v.includes('DEVOLU')||v.includes('DEVUELTO')) return 'returned';
+  if (v.includes('CANCEL')||v.includes('RECHAZ')||v.includes('ANULAD')) return 'cancelled';
+  if (v.includes('ENTREGAD')) return 'delivered';
+  if (/TRANSITO|REPARTO|CAMION|GUIA|OFICINA|DESTINO|NOVEDAD|DESPACH/.test(v)) return 'transit';
+  return 'pending';
+}
+function parseDropi(rows){
+  let hi=rows.findIndex(r=>(r||[]).some(x=>/ESTATUS|ESTADO/.test(norm(x)))); if (hi<0) hi=0;
+  const h=rows[hi].map(x=>String(x||''));
+  const c={
+    venta:findCol(h,['VALOR DE COMPRA EN PRODUCTOS','VALOR FACTURADO','PRECIO VENTA','TOTAL DE LA ORDEN','VENTA']),
+    prov:findCol(h,['TOTAL EN PRECIOS DE PROVEEDOR','COSTO PROVEEDOR','PRECIO PROVEEDOR'],['FLETE']),
+    flete:findCol(h,['PRECIO FLETE','COSTO FLETE','FLETE','COSTO ENVIO'],['DEVOLUCION']),
+    dev:findCol(h,['COSTO DEVOLUCION FLETE','FLETE DEVOLUCION','COSTO DEVOLUCION']),
+    com:findCol(h,['COMISION']), est:findCol(h,['ESTATUS','ESTADO','STATUS']),
+    qty:findCol(h,['CANTIDAD']), id:findCol(h,['ID']), fecha:findCol(h,['FECHA DE REPORTE','FECHA']), ciudad:findCol(h,['CIUDAD DESTINO','CIUDAD']),
+    prod:findCol(h,['PRODUCTO','NOMBRE PRODUCTO','PRODUCTOS','CATEGORIAS','CATEGORIA'],['VALOR','PRECIO','TOTAL','CANTIDAD','ID'])
+  };
+  if (c.est<0||c.venta<0) throw new Error('No encontré las columnas de Dropi (estatus y valor de compra). ¿Es el Excel de pedidos de Dropi?');
+  const out=[];
+  for (const r of rows.slice(hi+1)){
+    if (!r||r.filter(x=>x!==''&&x!=null).length<3) continue;
+    const venta=num(r[c.venta]); if (venta<=0) continue;
+    const flete=c.flete>=0?num(r[c.flete]):0;
+    out.push({id:c.id>=0?String(r[c.id]||''):'', fecha:(c.fecha>=0&&parseDate(r[c.fecha]))||today(), ciudad:c.ciudad>=0?String(r[c.ciudad]||''):'',
+      producto:(c.prod>=0?String(r[c.prod]||'').trim():'')||'Sin nombre', qty:c.qty>=0?Math.max(1,num(r[c.qty])):1,
+      estado:mapStatus(r[c.est]), venta, refund:0, taxFile:0,
+      costoProd:(c.prov>=0?num(r[c.prov]):0)+(c.com>=0?num(r[c.com]):0), envio:flete,
+      costoDev:c.dev>=0&&num(r[c.dev])>0?num(r[c.dev]):flete});
+  }
+  if (!out.length) throw new Error('El archivo no tiene pedidos con valores.');
+  return out;
+}
+
+/* Meta Ads */
+function parseMeta(rows){
+  const h=rows[0].map(x=>String(x||''));
+  const iS=findCol(h,['IMPORTE GASTADO','AMOUNT SPENT','GASTO']);
+  if (iS<0) throw new Error('No encontré la columna “Importe gastado” en el CSV de Meta.');
+  const iN=findCol(h,['NOMBRE DE LA CAMPANA','CAMPAIGN NAME','NOMBRE DEL CONJUNTO DE ANUNCIOS','AD SET NAME','NOMBRE DEL ANUNCIO','AD NAME']);
+  const iP=findCol(h,['COMPRAS','PURCHASES','RESULTADOS','RESULTS'],['VALOR','COSTO','COST','VALUE','INDICADOR','INDICATOR','TIPO']);
+  const iV=findCol(h,['VALOR DE CONVERSION DE COMPRAS','PURCHASES CONVERSION VALUE','VALOR DE CONVERSION']);
+  const ads=[];
+  for (const r of rows.slice(1)){
+    const name=iN>=0?String(r[iN]||''):'';
+    if (/^TOTAL|RESULTADOS GENERALES/.test(norm(name))) continue;
+    const spend=num(r[iS]); if (!(spend>0)) continue;
+    ads.push({name,spend,purchases:iP>=0?num(r[iP]):0,value:iV>=0?num(r[iV]):0});
+  }
+  if (!ads.length) throw new Error('El CSV de Meta no tiene filas con gasto.');
+  return ads;
+}
+
+/* análisis */
+let COSTS = {}; // costo unitario por producto (Shopify); EST = estimados
+let EST = {};
+function analyze(orders, ads, o){
+  const cod=o.cod, ivaOn=o.iva, fee=o.fee/100, shipCost=o.ship, opex=o.opex||0;
+  const spend = ads ? ads.reduce((a,b)=>a+b.spend,0) : (o.spend||0);
+  const metaValue = ads ? ads.reduce((a,b)=>a+b.value,0) : 0;
+  const metaPurch = ads ? ads.reduce((a,b)=>a+b.purchases,0) : 0;
+  const S={paid:0,delivered:0,transit:0,pending:0,returned:0,cancelled:0};
+  const P=new Map(); const seenOrder=new Set();
+  const prod = name => { if(!P.has(name)) P.set(name,{name,units:0,orders:0,venta:0,refund:0,iva:0,cogs:0,envio:0,fees:0,dev:0,ads:0,del:0,ret:0,tra:0,created:0}); return P.get(name); };
+  for (const x of orders){
+    S[x.estado]=(S[x.estado]||0)+1;
+    const p=prod(x.producto);
+    if (x.estado!=='cancelled') p.created++;
+    if (x.estado==='transit') p.tra++;
+    if (x.estado==='returned'){
+      p.ret++;
+      if (cod) p.dev+=x.costoDev;               // contra entrega: pierdes flete de ida y vuelta
+      else { p.dev+=(x.envio||0)+x.costoDev; }  // pago anticipado: devolución = envíos perdidos (la venta no se cuenta)
+      continue;
+    }
+    const counts = cod ? x.estado==='delivered' : (x.estado!=='cancelled');
+    if (!counts) continue;
+    if (x.estado==='delivered') p.del++;
+    p.orders++; p.units+=x.qty; p.venta+=x.venta; p.refund+=x.refund;
+    if (x.costoProd!=null) p.cogs+=x.costoProd;
+    else {
+      if (COSTS[x.producto]==null){ COSTS[x.producto]=Math.round((x.unitPrice||x.venta/x.qty)*0.35/10)*10; EST[x.producto]=true; }
+      p.cogs+=COSTS[x.producto]*x.qty;
+    }
+    if (x.orderId){ if (!seenOrder.has(x.orderId)){ seenOrder.add(x.orderId); p.envio+=shipCost; } }
+    else p.envio+=(x.envio||0);
+    const net=x.venta-x.refund;
+    p.iva += x.taxFile>0 ? x.taxFile*(net/(x.venta||1)) : (ivaOn ? net*IVA/(1+IVA) : 0);
+    p.fees += x.venta*fee;
+  }
+  const prods=[...P.values()].filter(p=>p.orders||p.ret||p.tra);
+  let unmatched=0;
+  if (ads){ for (const a of ads){ const an=norm(a.name);
+      const hit=prods.find(p=>{const w=norm(p.name).split(/\s+/).filter(t=>t.length>=4).slice(0,2); return w.length&&w.every(t=>an.includes(t));});
+      if (hit) hit.ads+=a.spend; else unmatched+=a.spend; } }
+  else unmatched=spend;
+  const tc=prods.reduce((a,p)=>a+p.created,0)||1;
+  prods.forEach(p=>p.ads+=unmatched*p.created/tc);
+  const T={venta:0,refund:0,iva:0,cogs:0,envio:0,fees:0,dev:0,orders:0};
+  for (const p of prods){
+    for (const k in T) T[k]+=p[k];
+    p.neta=p.venta-p.refund-p.iva;
+    p.util=p.neta-p.cogs-p.envio-p.fees-p.dev-p.ads;
+    p.margen=p.neta>0?p.util/p.neta*100:(p.util<0?-100:0);
+    p.unitCost=COSTS[p.name]; p.est=!!EST[p.name];
+    p.verdict=(p.orders+p.ret)<5?'dat':(p.util<=0?'apa':(p.margen>=15?'esc':'aju'));
+  }
+  const neta=T.venta-T.refund-T.iva;
+  const contrib=neta-T.cogs-T.envio-T.fees-T.dev-spend;
+  const util=contrib-opex;
+  const perOrder=T.orders?contrib/T.orders:0;
+  let p75=NaN,p100=NaN,tasa=NaN;
+  if (cod){
+    tasa=(S.delivered+S.returned)?S.delivered/(S.delivered+S.returned)*100:NaN;
+    const avgGain=T.orders?(neta-T.cogs-T.envio-T.fees)/T.orders:0;
+    const avgDev=S.returned?T.dev/S.returned:shipCost;
+    const proj=r=>util+S.transit*(r*avgGain-(1-r)*avgDev);
+    p75=proj(.75); p100=proj(1);
+  }
+  prods.sort((a,b)=>b.orders-a.orders);
+  return {S,spend,metaValue,metaPurch,T,neta,util,opex,margen:neta?util/neta*100:NaN,
+    roasReal:spend?(T.venta-T.refund)/spend:NaN, roasMeta:spend&&metaValue?metaValue/spend:NaN,
+    cpa:T.orders?spend/T.orders:NaN, cpaMeta:metaPurch?spend/metaPurch:NaN,
+    eq: perOrder>0? Math.ceil(opex/perOrder) : NaN, perOrder, aov:T.orders?T.venta/T.orders:0,
+    cod,tasa,p75,p100,prods,estimated:prods.some(p=>p.est),nOrders:orders.length};
+}
+
+function actions(R){
+  const out=[];
+  const worst=R.prods.filter(p=>p.verdict==='apa').sort((a,b)=>a.util-b.util)[0];
+  if (worst) out.push(['bad','!',`<b>${esc(worst.name)}</b> te dejó ${clp(worst.util)} en el período. Pausa sus anuncios o revisa precio y costo antes de seguir invirtiendo.`]);
+  if (isFinite(R.roasMeta) && isFinite(R.roasReal) && R.roasMeta > R.roasReal*1.1) out.push(['warn','x',`Meta te muestra un ROAS de ${xx(R.roasMeta)}, pero con tus ventas reales es ${xx(R.roasReal)}. Decide con el segundo.`]);
+  if (R.T.iva>0 && R.util < R.T.iva) out.push(['warn','%',`El IVA de tus ventas suma ${clp(R.T.iva)}, más que tu utilidad. Si no lo separas cada mes, vas a creer que ganaste más.`]);
+  if (R.cod && isFinite(R.tasa) && R.tasa<75) out.push(['warn','%',`Tu tasa de entrega es ${pct(R.tasa)}. Confirmar pedidos antes de despachar suele ser lo que más la sube.`]);
+  const best=R.prods.filter(p=>p.verdict==='esc').sort((a,b)=>b.util-a.util)[0];
+  if (best) out.push(['good','↑',`<b>${esc(best.name)}</b> tiene margen real de ${pct(best.margen)}. Es tu mejor candidato para subir presupuesto.`]);
+  if (isFinite(R.eq) && R.opex) out.push(['good','=',`Con tus costos fijos necesitas ${R.eq} ventas en el período para no perder. Llevas ${R.T.orders}.`]);
+  if (!out.length) out.push(['good','✓','Tus números se ven sanos. Revisa cada semana para detectar a tiempo un producto que empiece a perder.']);
+  return out.slice(0,3);
+}
+
+const VERD={esc:['Escalar','v-esc'],aju:['Ajustar','v-aju'],apa:['Apagar','v-apa'],dat:['Faltan datos','v-dat']};
+let LAST=null, ORDERS=null, META=null, IS_SAMPLE=true, UNLOCKED=false, MODE='shop';
+function render(R){
+  LAST=R;
+  $('#res-tag').textContent=IS_SAMPLE?'Datos de ejemplo':'Tus datos';
+  $('#res-tag').className='tag '+(IS_SAMPLE?'tag-ex':'tag-you');
+  $('#res-title').textContent=IS_SAMPLE?'Así se ve tu mes':`Tu período · ${R.T.orders} ventas`;
+  const u=$('#k-util'); u.textContent=clp(R.util); u.style.color=R.util>=0?'var(--g)':'var(--r)';
+  $('#k-util-d').textContent=R.opex?`incluye ${clp(R.opex)} de costos fijos`:'producto, envío, ads, comisiones e IVA';
+  const m=$('#k-mar'); m.textContent=pct(R.margen); m.style.color=R.margen>=10?'var(--txt)':'var(--r)';
+  $('#k-ven').textContent=clp(R.T.venta); $('#k-ven-d').textContent=`${R.T.orders} ${R.cod?'entregadas':'ventas'} · ticket ${clp(R.aov)}`;
+  $('#k-roas').textContent=R.spend?xx(R.roasReal):'—';
+  $('#k-roas-d').textContent=isFinite(R.roasMeta)?`Meta te muestra ${xx(R.roasMeta)}`:'ventas sin reembolsos ÷ gasto';
+  $('#k-cpa').textContent=R.spend?clp(R.cpa):'—';
+  $('#k-cpa-d').textContent=!R.spend?'agrega tu gasto en Meta Ads':(isFinite(R.cpaMeta)?`Meta te muestra ${clp(R.cpaMeta)}`:'gasto en Meta ÷ ventas');
+  $('#k-eq').textContent=R.opex&&isFinite(R.eq)?R.eq+' ventas':'—';
+  $('#k-eq-d').textContent=R.opex?(isFinite(R.eq)?`ganas ${clp(R.perOrder)} por venta antes de costos fijos`:'cada venta hoy pierde plata'):'ingresa tus costos fijos';
+  $('#cod-extra').hidden=!R.cod;
+  if (R.cod){ const t=$('#k-tasa'); t.textContent=pct(R.tasa); t.style.color=R.tasa>=75?'var(--g)':(R.tasa>=60?'var(--y)':'var(--r)');
+    $('#k-p75').textContent=R.S.transit?clp(R.p75):'Nada en tránsito'; $('#k-p100').textContent=R.S.transit?clp(R.p100):'—'; }
+  const lines=[['Ventas',R.T.venta,'var(--g)'],['Reembolsos',-R.T.refund,'var(--r)'],['IVA (19%)',-R.T.iva,'var(--y)'],['Costo de productos',-R.T.cogs,'var(--v)'],['Envíos',-R.T.envio,'var(--c)'],['Meta Ads',-R.spend,'var(--v)'],['Comisiones de pago',-R.T.fees,'var(--c)'],['Devoluciones',-R.T.dev,'var(--r)'],['Costos fijos',-R.opex,'var(--dim)']];
+  const base=R.T.venta||1;
+  $('#pl').innerHTML=lines.filter(l=>Math.round(l[1])!==0||l[0]==='Ventas').map(([l,v,col])=>`<div class="r"><span>${l}</span><div class="bar"><span style="width:${Math.min(100,Math.abs(v)/base*100)}%;background:${col}"></span></div><span class="mono">${clp(v)}</span></div>`).join('')
+    +`<div class="r tot"><span>Utilidad real</span><div class="bar"><span style="width:${Math.min(100,Math.abs(R.util)/base*100)}%;background:${R.util>=0?'var(--g)':'var(--r)'}"></span></div><span class="mono" style="color:${R.util>=0?'var(--g)':'var(--r)'}">${clp(R.util)}</span></div>`;
+  $('#actions').innerHTML=actions(R).map(([cls,ic,txt])=>`<div class="act ${cls}"><div class="dot">${ic}</div><div>${txt}</div></div>`).join('');
+  const FREE=2, editable=MODE==='shop';
+  $('#cogs-hint').textContent=R.estimated&&editable?'· costos estimados en 35% del precio: edítalos':'';
+  $('#tbl tbody').innerHTML=R.prods.map((p,i)=>{
+    const lock=!UNLOCKED&&!IS_SAMPLE&&i>=FREE; const [vl,vc]=VERD[p.verdict];
+    const cost=editable?`<input class="cost-in" data-p="${esc(p.name)}" value="${p.unitCost!=null?Math.round(p.unitCost):''}" inputmode="numeric" aria-label="Costo unitario de ${esc(p.name)}" ${lock?'tabindex="-1"':''}>${p.est?'<span class="est">est.</span>':''}`:(p.units?clp(p.cogs/Math.max(1,p.units)):'—');
+    return `<tr class="${lock?'locked':''}"><td>${esc(p.name)}</td><td class="n">${p.orders}</td><td class="n">${cost}</td><td class="n" style="color:${p.util>=0?'var(--g)':'var(--r)'}">${clp(p.util)}</td><td class="n">${pct(p.margen)}</td><td><span class="verd ${vc}">${vl}</span></td></tr>`;
+  }).join('');
+  const hidden=!IS_SAMPLE&&!UNLOCKED?Math.max(0,R.prods.length-FREE):0;
+  $('#gate-title').textContent=hidden?`Crea tu cuenta para ver tus otros ${hidden} productos`:(UNLOCKED?'Listo, tu análisis quedó guardado':'Guarda este análisis y mira todos tus productos');
+}
+$('#tbl').addEventListener('change',e=>{ const t=e.target; if(!t.classList.contains('cost-in')) return; const v=num(t.value); if(v>0){COSTS[t.dataset.p]=v; delete EST[t.dataset.p];} recompute(); });
+
+const opts=()=>({cod:$('#i-cod').checked, iva:$('#i-iva').checked, fee:num($('#i-fee').value), ship:num($('#i-ship').value), opex:num($('#i-opex').value), spend:num($('#i-spend').value)});
+function setStatus(msg,cls){ const s=$('#status'); s.textContent=msg; s.className='status'+(cls?' '+cls:''); }
+function recompute(){ if(!ORDERS) return; try{ render(analyze(ORDERS, META, opts())); }catch(e){ setStatus(e.message,'err'); } }
+function setMode(m){
+  MODE=m; $('#m-shop').setAttribute('aria-pressed',m==='shop'); $('#m-dropi').setAttribute('aria-pressed',m==='dropi');
+  $('#t-ord').textContent=m==='shop'?'1 · CSV de pedidos de Shopify':'1 · Excel de pedidos de Dropi';
+  $('#s-ord').textContent=m==='shop'?'Shopify → Pedidos → Exportar':'Dropi → Mis pedidos → Exportar';
+  $('#b-ord').textContent=m==='shop'?'.csv':'.xlsx'; $('#drop-ord').classList.remove('ok');
+  $('#ship-wrap').hidden=m==='dropi';
+}
+$('#m-shop').addEventListener('click',()=>setMode('shop'));
+$('#m-dropi').addEventListener('click',()=>setMode('dropi'));
+function readFile(file){
+  return new Promise((res,rej)=>{ const fr=new FileReader(); const isCsv=/\.csv$/i.test(file.name);
+    fr.onload=e=>{ try{ if(isCsv) res(parseCSV(new TextDecoder('utf-8').decode(new Uint8Array(e.target.result))));
+      else { if(typeof XLSX==='undefined') throw new Error('No se cargó el lector de Excel. Recarga la página.'); const wb=XLSX.read(e.target.result,{type:'array'}); res(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''})); } }catch(err){ rej(err); } };
+    fr.onerror=()=>rej(new Error('No pude leer el archivo.')); fr.readAsArrayBuffer(file); });
+}
+async function onOrders(file){
+  if(!file) return;
+  try{
+    const rows=await readFile(file);
+    COSTS={}; EST={};
+    ORDERS=MODE==='shop'?parseShopify(rows):parseDropi(rows);
+    IS_SAMPLE=false; UNLOCKED=false; if(META===SAMPLE_META) META=null;
+    const n=MODE==='shop'?new Set(ORDERS.map(o=>o.orderId)).size:ORDERS.length;
+    $('#drop-ord').classList.add('ok'); $('#b-ord').textContent='✓ '+n+' pedidos'; $('#s-ord').textContent=file.name;
+    setStatus('Listo: archivo leído.','ok'); recompute(); $('#results').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){ setStatus(e.message,'err'); }
+}
+async function onMeta(file){
+  if(!file) return;
+  try{ META=parseMeta(await readFile(file)); $('#drop-meta').classList.add('ok'); $('#b-meta').textContent='✓ '+clp(META.reduce((a,b)=>a+b.spend,0)); $('#s-meta').textContent=file.name; $('#i-spend').value='';
+    setStatus(ORDERS&&!IS_SAMPLE?'Gasto de Meta Ads sumado.':'CSV de Meta leído. Ahora sube tus pedidos.','ok'); if(ORDERS&&!IS_SAMPLE) recompute(); }
+  catch(e){ setStatus(e.message,'err'); }
+}
+function wireDrop(id,input,fn){ const el=$(id);
+  ['dragenter','dragover'].forEach(ev=>el.addEventListener(ev,e=>{e.preventDefault();el.classList.add('over');}));
+  ['dragleave','drop'].forEach(ev=>el.addEventListener(ev,e=>{e.preventDefault();el.classList.remove('over');}));
+  el.addEventListener('drop',e=>fn(e.dataTransfer.files[0])); $(input).addEventListener('change',e=>fn(e.target.files[0])); }
+wireDrop('#drop-ord','#f-ord',onOrders); wireDrop('#drop-meta','#f-meta',onMeta);
+['#i-spend','#i-opex','#i-fee','#i-ship'].forEach(s=>$(s).addEventListener('input',()=>{ if(s==='#i-spend'&&$(s).value&&META){ META=null; $('#drop-meta').classList.remove('ok'); $('#b-meta').textContent='opcional'; } recompute(); }));
+['#i-iva','#i-cod'].forEach(s=>$(s).addEventListener('change',recompute));
+
+/* datos de ejemplo: tienda con pago anticipado */
+const SAMPLE_COSTS={'Reloj GPS niños':7900,'Masajeador cervical':12900,'Lámpara proyector galaxia':4900,'Organizador de auto':5900,'Faja postural':5900};
+function makeSample(){
+  const defs=[['Reloj GPS niños',58,29990,.04],['Masajeador cervical',44,34990,.09],['Lámpara proyector galaxia',36,19990,.03],['Organizador de auto',21,14990,.08],['Faja postural',16,24990,.02]];
+  const o=[]; let seed=11,n=1000; const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  for (const [name,k,pr,ref] of defs){
+    for (let i=0;i<k;i++){ const x=rnd(); const est=x<.05?'cancelled':'paid'; const refunded=est==='paid'&&rnd()<ref;
+      o.push({orderId:'#'+(n++),producto:name,qty:1,unitPrice:pr,estado:est,venta:pr,refund:refunded?pr:0,taxFile:0,costoProd:null,envio:null,costoDev:0}); } }
+  return o;
+}
+const SAMPLE=makeSample();
+const SAMPLE_META=[{name:'Reloj GPS niños | CBO',spend:330000,purchases:62,value:1859380},{name:'Masajeador cervical',spend:320000,purchases:47,value:1644530},{name:'Lámpara galaxia',spend:120000,purchases:37,value:739630},{name:'Organizador auto',spend:110000,purchases:23,value:344770},{name:'Faja postural',spend:50000,purchases:16,value:399840}];
+function loadSample(){
+  setMode('shop'); COSTS={...SAMPLE_COSTS}; EST={}; ORDERS=SAMPLE; META=SAMPLE_META; IS_SAMPLE=true; UNLOCKED=false;
+  $('#drop-meta').classList.remove('ok'); $('#b-meta').textContent='opcional'; $('#s-meta').textContent='Administrador de anuncios → Informes → Exportar';
+  $('#i-spend').value=''; $('#i-cod').checked=false; $('#i-iva').checked=true; $('#i-ship').value='3500';
+  if(!$('#i-opex').value) $('#i-opex').value='245000';
+  setStatus('Mostrando una tienda de ejemplo. Sube tus archivos para ver los tuyos.'); recompute();
+}
+$('#btn-sample').addEventListener('click',loadSample);
+$('#hero-sample').addEventListener('click',()=>{loadSample();$('#prueba').scrollIntoView({behavior:'smooth'});});
+loadSample();
+
+/* registro: crea la cuenta, guarda los pedidos en el formato de la app y entra al panel */
+function toAppData(){
+  const o=opts(); const out=[]; const seen=new Set(); let i=0;
+  for (const x of ORDERS){
+    i++;
+    let estado=x.estado;
+    if (estado==='paid') estado = (x.refund>0 && x.refund>=x.venta-1) ? 'returned' : 'delivered';
+    else if (MODE==='dropi' && !o.cod && (estado==='transit'||estado==='pending')) estado='delivered'; // pago anticipado: ya está vendido
+    const venta=Math.max(0,Math.round(x.venta-(x.refund||0)));
+    const proveedor=Math.round(x.costoProd!=null ? x.costoProd : (COSTS[x.producto]||0)*x.qty);
+    let flete=0;
+    if (x.orderId){ if(!seen.has(x.orderId)){ seen.add(x.orderId); flete=o.ship; } } else flete=Math.round(x.envio||0);
+    const utilidad=venta-proveedor-flete;
+    out.push({id:String(x.orderId?x.orderId+'-'+i:(x.id||'DF'+i)), fecha:x.fecha||today(), producto:x.producto, estado, venta, proveedor, flete, comision:0,
+      utilidad, margen:venta>0?utilidad/venta*100:0, ciudad:x.ciudad||''});
+  }
+  let meta=null;
+  if (META){ const spend=META.reduce((a,b)=>a+b.spend,0), purchases=META.reduce((a,b)=>a+b.purchases,0), value=META.reduce((a,b)=>a+b.value,0);
+    meta={ads:META.map(a=>({nombre:a.name||'Anuncio',estado:'active',gasto:a.spend,impresiones:0,clics:0,compras:a.purchases,valorConversiones:a.value,roas:a.spend?a.value/a.spend:0,ctr:0,cpc:0,cpm:0,frecuencia:0})),
+      spend,impressions:0,clicks:0,purchases,valueConversions:value,roas:spend?value/spend:0,cpa:purchases?spend/purchases:0,ctr:0}; }
+  else if (o.spend>0) meta={ads:[],spend:o.spend,impressions:0,clicks:0,purchases:0,valueConversions:0,roas:0,cpa:0,ctr:0};
+  return {orders:out, meta, config:{ivaIncluded:o.iva, paymentFeePct:o.fee}};
+}
+function applyPlanLimit(data, user){
+  const m=user&&user.features&&user.features.maxOrders;
+  const max=(m===-1||!(m>0))?Infinity:m;
+  data.config.importTotal=data.orders.length;
+  if (data.orders.length>max) data.orders=data.orders.slice(0,max);
+  data.config.importKept=data.orders.length; // el gasto de Meta se prorratea si se guardó solo una parte
+  return data;
+}
+$('#reg').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=$('#r-email').value.trim(), pass=$('#r-pass').value, st=$('#r-status'); st.className='status';
+  if(!/^\S+@\S+\.\S+$/.test(email)){ st.textContent='Escribe un email válido.'; st.className='status err'; return; }
+  if(pass.length<6){ st.textContent='La contraseña necesita al menos 6 caracteres.'; st.className='status err'; return; }
+  const name=email.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()).trim()||'Usuario';
+  $('#r-btn').disabled=true; $('#r-btn').textContent='Creando cuenta…';
+  try{
+    const r=await fetch(API+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
+    let d={}; try{ d=await r.json(); }catch(_){}
+    if(!r.ok){
+      if(/registrado/i.test(d.error||'')){ st.innerHTML='Ese email ya tiene cuenta. <a href="/app">Ingresa aquí</a>.'; st.className='status err'; return; }
+      throw new Error(d.error||'No pudimos crear la cuenta. Intenta de nuevo.');
+    }
+    try{ localStorage.setItem('df_access',d.access); localStorage.setItem('df_refresh',d.refresh); localStorage.setItem('df_user',JSON.stringify(d.user)); }catch(_){}
+    if(!IS_SAMPLE&&ORDERS){
+      const data=applyPlanLimit(toAppData(), d.user);
+      const s=await fetch(API+'/api/data',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+d.access},body:JSON.stringify(data)});
+      if(!s.ok){ st.textContent='Tu cuenta quedó creada, pero no pudimos guardar los pedidos. Súbelos de nuevo en tu panel.'; st.className='status err'; setTimeout(()=>{ location.href='/app'; },2500); return; }
+    }
+    UNLOCKED=true; if(LAST) render(LAST);
+    st.textContent='Cuenta creada. Entrando a tu panel…'; st.className='status ok';
+    setTimeout(()=>{ location.href='/app'; },700);
+  }catch(err){
+    st.textContent = err instanceof TypeError ? 'No hay conexión con el servidor. Revisa tu internet e intenta de nuevo.' : err.message;
+    st.className='status err';
+  }finally{ $('#r-btn').disabled=false; $('#r-btn').textContent='Crear cuenta gratis'; }
+});
+
+/* calculadora por venta */
+const C=id=>+$('#c-'+id).value;
+function calc(){
+  const pr=C('precio'),co=C('costo'),fl=C('flete'),fe=C('fee')/100,cpa=C('cpa');
+  ['precio','costo','flete','cpa'].forEach(k=>$('#o-'+k).textContent=clp(C(k)));
+  $('#o-fee').textContent=C('fee').toLocaleString('es-CL',{minimumFractionDigits:1})+'%';
+  const iva=pr*IVA/(1+IVA), fee=pr*fe, neto=pr-iva;
+  const antesAds=neto-co-fl-fee, util=antesAds-cpa;
+  const out=$('#c-out'); out.textContent=clp(util); out.style.color=util>=0?'var(--g)':'var(--r)';
+  $('#c-iva').textContent=clp(-iva); $('#c-fee2').textContent=clp(-fee);
+  $('#c-max').textContent=antesAds>0?clp(antesAds):'Imposible a este precio';
+  $('#c-roase').textContent=antesAds>0?xx(pr/antesAds):'—';
+  const mar=util/neto*100; $('#c-mar').textContent=pct(mar);
+  const v=$('#c-verd');
+  if(util<=0){ v.textContent='Pierde plata en cada venta'; v.style.cssText='background:rgba(255,92,122,.15);color:var(--r)'; }
+  else if(mar<10){ v.textContent='Margen justo: ajusta antes de escalar'; v.style.cssText='background:rgba(255,200,87,.14);color:var(--y)'; }
+  else { v.textContent='Deja plata: candidato a escalar'; v.style.cssText='background:rgba(46,230,166,.14);color:var(--g)'; }
+}
+document.querySelectorAll('#calc-in input').forEach(i=>i.addEventListener('input',calc)); calc();
+
+/* gráfico y contador del héroe */
+(function(){
+  const vals=[42,51,38,-12,46,58,61,33,49,-6,55,67,44,59];
+  const W=420,H=120,pad=6,max=70,min=-20,zero=pad+(H-2*pad)*(max/(max-min));
+  const bw=(W-2*pad)/vals.length;
+  let s=`<line x1="0" x2="${W}" y1="${zero}" y2="${zero}" stroke="#2A3550" stroke-width="1"/>`;
+  vals.forEach((v,i)=>{ const h=(H-2*pad)*Math.abs(v)/(max-min); const y=v>=0?zero-h:zero;
+    s+=`<rect x="${pad+i*bw+bw*.18}" y="${y}" width="${bw*.64}" height="${h}" rx="3" fill="${v>=0?'#2EE6A6':'#FF5C7A'}" opacity="${i===vals.length-1?1:.8}"/>`; });
+  $('#hero-chart').innerHTML=s;
+  const els=[...document.querySelectorAll('[data-count]')]; const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches; const t0=performance.now();
+  els.forEach(el=>el.textContent=clp(+el.dataset.count));
+  function tick(now){ const k=reduce?1:Math.min(1,(now-t0)/1400),e=1-Math.pow(1-k,3); els.forEach(el=>el.textContent=clp(+el.dataset.count*e)); if(k<1) requestAnimationFrame(tick); }
+  requestAnimationFrame(tick);
+})();
+})();
+</script>
+
+</body>
+</html>
