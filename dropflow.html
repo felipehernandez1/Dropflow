@@ -1929,7 +1929,7 @@ function isPro() { return USER?.planActive && USER?.plan !== 'free'; }
 function planMaxOrders() {
   if (isPro()) return Infinity;
   const m = USER?.features?.maxOrders;
-  return m === -1 ? Infinity : (typeof m === 'number' && m > 0 ? m : 15);
+  return m === -1 ? Infinity : (typeof m === 'number' && m > 0 ? m : 100);
 }
 
 // ════════════════════════════════════════════════════════════
@@ -2066,7 +2066,10 @@ function calcMetrics(orders) {
 
   const sales        = delivered.reduce((s,o) => s+o.venta, 0);
   const costs        = delivered.reduce((s,o) => s+o.proveedor+o.flete+o.comision, 0);
-  const adsSpend     = STATE.meta?.spend || 0;
+  // Si el plan gratis guardó solo una parte de los pedidos importados, se usa la parte proporcional del gasto en Meta
+  const imp          = STATE.config || {};
+  const adsShare     = (!isPro() && imp.importTotal > 0 && imp.importKept > 0 && imp.importKept < imp.importTotal) ? imp.importKept / imp.importTotal : 1;
+  const adsSpend     = (STATE.meta?.spend || 0) * adsShare;
   // Pago anticipado: IVA incluido en el precio (19%) y comisión de la pasarela (Webpay, Mercado Pago, Flow)
   const ivaAmount    = STATE.config?.ivaIncluded ? sales * 19 / 119 : 0;
   const feeAmount    = sales * (parseFloat(STATE.config?.paymentFeePct) || 0) / 100;
@@ -2079,7 +2082,7 @@ function calcMetrics(orders) {
 
   return { orders: orders.length, delivered: delivered.length, transit: transit.length,
     returned: returned.length, cancelled: cancelled.length,
-    sales, costs, adsSpend, ivaAmount, feeAmount, profit, margin, deliveryRate, cpa, roas };
+    sales, costs, adsSpend, adsShare, ivaAmount, feeAmount, profit, margin, deliveryRate, cpa, roas };
 }
 
 // ════════════════════════════════════════════════════════════
@@ -2133,7 +2136,7 @@ function renderDashboard(orders, M) {
   setText('kpi-roas-sub', 'ads: ' + fmt(M.adsSpend));
 
   setText('kpi-ads',      M.adsSpend > 0 ? fmt(M.adsSpend) : '—');
-  setText('kpi-ads-sub',  STATE.meta ? 'Meta Ads conectado' : 'Sin datos de ads');
+  setText('kpi-ads-sub',  !STATE.meta ? 'Sin datos de ads' : (M.adsShare < 1 ? `proporcional a ${STATE.config.importKept} de ${STATE.config.importTotal} pedidos` : 'Meta Ads conectado'));
 
   setText('kpi-margin',   M.margin.toFixed(1) + '%');
   const mClass = M.margin >= 20 ? 'green' : M.margin >= 10 ? '' : M.margin >= 0 ? 'amber' : 'red';
@@ -2630,7 +2633,7 @@ const PLAN_DATA = {
   CLP: [
     {
       key:'free', price:'Gratis', sub:'para siempre', color:'var(--text3)',
-      features:['Dashboard básico','Hasta 15 pedidos guardados','CSV de Meta Ads','IVA y comisión de pago','1 usuario'],
+      features:['Dashboard básico','Hasta 100 pedidos guardados','CSV de Meta Ads','IVA y comisión de pago','1 usuario'],
       off:['Meta Ads en vivo','IA Dropflow','Exportar'],
       btnText:'Plan actual', btnAction:'', featured:false
     },
@@ -2651,7 +2654,7 @@ const PLAN_DATA = {
   USD: [
     {
       key:'free', price:'Free', sub:'forever', color:'var(--text3)',
-      features:['Basic dashboard','Up to 15 saved orders','Meta Ads CSV','VAT and payment fees','1 user'],
+      features:['Basic dashboard','Up to 100 saved orders','Meta Ads CSV','VAT and payment fees','1 user'],
       off:['Live Meta Ads','Dropflow AI','Export'],
       btnText:'Current plan', btnAction:'', featured:false
     },
@@ -2983,6 +2986,9 @@ function handleDropiFile(file) {
       }
 
       STATE.orders = orders.slice(0, maxOrders);
+      // Si el plan guarda solo una parte, el gasto de Meta se prorratea sobre los pedidos guardados
+      STATE.config.importTotal = orders.length;
+      STATE.config.importKept  = STATE.orders.length;
 
       // Ajustar el período para que cubra los pedidos importados
       // (si no, el dashboard puede quedar filtrando un mes sin datos)

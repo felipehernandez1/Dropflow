@@ -337,7 +337,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
             <input class="inp" id="r-pass" type="password" autocomplete="new-password" placeholder="Contraseña (6+ caracteres)" aria-label="Contraseña" required minlength="6">
             <button class="btn btn-pri" type="submit" id="r-btn">Crear cuenta gratis</button>
           </form>
-          <div class="fine">Sin tarjeta. Cancela cuando quieras. El plan gratis guarda tus primeros 15 pedidos. ¿Ya tienes cuenta? <a href="/app" id="go-login">Ingresa aquí</a>.</div>
+          <div class="fine">Sin tarjeta. Cancela cuando quieras. El plan gratis guarda hasta 100 pedidos. ¿Ya tienes cuenta? <a href="/app" id="go-login">Ingresa aquí</a>.</div>
           <div class="status" id="r-status" role="status" aria-live="polite"></div>
         </div>
       </div>
@@ -422,7 +422,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <div class="wrap">
     <div class="sec-h"><div class="eyebrow">Precios</div><h2>Empieza gratis. Paga cuando te sirva.</h2><p>Pagos con Mercado Pago o Stripe, en CLP o USD. Cancela cuando quieras.</p></div>
     <div class="plans">
-      <div class="panel plan"><h3>Gratis</h3><div class="for">Para probar con tus datos</div><div class="price">$0</div><ul><li>Pedidos + CSV de Meta Ads</li><li>Utilidad y margen real</li><li>IVA y comisión de pago</li><li>Hasta 15 pedidos guardados</li></ul><a class="btn btn-ghost" href="#prueba" style="width:100%">Probar ahora</a></div>
+      <div class="panel plan"><h3>Gratis</h3><div class="for">Para probar con tus datos</div><div class="price">$0</div><ul><li>Pedidos + CSV de Meta Ads</li><li>Utilidad y margen real</li><li>IVA y comisión de pago</li><li>Hasta 100 pedidos guardados</li></ul><a class="btn btn-ghost" href="#prueba" style="width:100%">Probar ahora</a></div>
       <div class="panel plan feat2"><h3>Pro <span class="pill-pop">Más elegido</span></h3><div class="for">Para tiendas que venden todos los días</div><div class="price">$5.990 <small>CLP / 2 semanas</small></div><ul><li>Pedidos ilimitados</li><li>Meta Ads en vivo</li><li>IA Dropflow para analizar tus números</li><li>Comparación de períodos</li></ul><a class="btn btn-pri" href="#cuenta" style="width:100%">Crear cuenta</a></div>
       <div class="panel plan"><h3>Business</h3><div class="for">Para equipos o varias tiendas</div><div class="price">$19.990 <small>CLP / mes</small></div><ul><li>Todo lo de Pro</li><li>Usuarios ilimitados</li><li>Exportar a Excel</li><li>Soporte por WhatsApp</li></ul><a class="btn btn-ghost" href="#cuenta" style="width:100%">Crear cuenta</a></div>
     </div>
@@ -820,6 +820,14 @@ function toAppData(){
   else if (o.spend>0) meta={ads:[],spend:o.spend,impressions:0,clicks:0,purchases:0,valueConversions:0,roas:0,cpa:0,ctr:0};
   return {orders:out, meta, config:{ivaIncluded:o.iva, paymentFeePct:o.fee}};
 }
+function applyPlanLimit(data, user){
+  const m=user&&user.features&&user.features.maxOrders;
+  const max=(m===-1||!(m>0))?Infinity:m;
+  data.config.importTotal=data.orders.length;
+  if (data.orders.length>max) data.orders=data.orders.slice(0,max);
+  data.config.importKept=data.orders.length; // el gasto de Meta se prorratea si se guardó solo una parte
+  return data;
+}
 $('#reg').addEventListener('submit',async e=>{
   e.preventDefault();
   const email=$('#r-email').value.trim(), pass=$('#r-pass').value, st=$('#r-status'); st.className='status';
@@ -836,7 +844,7 @@ $('#reg').addEventListener('submit',async e=>{
     }
     try{ localStorage.setItem('df_access',d.access); localStorage.setItem('df_refresh',d.refresh); localStorage.setItem('df_user',JSON.stringify(d.user)); }catch(_){}
     if(!IS_SAMPLE&&ORDERS){
-      const data=toAppData();
+      const data=applyPlanLimit(toAppData(), d.user);
       const s=await fetch(API+'/api/data',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+d.access},body:JSON.stringify(data)});
       if(!s.ok){ st.textContent='Tu cuenta quedó creada, pero no pudimos guardar los pedidos. Súbelos de nuevo en tu panel.'; st.className='status err'; setTimeout(()=>{ location.href='/app'; },2500); return; }
     }
