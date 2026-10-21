@@ -1929,7 +1929,7 @@ function isPro() { return USER?.planActive && USER?.plan !== 'free'; }
 function planMaxOrders() {
   if (isPro()) return Infinity;
   const m = USER?.features?.maxOrders;
-  return m === -1 ? Infinity : (typeof m === 'number' && m > 0 ? m : 100);
+  return m === -1 ? Infinity : (typeof m === 'number' && m > 0 ? m : 10);
 }
 
 // ════════════════════════════════════════════════════════════
@@ -2633,7 +2633,7 @@ const PLAN_DATA = {
   CLP: [
     {
       key:'free', price:'Gratis', sub:'para siempre', color:'var(--text3)',
-      features:['Dashboard básico','Hasta 100 pedidos guardados','CSV de Meta Ads','IVA y comisión de pago','1 usuario'],
+      features:['Dashboard básico','Hasta 10 pedidos guardados','CSV de Meta Ads','IVA y comisión de pago','1 usuario'],
       off:['Meta Ads en vivo','IA Dropflow','Exportar'],
       btnText:'Plan actual', btnAction:'', featured:false
     },
@@ -2654,7 +2654,7 @@ const PLAN_DATA = {
   USD: [
     {
       key:'free', price:'Free', sub:'forever', color:'var(--text3)',
-      features:['Basic dashboard','Up to 100 saved orders','Meta Ads CSV','VAT and payment fees','1 user'],
+      features:['Basic dashboard','Up to 10 saved orders','Meta Ads CSV','VAT and payment fees','1 user'],
       off:['Live Meta Ads','Dropflow AI','Export'],
       btnText:'Current plan', btnAction:'', featured:false
     },

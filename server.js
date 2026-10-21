@@ -38,7 +38,7 @@ const CFG = {
 
 // ── Planes ──────────────────────────────────────────────────────────
 const PLANS = {
-  free:        { price:0,     days:null, name:'Free',       features:{ maxOrders: 100, ai:false, metaAds:true,  export:false } },
+  free:        { price:0,     days:null, name:'Free',       features:{ maxOrders: 10,  ai:false, metaAds:true,  export:false } },
   pro_weekly:  { price:5990,  days:14,    name:'Pro Weekly', currency:'CLP', features:{ maxOrders:-1, ai:true, metaAds:true, export:true } },
   pro_monthly: { price:9990,  days:30,   name:'Pro Monthly',currency:'CLP', features:{ maxOrders:-1, ai:true, metaAds:true, export:true } },
   pro_usd:     { price:5,     days:14,   name:'Pro Monthly',currency:'USD', features:{ maxOrders:-1, ai:true, metaAds:true, export:true } },
